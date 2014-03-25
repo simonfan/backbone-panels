@@ -1,0 +1,25 @@
+{
+  "name": "backbone-panels",
+  "main": "built/backbone-panels.js",
+  "version": "0.0.0",
+  "description": "Some module...",
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "jquery": "~2.1.0",
+    "jquery-ui": "~1.10.4",
+    "backbone-ui-resizable": "~0.1.0",
+    "collection-dock": "0.2.3"
+  },
+  "devDependencies": {
+    "requirejs": "*",
+    "requirejs-text": "*",
+    "underscore": "*",
+    "jquery": "*",
+    "qunit": "*"
+  },
+  "resolutions": {
+    "jquery": ">=1.6",
+    "model-dock": "~0.2.4",
+    "subject": "0.4.1"
+  }
+}
