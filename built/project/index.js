@@ -2,4 +2,4 @@
 //     (c) simonfan
 //     backbone-panels is licensed under the MIT terms.
 
-define(["require","exports","module","collection-dock","./__backbone-panels/item-view"],function(e,t,n){var r=e("collection-dock"),i=e("./__backbone-panels/item-view"),s=n.exports=r.extend({itemHtml:'<div class="panel"></div>',itemView:i})});
+define(["require","exports","module","collection-dock","lowercase-backbone","lodash","./__backbone-panels/item-view/index","./__backbone-panels/helpers","./__backbone-panels/event-handlers/index"],function(e,t,n){var r=e("collection-dock"),i=e("lowercase-backbone"),s=e("lodash"),o=e("./__backbone-panels/item-view/index"),u=n.exports=r.extend({initialize:function(t){i.view.prototype.initialize.apply(this,arguments),this.initializeCollectionDock.apply(this,arguments),this.initializePanels.apply(this,arguments)},itemView:o,initializePanels:function(t){s.bindAll(this,"handleResize"),this.$el.css(this.css),this.arrange()},css:{position:"relative"}});u.proto(e("./__backbone-panels/helpers")),u.proto(e("./__backbone-panels/event-handlers/index"))});

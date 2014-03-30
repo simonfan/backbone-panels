@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/event-handlers/index.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -82,76 +82,71 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/event-handlers/index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//     backbone-panels
-//     (c) simonfan
-//     backbone-panels is licensed under the MIT terms.
-
-/**
- * AMD module.
- *
- * @module backbone-panels
- */
-
 define(function (require, exports, module) {
-	&#x27;use strict&#x27;;
 
-	var collectionDock = require(&#x27;collection-dock&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;),
-		_ = require(&#x27;lodash&#x27;);
 
-	// internal
-	var itemView = require(&#x27;./__backbone-panels/item-view/index&#x27;);
+	var _ = require(&#x27;lodash&#x27;);
 
-	var panels = module.exports = collectionDock.extend({
+	/**
+	 * Resize event handler.
+	 * Invokes all other steps.
+	 *
+	 * @method handleResize
+	 */
+	exports.handleResize = function handleResize(model, movement) {
+		// retrieve movement data.
+		movement = movement.data();
 
-		initialize: function initialize(options) {
-			backbone.view.prototype.initialize.apply(this, arguments);
+		var index = this.collection.indexOf(model),
+			delta = Math.abs(movement.delta);
 
-			// collection-dock
-			this.initializeCollectionDock.apply(this, arguments);
+		if (movement.action === &#x27;expand&#x27;) {
+			// contract other guys
 
-			// this
-			this.initializePanels.apply(this, arguments);
-		},
+			if (movement.handle === &#x27;left&#x27;) {
+				// contract before
 
-		itemView: itemView,
+				var before = this.before(index);
 
-		/**
-		 * Initialization logic for panels view.
-		 *
-		 *
-		 * @method initialPanels
-		 * @param options {Object}
-		 */
-		initializePanels: function initializePanels(options) {
+				this.contractToLeft(before, delta);
 
-			// bind methods
-			_.bindAll(this, &#x27;handleResize&#x27;);
+			} else if (movement.handle === &#x27;right&#x27;) {
+				// contract after
+				var after = this.after(index);
 
-			// set styles for the panel element.
-			this.$el.css(this.css);
+				this.contractToRight(after, delta);
 
-			this.arrange();
+			}
 
-		},
+		} else if (movement.action === &#x27;contract&#x27;) {
 
-		/**
-		 * Css to be set on the main $el.
-		 *
-		 * @property css
-		 *
-		 */
-		css: {
-			position: &#x27;relative&#x27;
-		},
-	});
+			// expand other guys
+			if (movement.handle === &#x27;left&#x27;) {
+				// expand before
 
-	panels.proto(require(&#x27;./__backbone-panels/helpers&#x27;));
-	panels.proto(require(&#x27;./__backbone-panels/event-handlers/index&#x27;));
+				var before = this.before(index);
+
+				this.expandToRight(before, delta);
+
+			} else if (movement.handle === &#x27;right&#x27;) {
+				// expand after
+				var after = this.after(index);
+
+				this.expandToLeft(after, delta);
+			}
+		}
+
+	};
+
+	exports.contractToLeft = require(&#x27;./contract-to-left&#x27;);
+	exports.contractToRight = require(&#x27;./contract-to-right&#x27;);
+	exports.expandToRight = require(&#x27;./expand-to-right&#x27;);
+	exports.expandToLeft = require(&#x27;./expand-to-left&#x27;);
+
 });
 
     </pre>

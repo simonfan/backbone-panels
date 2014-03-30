@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/item-view/index.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -82,76 +82,67 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/item-view/index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//     backbone-panels
-//     (c) simonfan
-//     backbone-panels is licensed under the MIT terms.
-
-/**
- * AMD module.
- *
- * @module backbone-panels
- */
-
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var collectionDock = require(&#x27;collection-dock&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;),
-		_ = require(&#x27;lodash&#x27;);
+	var modelDock = require(&#x27;model-dock&#x27;),
+		resizable = require(&#x27;backbone-ui-resizable&#x27;),
+		collectionDock = require(&#x27;collection-dock&#x27;),
+		backbone = require(&#x27;lowercase-backbone&#x27;);
 
-	// internal
-	var itemView = require(&#x27;./__backbone-panels/item-view/index&#x27;);
+	var itemView = collectionDock.prototype.itemView;
 
-	var panels = module.exports = collectionDock.extend({
 
-		initialize: function initialize(options) {
-			backbone.view.prototype.initialize.apply(this, arguments);
+	var panel = module.exports = itemView
+		.extend(modelDock.prototype)
+		.extend(resizable.prototype)
+		.extend({
 
-			// collection-dock
-			this.initializeCollectionDock.apply(this, arguments);
+			html: &#x27;&lt;div class=&quot;panel&quot;&gt;&lt;/div&gt;&#x27;,
 
-			// this
-			this.initializePanels.apply(this, arguments);
-		},
+			initialize: function initialize(options) {
+				backbone.view.prototype.initialize.apply(this, arguments);
 
-		itemView: itemView,
+				this.initializeItemView.apply(this, arguments);
+				this.initializeModelDock.apply(this, arguments);
+				this.initializeResizableDock.apply(this, arguments);
 
-		/**
-		 * Initialization logic for panels view.
-		 *
-		 *
-		 * @method initialPanels
-		 * @param options {Object}
-		 */
-		initializePanels: function initializePanels(options) {
+				this.initializePanel.apply(this, arguments);
+			},
 
-			// bind methods
-			_.bindAll(this, &#x27;handleResize&#x27;);
+			/**
+			 * Initialization logic for a single panel view.
+			 *
+			 * @method initializePanel
+			 * @param options
+			 */
+			initializePanel: function initializePanel(options) {
+				// collectionView is a property made available by initializeItemView.
 
-			// set styles for the panel element.
-			this.$el.css(this.css);
+				// listen to resize events on this
+				this.on(&#x27;resize&#x27;, this.collectionView.handleResize);
 
-			this.arrange();
+				this.$el.css(this.css);
 
-		},
+			},
 
-		/**
-		 * Css to be set on the main $el.
-		 *
-		 * @property css
-		 *
-		 */
-		css: {
-			position: &#x27;relative&#x27;
-		},
-	});
+			css: {
+				position: &#x27;absolute&#x27;,
+			},
 
-	panels.proto(require(&#x27;./__backbone-panels/helpers&#x27;));
-	panels.proto(require(&#x27;./__backbone-panels/event-handlers/index&#x27;));
+			resizableOptions: {
+				// only horizontal handles.
+				handles: &#x27;w,e&#x27;
+			},
+		});
+
+	panel.proto(require(&#x27;./move&#x27;));
+	panel.proto(require(&#x27;./contract&#x27;));
+	panel.proto(require(&#x27;./expand&#x27;));
 });
 
     </pre>

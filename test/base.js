@@ -35,15 +35,15 @@
 			panels.attach(collection);
 
 			// add a panel
-			panels.add({
-				width: 100,
-				height: 200
-			})
+			collection.add([
+				{ width: 100, height: 100 },
+				{ width: 300, height: 300, 'min-width': 200 },
+				{ width: 120, height: 120, 'min-width': 70, 'max-width': 200 },
+				{ width: 240, height: 240, 'min-width': 122 },
+				{ width: 190, height: 190, 'min-width': 170 }
+			]);
 
-			panels.add({
-				width: 300,
-				height: 200
-			});
+			panels.arrange();
 		});
 	});
 });

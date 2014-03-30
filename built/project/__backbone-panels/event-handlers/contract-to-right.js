@@ -1,0 +1,1 @@
+define(["require","exports","module","lodash"],function(e,t,n){var r=e("lodash");n.exports=function(t,n){while(t.length>0&&n>0){var r=t.shift(),i=r.contractToRight(n);r.moveToRight(i),n=i}}});

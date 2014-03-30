@@ -4,11 +4,39 @@
         "version": "0.0.0"
     },
     "files": {
-        "src/index.js": {
-            "name": "src/index.js",
+        "src/__backbone-panels/event-handlers/contract-to-right.js": {
+            "name": "src/__backbone-panels/event-handlers/contract-to-right.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/event-handlers/index.js": {
+            "name": "src/__backbone-panels/event-handlers/index.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/item-view/index.js": {
+            "name": "src/__backbone-panels/item-view/index.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/helpers.js": {
+            "name": "src/__backbone-panels/helpers.js",
             "modules": {
                 "backbone-panels": 1
             },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/index.js": {
+            "name": "src/index.js",
+            "modules": {},
             "classes": {},
             "fors": {},
             "namespaces": {}
@@ -22,12 +50,215 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/index.js",
+            "file": "src/__backbone-panels/helpers.js",
             "line": 5,
             "description": "AMD module."
         }
     },
     "classes": {},
-    "classitems": [],
+    "classitems": [
+        {
+            "file": "src/__backbone-panels/event-handlers/contract-to-right.js",
+            "line": 7,
+            "description": "This method is called whenever a panel\nis on expansion towards the Right side,\nso that the panels right to it have to contract",
+            "itemtype": "method",
+            "name": "contractToRight",
+            "params": [
+                {
+                    "name": "panels",
+                    "description": "",
+                    "type": "Array of panelViews"
+                },
+                {
+                    "name": "delta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src/__backbone-panels/event-handlers/index.js",
+            "line": 6,
+            "description": "Resize event handler.\nInvokes all other steps.",
+            "itemtype": "method",
+            "name": "handleResize",
+            "class": ""
+        },
+        {
+            "file": "src/__backbone-panels/item-view/index.js",
+            "line": 29,
+            "description": "Initialization logic for a single panel view.",
+            "itemtype": "method",
+            "name": "initializePanel",
+            "params": [
+                {
+                    "name": "options",
+                    "description": ""
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 14,
+            "description": "Retrieve all models before the given one.",
+            "itemtype": "method",
+            "name": "before",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Backbone Model|Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 24,
+            "description": "Retrieve all models after the given one.",
+            "itemtype": "method",
+            "name": "after",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Backbone Model|Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 34,
+            "itemtype": "method",
+            "name": "reduceBefore",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Backbone Model|Number"
+                },
+                {
+                    "name": "iter",
+                    "description": "",
+                    "type": "Function"
+                },
+                {
+                    "name": "memo",
+                    "description": "",
+                    "type": "*"
+                },
+                {
+                    "name": "context",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 47,
+            "itemtype": "method",
+            "name": "reduceAfter",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Backbone Model|Number"
+                },
+                {
+                    "name": "iter",
+                    "description": "",
+                    "type": "Function"
+                },
+                {
+                    "name": "memo",
+                    "description": "",
+                    "type": "*"
+                },
+                {
+                    "name": "context",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 60,
+            "description": "Returns the left position at which a given\npanel should be placed.",
+            "itemtype": "method",
+            "name": "calculateLeftPos",
+            "params": [
+                {
+                    "name": "panel",
+                    "description": "",
+                    "type": "Bakcbone Model"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 76,
+            "description": "Set the place for the panel.",
+            "itemtype": "method",
+            "name": "postitionPanel",
+            "params": [
+                {
+                    "name": "panel",
+                    "description": "",
+                    "type": "Backbone Model"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/helpers.js",
+            "line": 91,
+            "description": "Puts all panels in their places\nby calculating left positions on them all.",
+            "itemtype": "method",
+            "name": "arrange",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 35,
+            "description": "Initialization logic for panels view.",
+            "itemtype": "method",
+            "name": "initialPanels",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 54,
+            "description": "Css to be set on the main $el.",
+            "itemtype": "property",
+            "name": "css",
+            "class": "",
+            "module": "backbone-panels"
+        }
+    ],
     "warnings": []
 }

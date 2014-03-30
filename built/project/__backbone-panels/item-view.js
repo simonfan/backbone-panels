@@ -1,1 +1,0 @@
-define(["require","exports","module","backbone-ui-resizable"],function(e,t,n){var r=e("backbone-ui-resizable");console.log("!!!!!!!!111"),console.log(r);var i=n.exports=r.extend({initialize:function(t){console.log(t),r.prototype.initialize.apply(this,arguments),console.log(this.model)}})});

@@ -7,9 +7,9 @@
     "backbone": "~1.1.2",
     "jquery": "~2.1.0",
     "jquery-ui": "~1.10.4",
-    "backbone-ui-resizable": "0.2.2",
-    "collection-dock": "0.4.3",
-    "model-dock": "0.2.5"
+    "backbone-ui-resizable": "0.2.3",
+    "collection-dock": "0.4.4",
+    "model-dock": "0.3.6"
   },
   "devDependencies": {
     "requirejs": "*",
@@ -20,10 +20,9 @@
   },
   "resolutions": {
     "jquery": "~2.1.0",
-    "model-dock": "0.3.5",
+    "model-dock": "0.3.6",
     "subject": "~0.4.1",
-    "collection-dock": "0.4.3",
-    "backbone-ui-resizable": "0.2.2",
+    "collection-dock": "0.4.4",
     "jquery.filler": "0.2.3"
   }
 }

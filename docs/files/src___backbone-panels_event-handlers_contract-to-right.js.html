@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/event-handlers/contract-to-right.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -82,76 +82,42 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/event-handlers/contract-to-right.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//     backbone-panels
-//     (c) simonfan
-//     backbone-panels is licensed under the MIT terms.
-
-/**
- * AMD module.
- *
- * @module backbone-panels
- */
-
 define(function (require, exports, module) {
-	&#x27;use strict&#x27;;
 
-	var collectionDock = require(&#x27;collection-dock&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;),
-		_ = require(&#x27;lodash&#x27;);
 
-	// internal
-	var itemView = require(&#x27;./__backbone-panels/item-view/index&#x27;);
+	var _ = require(&#x27;lodash&#x27;);
 
-	var panels = module.exports = collectionDock.extend({
 
-		initialize: function initialize(options) {
-			backbone.view.prototype.initialize.apply(this, arguments);
+	/**
+	 * This method is called whenever a panel
+	 * is on expansion towards the Right side,
+	 * so that the panels right to it have to contract
+	 *
+	 *
+	 * @method contractToRight
+	 * @param panels {Array of panelViews}
+	 * @param delta {+Number}
+	 */
+	module.exports = function contractToRight(panels, delta) {
 
-			// collection-dock
-			this.initializeCollectionDock.apply(this, arguments);
+		while (panels.length &gt; 0 &amp;&amp; delta &gt; 0) {
 
-			// this
-			this.initializePanels.apply(this, arguments);
-		},
+			// get the first panel from the panels to the right
+			var view = panels.shift();
 
-		itemView: itemView,
+			var remainder = view.contractToRight(delta);
 
-		/**
-		 * Initialization logic for panels view.
-		 *
-		 *
-		 * @method initialPanels
-		 * @param options {Object}
-		 */
-		initializePanels: function initializePanels(options) {
+			view.moveToRight(remainder);
 
-			// bind methods
-			_.bindAll(this, &#x27;handleResize&#x27;);
+			delta = remainder;
+		}
 
-			// set styles for the panel element.
-			this.$el.css(this.css);
+	};
 
-			this.arrange();
-
-		},
-
-		/**
-		 * Css to be set on the main $el.
-		 *
-		 * @property css
-		 *
-		 */
-		css: {
-			position: &#x27;relative&#x27;
-		},
-	});
-
-	panels.proto(require(&#x27;./__backbone-panels/helpers&#x27;));
-	panels.proto(require(&#x27;./__backbone-panels/event-handlers/index&#x27;));
 });
 
     </pre>

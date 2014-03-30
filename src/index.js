@@ -12,61 +12,56 @@ define(function (require, exports, module) {
 	'use strict';
 
 	var collectionDock = require('collection-dock'),
-		backbone = require('lowercase-backbone');
+		backbone = require('lowercase-backbone'),
+		_ = require('lodash');
 
 	// internal
-	var itemView = require('./__backbone-panels/item-view'),
-		panelCollection = require('./__backbone-panels/collection');
-
-
+	var itemView = require('./__backbone-panels/item-view/index');
 
 	var panels = module.exports = collectionDock.extend({
 
 		initialize: function initialize(options) {
-			backbone.prototype.initialize.apply(this, arguments);
+			backbone.view.prototype.initialize.apply(this, arguments);
 
 			// collection-dock
 			this.initializeCollectionDock.apply(this, arguments);
 
 			// this
-			this.initialPanels.apply(this, arguments);
+			this.initializePanels.apply(this, arguments);
 		},
 
+		itemView: itemView,
 
-		initializePanels: function initialPanels(options) {
+		/**
+		 * Initialization logic for panels view.
+		 *
+		 *
+		 * @method initialPanels
+		 * @param options {Object}
+		 */
+		initializePanels: function initializePanels(options) {
+
+			// bind methods
+			_.bindAll(this, 'handleResize');
 
 			// set styles for the panel element.
 			this.$el.css(this.css);
 
-			// get initial set of panels
-			var initialPanels = options.initialPanels || this.initialPanels || [];
-
-			// attach a panelCollection
-			this.attach(panelCollection(initialPanels));
+			this.arrange();
 
 		},
 
-		itemHtml: '<div class="panel"></div>',
-
-		// NOT OVERRIDABLE.
-		itemView: function (options) {
-
-			options.panels = this;
-
-			return itemView(options);
-
-		},
-
+		/**
+		 * Css to be set on the main $el.
+		 *
+		 * @property css
+		 *
+		 */
 		css: {
 			position: 'relative'
 		},
-
-		panel: function getPanelView(index) {
-
-			var model = this.collection.at(index),
-				view = this.itemViewInstance(model);
-
-			return view;
-		},
 	});
+
+	panels.proto(require('./__backbone-panels/helpers'));
+	panels.proto(require('./__backbone-panels/event-handlers/index'));
 });
