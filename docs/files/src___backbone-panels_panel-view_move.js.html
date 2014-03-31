@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/item-view/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel-view/move.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -47,6 +47,8 @@
             
                 <li><a href="../modules/backbone-panels.html">backbone-panels</a></li>
             
+                <li><a href="../modules/positioners.html">positioners</a></li>
+            
             </ul>
         </div>
     </div>
@@ -82,67 +84,71 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/item-view/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/move.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var modelDock = require(&#x27;model-dock&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;),
-		collectionDock = require(&#x27;collection-dock&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;);
 
-	var itemView = collectionDock.prototype.itemView;
+	var helpers = require(&#x27;./helpers&#x27;);
 
+	/**
+	 * Moves the whole view to the left.
+	 *   &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	 *   --------
+	 *   |      |
+	 *   |      |
+	 *   |      |
+	 *   --------
+	 *
+	 * @method moveToLeft
+	 * @param attemptedDelta {+Number}
+	 */
+	exports.moveToLeft = function moveToLeft(attemptedDelta) {
 
-	var panel = module.exports = itemView
-		.extend(modelDock.prototype)
-		.extend(resizable.prototype)
-		.extend({
+		var model = this.model,
+			currentLeft = model.get(&#x27;left&#x27;);
 
-			html: &#x27;&lt;div class=&quot;panel&quot;&gt;&lt;/div&gt;&#x27;,
-
-			initialize: function initialize(options) {
-				backbone.view.prototype.initialize.apply(this, arguments);
-
-				this.initializeItemView.apply(this, arguments);
-				this.initializeModelDock.apply(this, arguments);
-				this.initializeResizableDock.apply(this, arguments);
-
-				this.initializePanel.apply(this, arguments);
-			},
-
-			/**
-			 * Initialization logic for a single panel view.
-			 *
-			 * @method initializePanel
-			 * @param options
-			 */
-			initializePanel: function initializePanel(options) {
-				// collectionView is a property made available by initializeItemView.
-
-				// listen to resize events on this
-				this.on(&#x27;resize&#x27;, this.collectionView.handleResize);
-
-				this.$el.css(this.css);
-
-			},
-
-			css: {
-				position: &#x27;absolute&#x27;,
-			},
-
-			resizableOptions: {
-				// only horizontal handles.
-				handles: &#x27;w,e&#x27;
-			},
+		var delta = helpers.maxSubtraction({
+			subtraction: attemptedDelta,
+			currValue: currentLeft,
+			minValue: model.get(&#x27;min-left&#x27;)
 		});
 
-	panel.proto(require(&#x27;./move&#x27;));
-	panel.proto(require(&#x27;./contract&#x27;));
-	panel.proto(require(&#x27;./expand&#x27;));
+		model.set(&#x27;left&#x27;, currentLeft - delta);
+
+		return attemptedDelta - delta;
+	};
+
+	/**
+	 * Moves the whole view to the right.
+	 *   &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 *   --------
+	 *   |      |
+	 *   |      |
+	 *   |      |
+	 *   --------
+	 *
+	 * @method moveToRight
+	 * @param attemptedDelta {+Number}
+	 */
+	exports.moveToRight = function moveToRight(attemptedDelta) {
+
+		var model = this.model,
+			currentLeft = model.get(&#x27;left&#x27;);
+
+		var delta = helpers.maxAddition({
+			addition: attemptedDelta,
+			currValue: currentLeft,
+			maxValue: model.get(&#x27;max-left&#x27;)
+		});
+
+		model.set(&#x27;left&#x27;, currentLeft + delta);
+
+		return attemptedDelta - delta;
+	};
 });
 
     </pre>

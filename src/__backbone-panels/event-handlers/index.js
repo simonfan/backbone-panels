@@ -1,3 +1,9 @@
+/**
+ * Logic for dealing with panel resizing
+ *
+ * @module backbone-panels
+ * @submolude event-handlers
+ */
 define(function (require, exports, module) {
 
 
@@ -9,11 +15,11 @@ define(function (require, exports, module) {
 	 *
 	 * @method handleResize
 	 */
-	exports.handleResize = function handleResize(model, movement) {
+	exports.handleResize = function handleResize(panel, movement) {
 		// retrieve movement data.
 		movement = movement.data();
 
-		var index = this.collection.indexOf(model),
+		var index = panel.index,
 			delta = Math.abs(movement.delta);
 
 		if (movement.action === 'expand') {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>backbone-panels - backbone-panels</title>
+    <title>src/__backbone-panels/panel-view/helpers.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,54 +84,96 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>backbone-panels Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/helpers.js</h1>
 
-    
-
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src___backbone-panels_event-handlers_index.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;event-handlers&#x2F;index.js:1</code></a>
-        </div>
-    
-
-    
-</div>
+<div class="file">
+    <pre class="code prettyprint linenums">
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
 
+	/**
+	 * Calculates the max value that may be added to the
+	 * current value given an attempted addition value
+	 * and a max value.
+	 *
+	 * @method maxAddition
+	 * @param data
+	 *     @param addition {Number}
+	 *     @param currValue {Number}
+	 *     @param maxValue {Number}
+	 */
+	exports.maxAddition = function maxAddition(data) {
 
-<div class="box intro">
-    <p>Logic for dealing with panel resizing</p>
+		var addition = data.addition,
+			currValue = data.currValue,
+			maxValue = data.maxValue;
 
-</div>
+		if (_.isNumber(maxValue)) {
+
+				// check what would be the result if
+				// attempt was fully applied
+			var attempt = currValue + addition;
+
+			// maximum set
+			if (attempt &lt;= maxValue) {
+				// accepted
+				return addition;
+			} else {
+				// not accepted
+				// return the maximum addition
+				return maxValue - currValue;
+			}
+
+		} else {
+			// no maximum, addition accepted
+			return addition;
+		}
+	};
+
+	/**
+	 * Calculates the maximum value that may be
+	 * subtracted from a current value given an attemped
+	 * subtraction value and a minimum value.
+	 *
+	 * @method maxSubtraction
+	 * @param data
+	 *     @param subtraction {Number}
+	 *     @param currValue {Number}
+	 *     @param minValue {Number}
+	 */
+	exports.maxSubtraction = function maxSubtraction(data) {
+
+		var subtraction = data.subtraction,
+			currValue = data.currValue,
+			minValue = data.minValue;
 
 
+		if (_.isNumber(minValue)) {
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+				// check what would be the result if
+				// attempt was fully applied
+			var attempt = currValue - subtraction;
 
-    <div class="yui3-u-1-2">
-        
-            <p>This module is a rollup of the following modules:</p>
+			// minimum set
+			if (attempt &gt;= minValue) {
+				// accepted
+				return subtraction;
+			} else {
+				// not accepted
+				// return the maximum subtraction
+				return currValue - minValue;
+			}
 
-            <ul class="module-submodules">
-            
-                <li class="module-submodule">
-                    <a href="../modules/positioners.html">
-                        positioners
-                    </a>
+		} else {
+			// no minimum, subtraction accepted
+			return subtraction;
+		}
+	};
 
-                    <div class="module-submodule-description">
-                        Logic for positioning the panels at the right starting place.
-                    </div>
-                </li>
-            
-            </ul>
-        
-    </div>
+});
+
+    </pre>
 </div>
 
                     </div>

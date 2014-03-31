@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>backbone-panels - backbone-panels</title>
+    <title>src/__backbone-panels/iterators.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,54 +84,111 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>backbone-panels Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__backbone-panels/iterators.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Logic for iterating over panel views.
+ *
+ *
+ * @module backbone-panels
+ * @submolude iterators
+ */
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src___backbone-panels_event-handlers_index.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;event-handlers&#x2F;index.js:1</code></a>
-        </div>
-    
+	var _ = require(&#x27;lodash&#x27;);
 
-    
-</div>
+	// Underscore methods that we want to implement on the Collection.
+	// 90% of the core usefulness of Backbone Collections is actually implemented
+	// right here:
+	var _methods = [&#x27;forEach&#x27;, &#x27;each&#x27;, &#x27;map&#x27;, &#x27;collect&#x27;, &#x27;reduce&#x27;, &#x27;foldl&#x27;,
+	&#x27;inject&#x27;, &#x27;reduceRight&#x27;, &#x27;foldr&#x27;, &#x27;find&#x27;, &#x27;detect&#x27;, &#x27;filter&#x27;, &#x27;select&#x27;,
+	&#x27;reject&#x27;, &#x27;every&#x27;, &#x27;all&#x27;, &#x27;some&#x27;, &#x27;any&#x27;, &#x27;include&#x27;, &#x27;contains&#x27;, &#x27;invoke&#x27;,
+	&#x27;max&#x27;, &#x27;min&#x27;, &#x27;toArray&#x27;, &#x27;size&#x27;, &#x27;first&#x27;, &#x27;head&#x27;, &#x27;take&#x27;, &#x27;initial&#x27;, &#x27;rest&#x27;,
+	&#x27;tail&#x27;, &#x27;drop&#x27;, &#x27;last&#x27;, &#x27;without&#x27;, &#x27;difference&#x27;, &#x27;indexOf&#x27;, &#x27;shuffle&#x27;,
+	&#x27;lastIndexOf&#x27;, &#x27;isEmpty&#x27;, &#x27;chain&#x27;, &#x27;sample&#x27;, &#x27;partition&#x27;];
+
+	_.each(_methods, function (method) {
+		exports[method] = function () {
+
+			var args = Array.prototype.slice.call(arguments);
+
+			// add panelViews
+			args.unshift(this.panelViews);
+
+			return _[method].apply(_, args);
+		};
+	});
 
 
 
-<div class="box intro">
-    <p>Logic for dealing with panel resizing</p>
 
-</div>
+	/**
+	 * Retrieve all models before the given one.
+	 *
+	 * @method before
+	 * @param index {Backbone Model|Number}
+	 */
+	exports.before = function before(index) {
+		return this.first(index);
+	};
 
+	/**
+	 * Retrieve all models after the given one.
+	 *
+	 * @method after
+	 * @param index {Backbone Model|Number}
+	 */
+	exports.after = function after(index) {
+		return this.rest(index + 1);
+	};
 
+	/**
+	 *
+	 * @method reduceBefore
+	 * @param index {Backbone Model|Number}
+	 * @param iter {Function}
+	 * @param memo {*}
+	 * @param [context] {Object}
+	 */
+	exports.reduceBefore = function reduceBefore(index, iter, memo, context) {
+		var before = this.before(index);
+		return _.reduce(before, iter, memo, context);
+	};
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+	/**
+	 *
+	 * @method reduceAfter
+	 * @param index {Backbone Model|Number}
+	 * @param iter {Function}
+	 * @param memo {*}
+	 * @param [context] {Object}
+	 */
+	exports.reduceAfter = function reduceAfter(index, iter, memo, context) {
+		var after = this.after(index);
+		return _.reduce(after, iter, memo, context);
+	};
 
-    <div class="yui3-u-1-2">
-        
-            <p>This module is a rollup of the following modules:</p>
+	/**
+	 * Returns the left position at which a given
+	 * panel should be placed.
+	 *
+	 * @method calculateLeftPos
+	 * @param panel {Bakcbone Model}
+	 */
+	exports.calculateLeftPos = function calculateLeftPos(panel) {
 
-            <ul class="module-submodules">
-            
-                <li class="module-submodule">
-                    <a href="../modules/positioners.html">
-                        positioners
-                    </a>
+		var index = panel.index;
 
-                    <div class="module-submodule-description">
-                        Logic for positioning the panels at the right starting place.
-                    </div>
-                </li>
-            
-            </ul>
-        
-    </div>
+		return this.reduceBefore(index, function(distance, panel) {
+			return distance + panel.model.get(&#x27;width&#x27;);
+		}, 0);
+	};
+});
+
+    </pre>
 </div>
 
                     </div>

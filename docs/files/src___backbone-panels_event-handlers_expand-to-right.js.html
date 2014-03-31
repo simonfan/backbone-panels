@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>backbone-panels - backbone-panels</title>
+    <title>src/__backbone-panels/event-handlers/expand-to-right.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,54 +84,40 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>backbone-panels Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__backbone-panels/event-handlers/expand-to-right.js</h1>
 
-    
-
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src___backbone-panels_event-handlers_index.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;event-handlers&#x2F;index.js:1</code></a>
-        </div>
-    
-
-    
-</div>
+<div class="file">
+    <pre class="code prettyprint linenums">
+define(function (require, exports, module) {
 
 
+	var _ = require(&#x27;lodash&#x27;);
 
-<div class="box intro">
-    <p>Logic for dealing with panel resizing</p>
+	/**
+	 * Invoked whenever the panels to the left of a panel
+	 * have to be contracted towards the right.
+	 * It is a response to left-contraction on a panel.
+	 *
+	 * @method contractToLeft
+	 * @param views {Array of panel views}
+	 * @param delta {Number}
+	 */
+	module.exports = function expandToRight(views, delta) {
 
-</div>
+		while (views.length &gt; 0 &amp;&amp; delta !== 0) {
 
+			var view = views.pop(),
+				remainder = view.expandToRight(delta);
 
+			view.moveToRight(remainder);
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+			delta = remainder;
+		}
 
-    <div class="yui3-u-1-2">
-        
-            <p>This module is a rollup of the following modules:</p>
+	};
+});
 
-            <ul class="module-submodules">
-            
-                <li class="module-submodule">
-                    <a href="../modules/positioners.html">
-                        positioners
-                    </a>
-
-                    <div class="module-submodule-description">
-                        Logic for positioning the panels at the right starting place.
-                    </div>
-                </li>
-            
-            </ul>
-        
-    </div>
+    </pre>
 </div>
 
                     </div>

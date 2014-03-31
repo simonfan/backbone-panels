@@ -1,27 +1,23 @@
+/**
+ * The view for a single panel.
+ *
+ * @module backbone-panels
+ * @submolude panel-view
+ */
 define(function (require, exports, module) {
 	'use strict';
 
 	var modelDock = require('model-dock'),
 		resizable = require('backbone-ui-resizable'),
-		collectionDock = require('collection-dock'),
 		backbone = require('lowercase-backbone');
 
-	var itemView = collectionDock.prototype.itemView;
-
-
-	var panel = module.exports = itemView
+	var panel = module.exports = backbone.view
 		.extend(modelDock.prototype)
 		.extend(resizable.prototype)
 		.extend({
 
-			html: '<div class="panel"></div>',
-
 			initialize: function initialize(options) {
 				backbone.view.prototype.initialize.apply(this, arguments);
-
-				this.initializeItemView.apply(this, arguments);
-
-				this.render();
 
 				this.initializeModelDock.apply(this, arguments);
 				this.initializeResizableDock.apply(this, arguments);
@@ -36,10 +32,14 @@ define(function (require, exports, module) {
 			 * @param options
 			 */
 			initializePanel: function initializePanel(options) {
-				// collectionView is a property made available by initializeItemView.
+
+				this.index = options.index;
+
+				// panelsView, the main view behind this group of panels.
+				this.panelsView = options.panelsView;
 
 				// listen to resize events on this
-				this.on('resize', this.collectionView.handleResize);
+				this.on('resize', this.panelsView.handleResize);
 
 				this.$el.css(this.css);
 

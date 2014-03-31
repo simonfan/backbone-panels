@@ -47,6 +47,8 @@
             
                 <li><a href="../modules/backbone-panels.html">backbone-panels</a></li>
             
+                <li><a href="../modules/positioners.html">positioners</a></li>
+            
             </ul>
         </div>
     </div>
@@ -91,66 +93,118 @@
 //     backbone-panels is licensed under the MIT terms.
 
 /**
- * AMD module.
+ * Provides a responsive panel system.
  *
  * @module backbone-panels
  */
-
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var collectionDock = require(&#x27;collection-dock&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;),
+	var backbone = require(&#x27;lowercase-backbone&#x27;),
 		_ = require(&#x27;lodash&#x27;);
 
 	// internal
-	var itemView = require(&#x27;./__backbone-panels/item-view/index&#x27;);
+	var panelView = require(&#x27;./__backbone-panels/panel-view/index&#x27;);
 
-	var panels = module.exports = collectionDock.extend({
+	var panels = module.exports = backbone.view.extend({
 
 		initialize: function initialize(options) {
 			backbone.view.prototype.initialize.apply(this, arguments);
-
-			// collection-dock
-			this.initializeCollectionDock.apply(this, arguments);
 
 			// this
 			this.initializePanels.apply(this, arguments);
 		},
 
-		itemView: itemView,
+		/**
+		 * The constructor method for the single panel view.
+		 *
+		 * @property panelView
+		 * @type Function
+		 */
+		panelView: panelView,
 
 		/**
 		 * Initialization logic for panels view.
-		 *
 		 *
 		 * @method initialPanels
 		 * @param options {Object}
 		 */
 		initializePanels: function initializePanels(options) {
 
-			// bind methods
-			_.bindAll(this, &#x27;handleResize&#x27;);
+			// [1] bind event handling methods
+			_.bindAll(this,
+				&#x27;handleResize&#x27;,
+				&#x27;contractToLeft&#x27;,
+				&#x27;contractToRight&#x27;,
+				&#x27;expandToLeft&#x27;,
+				&#x27;expandToRight&#x27;);
 
-			// set styles for the panel element.
+			// [2] set styles for the panel element.
 			this.$el.css(this.css);
 
+			// [3] initialize single panel-views
+			/**
+			 * Array where the single panel views are stored
+			 * in the order they appear (left-&gt;right) on the view.
+			 *
+			 * @property panelViews
+			 * @type Array
+			 */
+			this.panelViews = [];
+			_.each(this.$el.children(), function (el, index) {
+
+				var $el = $(el),
+					data = $el.data();
+
+				data = this.parsePanelData(data);
+
+				var view = this.panelView({
+					index: index,
+					panelsView: this,
+					el: $el,
+					model: backbone.model(data)
+				});
+
+				this.panelViews.push(view);
+			}, this);
+
+			// [4] arrange the views.
 			this.arrange();
 
+		},
+
+		/**
+		 * Parse the results from this.$el.data()
+		 * and return the data that should be set on the single
+		 * panelView&#x27;s model.
+		 *
+		 * @method parsePanelData
+		 * @param data {Object}
+		 */
+		parsePanelData: function parsePanelData(data) {
+
+			data[&#x27;min-width&#x27;] = data.minWidth;
+			data[&#x27;max-width&#x27;] = data.maxWidth;
+
+			data[&#x27;min-left&#x27;] = data.minLeft;
+			data[&#x27;max-left&#x27;] = data.maxLeft;
+
+			return data;
 		},
 
 		/**
 		 * Css to be set on the main $el.
 		 *
 		 * @property css
-		 *
+		 * @type Object
 		 */
 		css: {
 			position: &#x27;relative&#x27;
 		},
 	});
 
-	panels.proto(require(&#x27;./__backbone-panels/helpers&#x27;));
+	panels.proto(require(&#x27;./__backbone-panels/iterators&#x27;));
+	panels.proto(require(&#x27;./__backbone-panels/positioners&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/event-handlers/index&#x27;));
 });
 

@@ -4,6 +4,13 @@
         "version": "0.0.0"
     },
     "files": {
+        "src/__backbone-panels/event-handlers/contract-to-left.js": {
+            "name": "src/__backbone-panels/event-handlers/contract-to-left.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/__backbone-panels/event-handlers/contract-to-right.js": {
             "name": "src/__backbone-panels/event-handlers/contract-to-right.js",
             "modules": {},
@@ -11,24 +18,75 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/__backbone-panels/event-handlers/expand-to-left.js": {
+            "name": "src/__backbone-panels/event-handlers/expand-to-left.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/event-handlers/expand-to-right.js": {
+            "name": "src/__backbone-panels/event-handlers/expand-to-right.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/__backbone-panels/event-handlers/index.js": {
             "name": "src/__backbone-panels/event-handlers/index.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src/__backbone-panels/item-view/index.js": {
-            "name": "src/__backbone-panels/item-view/index.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src/__backbone-panels/helpers.js": {
-            "name": "src/__backbone-panels/helpers.js",
             "modules": {
                 "backbone-panels": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-view/contract.js": {
+            "name": "src/__backbone-panels/panel-view/contract.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-view/expand.js": {
+            "name": "src/__backbone-panels/panel-view/expand.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-view/helpers.js": {
+            "name": "src/__backbone-panels/panel-view/helpers.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-view/index.js": {
+            "name": "src/__backbone-panels/panel-view/index.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-view/move.js": {
+            "name": "src/__backbone-panels/panel-view/move.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/iterators.js": {
+            "name": "src/__backbone-panels/iterators.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/positioners.js": {
+            "name": "src/__backbone-panels/positioners.js",
+            "modules": {
+                "positioners": 1
             },
             "classes": {},
             "fors": {},
@@ -45,18 +103,54 @@
     "modules": {
         "backbone-panels": {
             "name": "backbone-panels",
-            "submodules": {},
+            "submodules": {
+                "positioners": 1
+            },
             "classes": {},
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 5,
-            "description": "AMD module."
+            "file": "src/__backbone-panels/event-handlers/index.js",
+            "line": 1,
+            "description": "Logic for dealing with panel resizing",
+            "submolude": "event-handlers"
+        },
+        "positioners": {
+            "name": "positioners",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "backbone-panels",
+            "namespace": "",
+            "file": "src/__backbone-panels/positioners.js",
+            "line": 1,
+            "description": "Logic for positioning the panels at the right starting place."
         }
     },
     "classes": {},
     "classitems": [
+        {
+            "file": "src/__backbone-panels/event-handlers/contract-to-left.js",
+            "line": 6,
+            "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the left.\nIt is a response to left-expansion on a panel.",
+            "itemtype": "method",
+            "name": "contractToLeft",
+            "params": [
+                {
+                    "name": "views",
+                    "description": "",
+                    "type": "Array of panel views"
+                },
+                {
+                    "name": "delta",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
         {
             "file": "src/__backbone-panels/event-handlers/contract-to-right.js",
             "line": 7,
@@ -78,16 +172,181 @@
             "class": ""
         },
         {
-            "file": "src/__backbone-panels/event-handlers/index.js",
+            "file": "src/__backbone-panels/event-handlers/expand-to-left.js",
             "line": 6,
-            "description": "Resize event handler.\nInvokes all other steps.",
+            "description": "Invoked whenever the panels to the right of a panel\nhave to be expanded towards the left.\nIt is a response to right-contraction on a panel.",
             "itemtype": "method",
-            "name": "handleResize",
+            "name": "expandToLeft",
+            "params": [
+                {
+                    "name": "views",
+                    "description": "",
+                    "type": "Array of panel views"
+                },
+                {
+                    "name": "delta",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
             "class": ""
         },
         {
-            "file": "src/__backbone-panels/item-view/index.js",
-            "line": 29,
+            "file": "src/__backbone-panels/event-handlers/expand-to-right.js",
+            "line": 6,
+            "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the right.\nIt is a response to left-contraction on a panel.",
+            "itemtype": "method",
+            "name": "contractToLeft",
+            "params": [
+                {
+                    "name": "views",
+                    "description": "",
+                    "type": "Array of panel views"
+                },
+                {
+                    "name": "delta",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src/__backbone-panels/event-handlers/index.js",
+            "line": 12,
+            "description": "Resize event handler.\nInvokes all other steps.",
+            "itemtype": "method",
+            "name": "handleResize",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/contract.js",
+            "line": 7,
+            "description": "Contracts the view by moving the left handle\ntowards the right direction while maintaining\nthe right handle at a fixed position.\n  --------\n->|      |\n->|      |\n->|      |\n  --------",
+            "itemtype": "method",
+            "name": "contractToRight",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/contract.js",
+            "line": 39,
+            "description": "Contracts the view by moving the right handle\ntowards the left direction while maintaing the\nleft handle at a fixed position.\n  --------\n  |      |<-\n  |      |<-\n  |      |<-\n  --------",
+            "itemtype": "method",
+            "name": "contractToLeft",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/expand.js",
+            "line": 6,
+            "description": "Expands the view by moving the left handle\ntowards the left direction while maintaing\nthe right handle at a fixed position.\n  --------\n  |<-    |\n  |<-    |\n  |<-    |\n  --------",
+            "itemtype": "method",
+            "name": "expandToLeft",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/expand.js",
+            "line": 38,
+            "description": "Expands the view by moving the right handle\ntowards the right direction while maintaing\nthe left handle at a fixed position.\n  --------\n  |    ->|\n  |    ->|\n  |    ->|\n  --------",
+            "itemtype": "method",
+            "name": "expandToRight",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/helpers.js",
+            "line": 5,
+            "description": "Calculates the max value that may be added to the\ncurrent value given an attempted addition value\nand a max value.",
+            "itemtype": "method",
+            "name": "maxAddition",
+            "params": [
+                {
+                    "name": "data",
+                    "description": ""
+                },
+                {
+                    "name": "addition",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "currValue",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "maxValue",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/helpers.js",
+            "line": 44,
+            "description": "Calculates the maximum value that may be\nsubtracted from a current value given an attemped\nsubtraction value and a minimum value.",
+            "itemtype": "method",
+            "name": "maxSubtraction",
+            "params": [
+                {
+                    "name": "data",
+                    "description": ""
+                },
+                {
+                    "name": "subtraction",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "currValue",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "minValue",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/index.js",
+            "line": 28,
             "description": "Initialization logic for a single panel view.",
             "itemtype": "method",
             "name": "initializePanel",
@@ -97,11 +356,44 @@
                     "description": ""
                 }
             ],
-            "class": ""
+            "class": "",
+            "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 14,
+            "file": "src/__backbone-panels/panel-view/move.js",
+            "line": 7,
+            "description": "Moves the whole view to the left.\n  <<<<<<<<\n  --------\n  |      |\n  |      |\n  |      |\n  --------",
+            "itemtype": "method",
+            "name": "moveToLeft",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-view/move.js",
+            "line": 35,
+            "description": "Moves the whole view to the right.\n  >>>>>>>>\n  --------\n  |      |\n  |      |\n  |      |\n  --------",
+            "itemtype": "method",
+            "name": "moveToRight",
+            "params": [
+                {
+                    "name": "attemptedDelta",
+                    "description": "",
+                    "type": "+Number"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 38,
             "description": "Retrieve all models before the given one.",
             "itemtype": "method",
             "name": "before",
@@ -116,8 +408,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 24,
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 48,
             "description": "Retrieve all models after the given one.",
             "itemtype": "method",
             "name": "after",
@@ -132,8 +424,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 34,
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 58,
             "itemtype": "method",
             "name": "reduceBefore",
             "params": [
@@ -163,8 +455,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 47,
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 71,
             "itemtype": "method",
             "name": "reduceAfter",
             "params": [
@@ -194,8 +486,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 60,
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 84,
             "description": "Returns the left position at which a given\npanel should be placed.",
             "itemtype": "method",
             "name": "calculateLeftPos",
@@ -210,8 +502,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 76,
+            "file": "src/__backbone-panels/positioners.js",
+            "line": 10,
             "description": "Set the place for the panel.",
             "itemtype": "method",
             "name": "postitionPanel",
@@ -223,20 +515,32 @@
                 }
             ],
             "class": "",
-            "module": "backbone-panels"
+            "module": "backbone-panels",
+            "submodule": "positioners"
         },
         {
-            "file": "src/__backbone-panels/helpers.js",
-            "line": 91,
+            "file": "src/__backbone-panels/positioners.js",
+            "line": 25,
             "description": "Puts all panels in their places\nby calculating left positions on them all.",
             "itemtype": "method",
             "name": "arrange",
+            "class": "",
+            "module": "backbone-panels",
+            "submodule": "positioners"
+        },
+        {
+            "file": "src/index.js",
+            "line": 28,
+            "description": "The constructor method for the single panel view.",
+            "itemtype": "property",
+            "name": "panelView",
+            "type": "Function",
             "class": "",
             "module": "backbone-panels"
         },
         {
             "file": "src/index.js",
-            "line": 35,
+            "line": 36,
             "description": "Initialization logic for panels view.",
             "itemtype": "method",
             "name": "initialPanels",
@@ -252,13 +556,53 @@
         },
         {
             "file": "src/index.js",
-            "line": 54,
+            "line": 56,
+            "description": "Array where the single panel views are stored\nin the order they appear (left->right) on the view.",
+            "itemtype": "property",
+            "name": "panelViews",
+            "type": "Array",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 86,
+            "description": "Parse the results from this.$el.data()\nand return the data that should be set on the single\npanelView's model.",
+            "itemtype": "method",
+            "name": "parsePanelData",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 105,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",
+            "type": "Object",
             "class": "",
             "module": "backbone-panels"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "unknown tag: submolude",
+            "line": " src/__backbone-panels/event-handlers/index.js:1"
+        },
+        {
+            "message": "unknown tag: submolude",
+            "line": " src/__backbone-panels/panel-view/index.js:1"
+        },
+        {
+            "message": "unknown tag: submolude",
+            "line": " src/__backbone-panels/iterators.js:1"
+        }
+    ]
 }

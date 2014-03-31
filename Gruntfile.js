@@ -113,7 +113,7 @@ module.exports = function (grunt) {
 
 					// exclude these modules AND their dependencies
 					// (excluding your bower dependencies)
-					exclude: ["backbone", "jquery", "jquery-ui"],
+					exclude: ["backbone", "jquery", "jquery-ui", "model-dock", "lowercase-backbone", "backbone-ui-resizable"],
 
 					// excludeShallow
 					excludeShallow: [],

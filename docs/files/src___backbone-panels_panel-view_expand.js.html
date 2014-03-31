@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>backbone-panels - backbone-panels</title>
+    <title>src/__backbone-panels/panel-view/expand.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,54 +84,80 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>backbone-panels Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/expand.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src___backbone-panels_event-handlers_index.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;event-handlers&#x2F;index.js:1</code></a>
-        </div>
-    
+	var helpers = require(&#x27;./helpers&#x27;);
 
-    
-</div>
+	/**
+	 * Expands the view by moving the left handle
+	 * towards the left direction while maintaing
+	 * the right handle at a fixed position.
+	 *   --------
+	 *   |&lt;-    |
+	 *   |&lt;-    |
+	 *   |&lt;-    |
+	 *   --------
+	 *
+	 * @method expandToLeft
+	 * @param attemptedDelta {+Number}
+	 */
+	exports.expandToLeft = function expandToLeft(attemptedDelta) {
+		var model = this.model,
+			currentWidth = model.get(&#x27;width&#x27;),
+			currentLeft = model.get(&#x27;left&#x27;);
 
+		var delta = helpers.maxAddition({
+			addition: attemptedDelta,
+			currValue: currentWidth,
+			maxValue: model.get(&#x27;max-width&#x27;)
+		});
 
+		model.set({
+			width: currentWidth + delta,
+			left: currentLeft - delta
+		});
 
-<div class="box intro">
-    <p>Logic for dealing with panel resizing</p>
+		return attemptedDelta - delta;
+	};
 
-</div>
+	/**
+	 * Expands the view by moving the right handle
+	 * towards the right direction while maintaing
+	 * the left handle at a fixed position.
+	 *   --------
+	 *   |    -&gt;|
+	 *   |    -&gt;|
+	 *   |    -&gt;|
+	 *   --------
+	 *
+	 * @method expandToRight
+	 * @param attemptedDelta {+Number}
+	 */
+	exports.expandToRight = function expandToRight(attemptedDelta) {
+		var model = this.model,
+			currentWidth = model.get(&#x27;width&#x27;);
 
+		var delta = helpers.maxAddition({
+			addition: attemptedDelta,
+			currValue: currentWidth,
+			maxValue: model.get(&#x27;max-width&#x27;)
+		});
 
+		model.set({
+			width: currentWidth + delta
+		});
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+		return attemptedDelta - delta;
+	};
 
-    <div class="yui3-u-1-2">
-        
-            <p>This module is a rollup of the following modules:</p>
+});
 
-            <ul class="module-submodules">
-            
-                <li class="module-submodule">
-                    <a href="../modules/positioners.html">
-                        positioners
-                    </a>
-
-                    <div class="module-submodule-description">
-                        Logic for positioning the panels at the right starting place.
-                    </div>
-                </li>
-            
-            </ul>
-        
-    </div>
+    </pre>
 </div>
 
                     </div>

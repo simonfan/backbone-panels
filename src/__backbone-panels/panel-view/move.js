@@ -4,7 +4,18 @@ define(function (require, exports, module) {
 
 	var helpers = require('./helpers');
 
-
+	/**
+	 * Moves the whole view to the left.
+	 *   <<<<<<<<
+	 *   --------
+	 *   |      |
+	 *   |      |
+	 *   |      |
+	 *   --------
+	 *
+	 * @method moveToLeft
+	 * @param attemptedDelta {+Number}
+	 */
 	exports.moveToLeft = function moveToLeft(attemptedDelta) {
 
 		var model = this.model,
@@ -21,7 +32,18 @@ define(function (require, exports, module) {
 		return attemptedDelta - delta;
 	};
 
-
+	/**
+	 * Moves the whole view to the right.
+	 *   >>>>>>>>
+	 *   --------
+	 *   |      |
+	 *   |      |
+	 *   |      |
+	 *   --------
+	 *
+	 * @method moveToRight
+	 * @param attemptedDelta {+Number}
+	 */
 	exports.moveToRight = function moveToRight(attemptedDelta) {
 
 		var model = this.model,

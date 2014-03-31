@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/helpers.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel-view/index.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -47,6 +47,8 @@
             
                 <li><a href="../modules/backbone-panels.html">backbone-panels</a></li>
             
+                <li><a href="../modules/positioners.html">positioners</a></li>
+            
             </ul>
         </div>
     </div>
@@ -82,109 +84,70 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/helpers.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//     backbone-panels
-//     (c) simonfan
-//     backbone-panels is licensed under the MIT terms.
-
 /**
- * AMD module.
+ * The view for a single panel.
  *
  * @module backbone-panels
+ * @submolude panel-view
  */
-
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	/**
-	 * Retrieve all models before the given one.
-	 *
-	 * @method before
-	 * @param index {Backbone Model|Number}
-	 */
-	exports.before = function before(index) {
-		return this.first(index);
-	};
+	var modelDock = require(&#x27;model-dock&#x27;),
+		resizable = require(&#x27;backbone-ui-resizable&#x27;),
+		backbone = require(&#x27;lowercase-backbone&#x27;);
 
-	/**
-	 * Retrieve all models after the given one.
-	 *
-	 * @method after
-	 * @param index {Backbone Model|Number}
-	 */
-	exports.after = function after(index) {
-		return this.rest(index + 1);
-	};
+	var panel = module.exports = backbone.view
+		.extend(modelDock.prototype)
+		.extend(resizable.prototype)
+		.extend({
 
-	/**
-	 *
-	 * @method reduceBefore
-	 * @param index {Backbone Model|Number}
-	 * @param iter {Function}
-	 * @param memo {*}
-	 * @param [context] {Object}
-	 */
-	exports.reduceBefore = function reduceBefore(index, iter, memo, context) {
-		var before = this.before(index);
-		return _.reduce(before, iter, memo, context);
-	};
+			initialize: function initialize(options) {
+				backbone.view.prototype.initialize.apply(this, arguments);
 
-	/**
-	 *
-	 * @method reduceAfter
-	 * @param index {Backbone Model|Number}
-	 * @param iter {Function}
-	 * @param memo {*}
-	 * @param [context] {Object}
-	 */
-	exports.reduceAfter = function reduceAfter(index, iter, memo, context) {
-		var after = this.after(index);
-		return _.reduce(after, iter, memo, context);
-	};
+				this.initializeModelDock.apply(this, arguments);
+				this.initializeResizableDock.apply(this, arguments);
 
-	/**
-	 * Returns the left position at which a given
-	 * panel should be placed.
-	 *
-	 * @method calculateLeftPos
-	 * @param panel {Bakcbone Model}
-	 */
-	exports.calculateLeftPos = function calculateLeftPos(panel) {
+				this.initializePanel.apply(this, arguments);
+			},
 
-		var index = this.collection.indexOf(panel.model);
+			/**
+			 * Initialization logic for a single panel view.
+			 *
+			 * @method initializePanel
+			 * @param options
+			 */
+			initializePanel: function initializePanel(options) {
 
-		return this.reduceBefore(index, function(distance, panel) {
-			return distance + panel.model.get(&#x27;width&#x27;);
-		}, 0);
-	};
+				this.index = options.index;
 
-	/**
-	 * Set the place for the panel.
-	 *
-	 * @method postitionPanel
-	 * @param panel {Backbone Model}
-	 */
-	exports.postitionPanel = function postitionPanel(panel) {
-		var left = this.calculateLeftPos(panel);
+				// panelsView, the main view behind this group of panels.
+				this.panelsView = options.panelsView;
 
-		panel.model.set({
-			left: left,
-			top: 0
+				// listen to resize events on this
+				this.on(&#x27;resize&#x27;, this.panelsView.handleResize);
+
+				this.$el.css(this.css);
+
+			},
+
+			css: {
+				position: &#x27;absolute&#x27;,
+			},
+
+			resizableOptions: {
+				// only horizontal handles.
+				handles: &#x27;w,e&#x27;
+			},
 		});
-	};
 
-	/**
-	 * Puts all panels in their places
-	 * by calculating left positions on them all.
-	 *
-	 * @method arrange
-	 */
-	exports.arrange = function arrange() {
-		this.each(this.postitionPanel, this);
-	};
+	panel.proto(require(&#x27;./move&#x27;));
+	panel.proto(require(&#x27;./contract&#x27;));
+	panel.proto(require(&#x27;./expand&#x27;));
 });
 
     </pre>

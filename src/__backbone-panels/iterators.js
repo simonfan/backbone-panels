@@ -1,15 +1,39 @@
-//     backbone-panels
-//     (c) simonfan
-//     backbone-panels is licensed under the MIT terms.
-
 /**
- * AMD module.
+ * Logic for iterating over panel views.
+ *
  *
  * @module backbone-panels
+ * @submolude iterators
  */
-
 define(function (require, exports, module) {
 	'use strict';
+
+	var _ = require('lodash');
+
+	// Underscore methods that we want to implement on the Collection.
+	// 90% of the core usefulness of Backbone Collections is actually implemented
+	// right here:
+	var _methods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
+	'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
+	'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
+	'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
+	'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+	'lastIndexOf', 'isEmpty', 'chain', 'sample', 'partition'];
+
+	_.each(_methods, function (method) {
+		exports[method] = function () {
+
+			var args = Array.prototype.slice.call(arguments);
+
+			// add panelViews
+			args.unshift(this.panelViews);
+
+			return _[method].apply(_, args);
+		};
+	});
+
+
+
 
 	/**
 	 * Retrieve all models before the given one.
@@ -66,35 +90,10 @@ define(function (require, exports, module) {
 	 */
 	exports.calculateLeftPos = function calculateLeftPos(panel) {
 
-		var index = this.collection.indexOf(panel.model);
+		var index = panel.index;
 
 		return this.reduceBefore(index, function(distance, panel) {
 			return distance + panel.model.get('width');
 		}, 0);
-	};
-
-	/**
-	 * Set the place for the panel.
-	 *
-	 * @method postitionPanel
-	 * @param panel {Backbone Model}
-	 */
-	exports.postitionPanel = function postitionPanel(panel) {
-		var left = this.calculateLeftPos(panel);
-
-		panel.model.set({
-			left: left,
-			top: 0
-		});
-	};
-
-	/**
-	 * Puts all panels in their places
-	 * by calculating left positions on them all.
-	 *
-	 * @method arrange
-	 */
-	exports.arrange = function arrange() {
-		this.each(this.postitionPanel, this);
 	};
 });
