@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/event-handlers/contract-to-right.js - backbone-panels</title>
+    <title>src/__backbone-panels/actions.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,15 +84,47 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/event-handlers/contract-to-right.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/actions.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Logic for dealing with panel resizing
+ *
+ * @module backbone-panels
+ * @submolude actions
+ */
 define(function (require, exports, module) {
 
 
 	var _ = require(&#x27;lodash&#x27;);
 
+	/**
+	 * Invoked whenever the panels to the left of a panel
+	 * have to be contracted towards the left.
+	 * It is a response to left-expansion on a panel.
+	 *
+	 * @method contractToLeft
+	 * @param panels {Array of panels}
+	 * @param delta {Number}
+	 */
+	exports.contractPanelsToLeft = function contractPanelsToLeft(panels, delta) {
+
+		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
+
+			var panel = panels.pop();
+
+			// [1] move the left border of the adjacent panel
+			var remainder = panel.contractToLeft(delta, { agent: &#x27;panels-control&#x27; });
+
+			// [2] if there is a remainder,
+			// move the panel as a whole in that direction
+			panel.moveToLeft(remainder, { agent: &#x27;panels-control&#x27; });
+
+			delta = remainder;
+		}
+
+	};
 
 	/**
 	 * This method is called whenever a panel
@@ -104,22 +136,64 @@ define(function (require, exports, module) {
 	 * @param panels {Array of panelViews}
 	 * @param delta {+Number}
 	 */
-	module.exports = function contractToRight(panels, delta) {
-
+	exports.contractPanelsToRight = function contractPanelsToRight(panels, delta) {
 		while (panels.length &gt; 0 &amp;&amp; delta &gt; 0) {
 
 			// get the first panel from the panels to the right
-			var view = panels.shift();
+			var panel = panels.shift();
 
-			var remainder = view.contractToRight(delta);
+			var remainder = panel.contractToRight(delta, { agent: &#x27;panels-control&#x27; });
 
-			view.moveToRight(remainder);
+			panel.moveToRight(remainder, { agent: &#x27;panels-control&#x27; });
+
+			delta = remainder;
+		}
+	};
+
+	/**
+	 * Invoked whenever the panels to the right of a panel
+	 * have to be expanded towards the left.
+	 * It is a response to right-contraction on a panel.
+	 *
+	 * @method expandToLeft
+	 * @param panels {Array of panel panels}
+	 * @param delta {Number}
+	 */
+	exports.expandPanelsToLeft = function expandPanelsToLeft(panels, delta) {
+
+		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
+
+			var panel = panels.shift(),
+				remainder = panel.expandToLeft(delta, { agent: &#x27;panels-control&#x27; });
+
+			panel.moveToLeft(remainder, { agent: &#x27;panels-control&#x27; });
 
 			delta = remainder;
 		}
 
 	};
 
+	/**
+	 * Invoked whenever the panels to the left of a panel
+	 * have to be contracted towards the right.
+	 * It is a response to left-contraction on a panel.
+	 *
+	 * @method contractToLeft
+	 * @param panels {Array of panel panels}
+	 * @param delta {Number}
+	 */
+	exports.expandPanelsToRight = function expandPanelsToRight(panels, delta) {
+
+		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
+
+			var panel = panels.pop(),
+				remainder = panel.expandToRight(delta, { agent: &#x27;panels-control&#x27; });
+
+			panel.moveToRight(remainder, { agent: &#x27;panels-control&#x27; });
+
+			delta = remainder;
+		}
+	};
 });
 
     </pre>

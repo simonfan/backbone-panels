@@ -7,7 +7,7 @@
     "backbone": "~1.1.2",
     "jquery": "~2.1.0",
     "jquery-ui": "~1.10.4",
-    "backbone-ui-resizable": "0.2.4",
+    "backbone-ui-resizable": "0.6.7",
     "model-dock": "0.3.6"
   },
   "devDependencies": {
@@ -19,10 +19,8 @@
   },
   "resolutions": {
     "jquery": "~2.1.0",
-    "model-dock": "0.3.6",
+    "model-dock": "~0.3.6",
     "subject": "~0.4.1",
-    "collection-dock": "0.4.4",
-    "jquery.filler": "0.2.3",
-    "backbone-ui-resizable": "0.2.4"
+    "backbone-ui-resizable": "0.6.7"
   }
 }

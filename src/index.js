@@ -14,7 +14,7 @@ define(function (require, exports, module) {
 		_ = require('lodash');
 
 	// internal
-	var panelView = require('./__backbone-panels/panel-view/index');
+	var panelBuilder = require('./__backbone-panels/panel-builder');
 
 	var panels = module.exports = backbone.view.extend({
 
@@ -28,10 +28,10 @@ define(function (require, exports, module) {
 		/**
 		 * The constructor method for the single panel view.
 		 *
-		 * @property panelView
+		 * @property panelBuilder
 		 * @type Function
 		 */
-		panelView: panelView,
+		panelBuilder: panelBuilder,
 
 		/**
 		 * Initialization logic for panels view.
@@ -43,11 +43,10 @@ define(function (require, exports, module) {
 
 			// [1] bind event handling methods
 			_.bindAll(this,
-				'handleResize',
-				'contractToLeft',
-				'contractToRight',
-				'expandToLeft',
-				'expandToRight');
+				'handlePanelResize',
+				'handlePanelResizeStart',
+				'handlePanelResizeStop'
+			);
 
 			// [2] set styles for the panel element.
 			this.$el.css(this.css);
@@ -57,49 +56,31 @@ define(function (require, exports, module) {
 			 * Array where the single panel views are stored
 			 * in the order they appear (left->right) on the view.
 			 *
-			 * @property panelViews
+			 * @property panels
 			 * @type Array
 			 */
-			this.panelViews = [];
-			_.each(this.$el.children(), function (el, index) {
+			this.panels = _.map(this.$el.children(), function (el, index) {
 
 				var $el = $(el),
 					data = $el.data();
 
-				data = this.parsePanelData(data);
-
-				var view = this.panelView({
-					index: index,
-					panelsView: this,
+				var panel = this.panelBuilder(_.extend(data, {
 					el: $el,
-					model: backbone.model(data)
-				});
+					model: backbone.model(data),
+					index: index,
+				}));
 
-				this.panelViews.push(view);
+				// listen to panel resize
+				this.listenTo(panel, 'resizestart', this.handlePanelResizeStart)
+					.listenTo(panel, 'resize-x', this.handlePanelResize)
+					.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
+
+				return panel;
+
 			}, this);
-
 			// [4] arrange the views.
 			this.arrange();
 
-		},
-
-		/**
-		 * Parse the results from this.$el.data()
-		 * and return the data that should be set on the single
-		 * panelView's model.
-		 *
-		 * @method parsePanelData
-		 * @param data {Object}
-		 */
-		parsePanelData: function parsePanelData(data) {
-
-			data['min-width'] = data.minWidth;
-			data['max-width'] = data.maxWidth;
-
-			data['min-left'] = data.minLeft;
-			data['max-left'] = data.maxLeft;
-
-			return data;
 		},
 
 		/**
@@ -114,6 +95,7 @@ define(function (require, exports, module) {
 	});
 
 	panels.proto(require('./__backbone-panels/iterators'));
-	panels.proto(require('./__backbone-panels/positioners'));
-	panels.proto(require('./__backbone-panels/event-handlers/index'));
+	panels.proto(require('./__backbone-panels/panel-config'));
+	panels.proto(require('./__backbone-panels/event-handlers'));
+	panels.proto(require('./__backbone-panels/actions'));
 });

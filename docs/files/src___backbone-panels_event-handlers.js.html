@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-view/move.js - backbone-panels</title>
+    <title>src/__backbone-panels/event-handlers.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,70 +84,81 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/move.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/event-handlers.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Logic for dealing with panel resizing
+ *
+ * @module backbone-panels
+ * @submolude event-handlers
+ */
 define(function (require, exports, module) {
-	&#x27;use strict&#x27;;
 
 
-	var helpers = require(&#x27;./helpers&#x27;);
+	var _ = require(&#x27;lodash&#x27;);
 
 	/**
-	 * Moves the whole view to the left.
-	 *   &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	 *   --------
-	 *   |      |
-	 *   |      |
-	 *   |      |
-	 *   --------
+	 * Resize event handler.
+	 * Invokes all other steps.
 	 *
-	 * @method moveToLeft
-	 * @param attemptedDelta {+Number}
+	 * @method handlePanelResize
 	 */
-	exports.moveToLeft = function moveToLeft(attemptedDelta) {
+	exports.handlePanelResize = function handlePanelResize(panel, edata) {
+		var index = panel.index,
+			delta = Math.abs(edata.delta);
 
-		var model = this.model,
-			currentLeft = model.get(&#x27;left&#x27;);
+		if (edata.agent !== &#x27;panels-control&#x27;) {
 
-		var delta = helpers.maxSubtraction({
-			subtraction: attemptedDelta,
-			currValue: currentLeft,
-			minValue: model.get(&#x27;min-left&#x27;)
-		});
 
-		model.set(&#x27;left&#x27;, currentLeft - delta);
 
-		return attemptedDelta - delta;
+			if (edata.action === &#x27;expand&#x27;) {
+				// contract other guys
+
+				if (edata.handle === &#x27;w&#x27;) {
+					// contract before
+
+					var before = this.before(index);
+
+					this.contractPanelsToLeft(before, delta);
+
+				} else if (edata.handle === &#x27;e&#x27;) {
+					// contract after
+					var after = this.after(index);
+
+					this.contractPanelsToRight(after, delta);
+
+				}
+
+			} else if (edata.action === &#x27;contract&#x27;) {
+
+				// expand other guys
+				if (edata.handle === &#x27;w&#x27;) {
+					// expand before
+
+					var before = this.before(index);
+
+					this.expandPanelsToRight(before, delta);
+
+				} else if (edata.handle === &#x27;e&#x27;) {
+					// expand after
+					var after = this.after(index);
+
+					this.expandPanelsToLeft(after, delta);
+				}
+			}
+
+		}
+
 	};
 
-	/**
-	 * Moves the whole view to the right.
-	 *   &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	 *   --------
-	 *   |      |
-	 *   |      |
-	 *   |      |
-	 *   --------
-	 *
-	 * @method moveToRight
-	 * @param attemptedDelta {+Number}
-	 */
-	exports.moveToRight = function moveToRight(attemptedDelta) {
+	exports.handlePanelResizeStart = function handlePanelResizeStart(panel, edata) {
 
-		var model = this.model,
-			currentLeft = model.get(&#x27;left&#x27;);
+	};
 
-		var delta = helpers.maxAddition({
-			addition: attemptedDelta,
-			currValue: currentLeft,
-			maxValue: model.get(&#x27;max-left&#x27;)
-		});
+	exports.handlePanelResizeStop = function handlePanelResizeStop(panel, edata) {
 
-		model.set(&#x27;left&#x27;, currentLeft + delta);
-
-		return attemptedDelta - delta;
 	};
 });
 

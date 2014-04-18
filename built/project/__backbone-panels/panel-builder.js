@@ -1,0 +1,1 @@
+define(["require","exports","module","lodash","backbone-ui-resizable"],function(e,t,n){var r=e("lodash"),i=e("backbone-ui-resizable"),s=n.exports=i.extend({initialize:function(t){i.prototype.initialize.call(this,t),this.index=t.index},handleOptions:{directions:"w,e",clss:"handle",ratio:0,thickness:25}})});

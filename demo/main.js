@@ -1,8 +1,7 @@
-define(['backbone-panels'], function (BackbonePanels) {
+define(['backbone-panels'], function (bbPanels) {
 
-    var msg = 'Main demo of the backbone-panels module running!';
 
-	console.log(msg);
-
-	alert(msg);
+	window.panels = bbPanels({
+		el: $('#panels')
+	});
 });

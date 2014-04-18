@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-view/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel-config.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,70 +84,93 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-view/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-config.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * The view for a single panel.
+ * Logic for positioning the panels at the right starting place.
  *
  * @module backbone-panels
- * @submolude panel-view
+ * @submodule positioners
  */
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var modelDock = require(&#x27;model-dock&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;);
 
-	var panel = module.exports = backbone.view
-		.extend(modelDock.prototype)
-		.extend(resizable.prototype)
-		.extend({
 
-			initialize: function initialize(options) {
-				backbone.view.prototype.initialize.apply(this, arguments);
+	exports.sumBefore = function sumBefore(attr, index) {
+		return this.reduceBefore(index, function (value, panel) {
+			return value + panel.get(attr);
+		}, 0);
+	};
 
-				this.initializeModelDock.apply(this, arguments);
-				this.initializeResizableDock.apply(this, arguments);
+	exports.sumAfter = function sumAfter(attr, index) {
+		return this.reduceAfter(index, function (value, panel) {
+			return value + panel.get(attr);
+		}, 0);
+	};
 
-				this.initializePanel.apply(this, arguments);
-			},
 
-			/**
-			 * Initialization logic for a single panel view.
-			 *
-			 * @method initializePanel
-			 * @param options
-			 */
-			initializePanel: function initializePanel(options) {
+	/**
+	 * Returns the left position at which a given
+	 * panel should be placed.
+	 *
+	 * @method calculateLeftPos
+	 * @param panel {Bakcbone Model}
+	 */
+	exports.calculateLeftPos = function calculateLeftPos(index) {
+		return this.sumBefore(&#x27;width&#x27;, index)
+	};
 
-				this.index = options.index;
+	/**
+	 * Set the place for the panel.
+	 *
+	 * @method postitionPanel
+	 * @param panel {Backbone Model}
+	 */
+	exports.postitionPanel = function postitionPanel(panel) {
+		var index = panel.index,
+			left = this.calculateLeftPos(index);
 
-				// panelsView, the main view behind this group of panels.
-				this.panelsView = options.panelsView;
-
-				// listen to resize events on this
-				this.on(&#x27;resize&#x27;, this.panelsView.handleResize);
-
-				this.$el.css(this.css);
-
-			},
-
-			css: {
-				position: &#x27;absolute&#x27;,
-			},
-
-			resizableOptions: {
-				// only horizontal handles.
-				handles: &#x27;w,e&#x27;
-			},
+		panel.model.set({
+			left: left,
+			top: 0
 		});
+	};
 
-	panel.proto(require(&#x27;./move&#x27;));
-	panel.proto(require(&#x27;./contract&#x27;));
-	panel.proto(require(&#x27;./expand&#x27;));
+
+	exports.setPanelMaxRight = function setPanelMaxRight(panel) {
+		var index = panel.index,
+			minWidthAfter = this.sumAfter(&#x27;minWidth&#x27;, index);
+
+		var totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
+
+		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
+	}
+
+	exports.setPanelMaxLeft = function setPanelMaxLeft(panel) {
+		var index = panel.index,
+			maxWidthBefore = this.sumBefore(&#x27;maxWidth&#x27;, index);
+
+		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
+	};
+
+	/**
+	 * Puts all panels in their places
+	 * by calculating left positions on them all.
+	 *
+	 * @method arrange
+	 */
+	exports.arrange = function arrange() {
+		this.each(function (panel) {
+			this.postitionPanel(panel);
+
+			this.setPanelMaxRight(panel);
+
+			this.setPanelMaxLeft(panel);
+		}, this);
+	};
 });
 
     </pre>

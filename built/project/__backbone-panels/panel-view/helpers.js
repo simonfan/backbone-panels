@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){t.maxAddition=function(t){var n=t.addition,r=t.currValue,i=t.maxValue;if(_.isNumber(i)){var s=r+n;return s<=i?n:i-r}return n},t.maxSubtraction=function(t){var n=t.subtraction,r=t.currValue,i=t.minValue;if(_.isNumber(i)){var s=r-n;return s>=i?n:r-i}return n}});

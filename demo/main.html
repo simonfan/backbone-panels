@@ -14,7 +14,7 @@
 		// load amdconfig manually
 		require(['../amdconfig'], function(undef) {
 			// load demo
-			require(['demo/main'], function() {
+			require(['../demo/main'], function() {
 
 				console.log('main demo successfully loaded and ran.');
 
@@ -23,11 +23,62 @@
 
 	</script>
 
+
+
+	<style type="text/css">
+		#panels {
+
+		}
+
+		.panel {
+			position: absolute;
+			border: 1px solid red;
+		}
+
+		.handle {
+			position: absolute;
+
+			background-color: rgba(0, 0, 0, 0.01);
+		}
+
+	</style>
+
 </head>
 
 <body>
 
 	<a href="../index.html">Menu</a>
+
+
+
+	<div id="panels">
+		<div
+			id="1"
+			class="panel"
+			data-min-width="80"
+			data-width="550"
+			data-max-width="700"
+
+
+			data-height="650"></div>
+		<div
+			id="2"
+			class="panel"
+			data-min-width="80"
+			data-width="400"
+			data-max-width="700"
+
+
+			data-height="650"></div>
+		<div
+			id="3"
+			class="panel"
+			data-min-width="80"
+			data-width="300"
+			data-max-width="700"
+
+			data-height="650"></div>
+	</div>
 
 </body>
 
