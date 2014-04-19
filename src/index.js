@@ -13,9 +13,6 @@ define(function (require, exports, module) {
 	var backbone = require('lowercase-backbone'),
 		_ = require('lodash');
 
-	// internal
-	var panelBuilder = require('./__backbone-panels/panel-builder');
-
 	var panels = module.exports = backbone.view.extend({
 
 		initialize: function initialize(options) {
@@ -24,14 +21,6 @@ define(function (require, exports, module) {
 			// this
 			this.initializePanels.apply(this, arguments);
 		},
-
-		/**
-		 * The constructor method for the single panel view.
-		 *
-		 * @property panelBuilder
-		 * @type Function
-		 */
-		panelBuilder: panelBuilder,
 
 		/**
 		 * Initialization logic for panels view.
@@ -59,28 +48,74 @@ define(function (require, exports, module) {
 			 * @property panels
 			 * @type Array
 			 */
-			this.panels = _.map(this.$el.children(), function (el, index) {
+			this.panels = [];
+
+			// start panels that already are in the html
+			_.each(this.$el.children(), function (el, index) {
 
 				var $el = $(el),
 					data = $el.data();
 
-				var panel = this.panelBuilder(_.extend(data, {
-					el: $el,
-					model: backbone.model(data),
-					index: index,
-				}));
+				data.el = $el;
 
-				// listen to panel resize
-				this.listenTo(panel, 'resizestart', this.handlePanelResizeStart)
-					.listenTo(panel, 'resize-x', this.handlePanelResize)
-					.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
-
-				return panel;
+				this.addPanel(index, data);
 
 			}, this);
+
 			// [4] arrange the views.
 			this.arrange();
 
+		},
+
+		/**
+		 * The constructor method for the single panel view.
+		 *
+		 * @property panelBuilder
+		 * @type Function
+		 */
+		panelBuilder: require('./__backbone-panels/panel-builder'),
+		panelTemplate: '<div></div>',
+		panelClass: 'panel',
+
+		/**
+		 * Adds a panel at a given index.
+		 *
+		 * @method addPanel
+		 * @param index {Number}
+		 * @param options {Object}
+		 */
+		addPanel: function addPanel(index, options) {
+
+			var $el;
+
+			if (options.el) {
+				$el = options.el;
+			} else {
+
+				// build the $el.
+				var html = _.isFunction(this.panelTemplate) ? this.panelTemplate(options) : this.panelTemplate;
+
+				$el = $(html);
+			}
+
+			// add needed classes
+			// and append
+			$el.addClass(this.panelClass)
+				.appendTo(this.$el);
+
+			var panel = this.panelBuilder(_.extend(options, {
+				el: $el,
+				model: backbone.model(options),
+			}));
+
+
+			// listen to panel resize
+			this.listenTo(panel, 'resizestart', this.handlePanelResizeStart)
+				.listenTo(panel, 'resize-x', this.handlePanelResize)
+				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
+
+			// put the panl in the panels array
+			this.panels.splice(index, 1, panel);
 		},
 
 		/**

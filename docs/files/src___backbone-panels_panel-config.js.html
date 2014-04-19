@@ -130,7 +130,7 @@ define(function (require, exports, module) {
 	 * @param panel {Backbone Model}
 	 */
 	exports.postitionPanel = function postitionPanel(panel) {
-		var index = panel.index,
+		var index = this.panelIndex(panel),
 			left = this.calculateLeftPos(index);
 
 		panel.model.set({
@@ -140,20 +140,26 @@ define(function (require, exports, module) {
 	};
 
 
-	exports.setPanelMaxRight = function setPanelMaxRight(panel) {
-		var index = panel.index,
-			minWidthAfter = this.sumAfter(&#x27;minWidth&#x27;, index);
+	exports.setPanelRightBoundaries = function setPanelRightBoundaries(panel) {
+		var index = this.panelIndex(panel),
+			minWidthAfter = this.sumAfter(&#x27;minWidth&#x27;, index),
+			maxWidthAfter = this.sumAfter(&#x27;maxWidth&#x27;, index);
 
 		var totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
 
 		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
-	}
 
-	exports.setPanelMaxLeft = function setPanelMaxLeft(panel) {
-		var index = panel.index,
-			maxWidthBefore = this.sumBefore(&#x27;maxWidth&#x27;, index);
+		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
+	};
+
+	exports.setPanelLeftBoundaries = function setPanelLeftBoundaries(panel) {
+		var index = this.panelIndex(panel),
+			maxWidthBefore = this.sumBefore(&#x27;maxWidth&#x27;, index),
+			minWidthBefore = this.sumBefore(&#x27;minWidth&#x27;, index);
 
 		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
+
+		panel.model.set(&#x27;minLeft&#x27;, minWidthBefore);
 	};
 
 	/**
@@ -166,9 +172,9 @@ define(function (require, exports, module) {
 		this.each(function (panel) {
 			this.postitionPanel(panel);
 
-			this.setPanelMaxRight(panel);
+			this.setPanelRightBoundaries(panel);
 
-			this.setPanelMaxLeft(panel);
+			this.setPanelLeftBoundaries(panel);
 		}, this);
 	};
 });

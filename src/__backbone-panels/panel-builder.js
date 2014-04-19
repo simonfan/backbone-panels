@@ -11,13 +11,6 @@ define(function (require, exports, module) {
 
 	var panel = module.exports = resizable.extend({
 
-		initialize: function initialize(options) {
-			resizable.prototype.initialize.call(this, options);
-
-			// save index
-			this.index = options.index;
-		},
-
 		handleOptions: {
 			directions: 'w,e',
 			clss: 'handle',

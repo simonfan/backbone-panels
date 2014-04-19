@@ -16,7 +16,7 @@ define(function (require, exports, module) {
 	 * @method handlePanelResize
 	 */
 	exports.handlePanelResize = function handlePanelResize(panel, edata) {
-		var index = panel.index,
+		var index = this.panelIndex(panel),
 			delta = Math.abs(edata.delta);
 
 		if (edata.agent !== 'panels-control') {

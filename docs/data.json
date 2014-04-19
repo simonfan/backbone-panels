@@ -177,7 +177,23 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 38,
+            "line": 35,
+            "description": "Retrieve the index of a given panel object.",
+            "itemtype": "method",
+            "name": "panelIndex",
+            "params": [
+                {
+                    "name": "panel",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/iterators.js",
+            "line": 50,
             "description": "Retrieve all models before the given one.",
             "itemtype": "method",
             "name": "before",
@@ -193,7 +209,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 48,
+            "line": 60,
             "description": "Retrieve all models after the given one.",
             "itemtype": "method",
             "name": "after",
@@ -209,7 +225,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 58,
+            "line": 70,
             "itemtype": "method",
             "name": "reduceBefore",
             "params": [
@@ -240,7 +256,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 71,
+            "line": 83,
             "itemtype": "method",
             "name": "reduceAfter",
             "params": [
@@ -305,7 +321,7 @@
         },
         {
             "file": "src/__backbone-panels/panel-config.js",
-            "line": 69,
+            "line": 75,
             "description": "Puts all panels in their places\nby calculating left positions on them all.",
             "itemtype": "method",
             "name": "arrange",
@@ -315,17 +331,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 28,
-            "description": "The constructor method for the single panel view.",
-            "itemtype": "property",
-            "name": "panelBuilder",
-            "type": "Function",
-            "class": "",
-            "module": "backbone-panels"
-        },
-        {
-            "file": "src/index.js",
-            "line": 36,
+            "line": 25,
             "description": "Initialization logic for panels view.",
             "itemtype": "method",
             "name": "initialPanels",
@@ -341,7 +347,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 55,
+            "line": 44,
             "description": "Array where the single panel views are stored\nin the order they appear (left->right) on the view.",
             "itemtype": "property",
             "name": "panels",
@@ -351,7 +357,38 @@
         },
         {
             "file": "src/index.js",
-            "line": 86,
+            "line": 70,
+            "description": "The constructor method for the single panel view.",
+            "itemtype": "property",
+            "name": "panelBuilder",
+            "type": "Function",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 80,
+            "description": "Adds a panel at a given index.",
+            "itemtype": "method",
+            "name": "addPanel",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 121,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",

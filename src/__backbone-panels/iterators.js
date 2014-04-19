@@ -32,6 +32,18 @@ define(function (require, exports, module) {
 		};
 	});
 
+	/**
+	 * Retrieve the index of a given panel object.
+	 *
+	 *
+	 * @method panelIndex
+	 * @param panel {Object}
+	 */
+	exports.panelIndex = function panelIndex(panel) {
+		return this.findIndex(function (p) {
+			return p.cid === panel.cid;
+		});
+	};
 
 
 
