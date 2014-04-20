@@ -105,7 +105,7 @@
         },
         {
             "file": "src/__backbone-panels/actions.js",
-            "line": 39,
+            "line": 60,
             "description": "This method is called whenever a panel\nis on expansion towards the Right side,\nso that the panels right to it have to contract",
             "itemtype": "method",
             "name": "contractToRight",
@@ -126,7 +126,7 @@
         },
         {
             "file": "src/__backbone-panels/actions.js",
-            "line": 63,
+            "line": 107,
             "description": "Invoked whenever the panels to the right of a panel\nhave to be expanded towards the left.\nIt is a response to right-contraction on a panel.",
             "itemtype": "method",
             "name": "expandToLeft",
@@ -147,10 +147,10 @@
         },
         {
             "file": "src/__backbone-panels/actions.js",
-            "line": 86,
+            "line": 155,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the right.\nIt is a response to left-contraction on a panel.",
             "itemtype": "method",
-            "name": "contractToLeft",
+            "name": "expandPanelsToRight",
             "params": [
                 {
                     "name": "panels",
@@ -331,7 +331,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 25,
+            "line": 26,
             "description": "Initialization logic for panels view.",
             "itemtype": "method",
             "name": "initialPanels",
@@ -347,7 +347,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 44,
+            "line": 45,
             "description": "Array where the single panel views are stored\nin the order they appear (left->right) on the view.",
             "itemtype": "property",
             "name": "panels",
@@ -357,7 +357,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 70,
+            "line": 71,
             "description": "The constructor method for the single panel view.",
             "itemtype": "property",
             "name": "panelBuilder",
@@ -367,7 +367,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 80,
+            "line": 81,
             "description": "Adds a panel at a given index.",
             "itemtype": "method",
             "name": "addPanel",
@@ -388,7 +388,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 121,
+            "line": 122,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",

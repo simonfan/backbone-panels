@@ -10,7 +10,8 @@
 define(function (require, exports, module) {
 	'use strict';
 
-	var backbone = require('lowercase-backbone'),
+	var $ = require('jquery'),
+		backbone = require('lowercase-backbone'),
 		_ = require('lodash');
 
 	var panels = module.exports = backbone.view.extend({

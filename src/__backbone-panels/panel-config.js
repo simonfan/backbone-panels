@@ -30,7 +30,7 @@ define(function (require, exports, module) {
 	 * @param panel {Bakcbone Model}
 	 */
 	exports.calculateLeftPos = function calculateLeftPos(index) {
-		return this.sumBefore('width', index)
+		return this.sumBefore('width', index);
 	};
 
 	/**

@@ -95,7 +95,7 @@
  * @submolude actions
  */
 define(function (require, exports, module) {
-
+	&#x27;use strict&#x27;;
 
 	var _ = require(&#x27;lodash&#x27;);
 
@@ -110,18 +110,39 @@ define(function (require, exports, module) {
 	 */
 	exports.contractPanelsToLeft = function contractPanelsToLeft(panels, delta) {
 
+
 		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
 
 			var panel = panels.pop();
 
-			// [1] move the left border of the adjacent panel
-			var remainder = panel.contractToLeft(delta, { agent: &#x27;panels-control&#x27; });
+			if (panels.length === 0) {
+				// this is the last panel,
+				// it has to contract all the delta
+				delta = panel.contractToLeft(delta, { agent: &#x27;panels-control&#x27; });
 
-			// [2] if there is a remainder,
-			// move the panel as a whole in that direction
-			panel.moveToLeft(remainder, { agent: &#x27;panels-control&#x27; });
+			} else {
 
-			delta = remainder;
+				var dMove = delta / 1.5,
+					dContract = delta - dMove;
+
+
+				// [1] move to the left the amount that
+				//     is required
+				var moveRemainder = panel.moveToLeft(dMove, { agent: &#x27;panels-control&#x27; });
+
+
+				// [2] contract to the left the amount required
+				var contractRemainder = panel.contractToLeft(dContract + moveRemainder, { agent: &#x27;panels-control&#x27; });
+
+				// [3] the remainders from the contract operation
+				//     should go over to movement
+				if (contractRemainder) {
+					panel.moveToLeft(contractRemainder, { agent: &#x27;panels-control&#x27; });
+				}
+
+				// [4] update the global delta
+				delta = dMove + contractRemainder;
+			}
 		}
 
 	};
@@ -142,11 +163,34 @@ define(function (require, exports, module) {
 			// get the first panel from the panels to the right
 			var panel = panels.shift();
 
-			var remainder = panel.contractToRight(delta, { agent: &#x27;panels-control&#x27; });
+			if (panels.length === 0) {
+				// this is the last panel,
+				// it has to contract all the delta
+				delta = panel.contractToRight(delta, { agent: &#x27;panels-control&#x27; });
 
-			panel.moveToRight(remainder, { agent: &#x27;panels-control&#x27; });
+			} else {
 
-			delta = remainder;
+				var dMove = delta / 1.5,
+					dContract = delta - dMove;
+
+
+				// [1] move to the left the amount that
+				//     is required
+				var moveRemainder = panel.moveToRight(dMove, { agent: &#x27;panels-control&#x27; });
+
+
+				// [2] contract to the left the amount required
+				var contractRemainder = panel.contractToRight(dContract + moveRemainder, { agent: &#x27;panels-control&#x27; });
+
+				// [3] the remainders from the contract operation
+				//     should go over to movement
+				if (contractRemainder) {
+					panel.moveToRight(contractRemainder, { agent: &#x27;panels-control&#x27; });
+				}
+
+				// [4] update the global delta
+				delta = dMove + contractRemainder;
+			}
 		}
 	};
 
@@ -163,12 +207,37 @@ define(function (require, exports, module) {
 
 		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
 
-			var panel = panels.shift(),
-				remainder = panel.expandToLeft(delta, { agent: &#x27;panels-control&#x27; });
+			// get the first panel from the panels to the right
+			var panel = panels.shift();
 
-			panel.moveToLeft(remainder, { agent: &#x27;panels-control&#x27; });
+			if (panels.length === 0) {
+				// this is the last panel,
+				// it has to contract all the delta
+				delta = panel.expandToLeft(delta, { agent: &#x27;panels-control&#x27; });
 
-			delta = remainder;
+			} else {
+
+				var dMove = delta / 1.5,
+					dContract = delta - dMove;
+
+
+				// [1] move to the left the amount that
+				//     is required
+				var moveRemainder = panel.moveToLeft(dMove, { agent: &#x27;panels-control&#x27; });
+
+
+				// [2] contract to the left the amount required
+				var contractRemainder = panel.expandToLeft(dContract + moveRemainder, { agent: &#x27;panels-control&#x27; });
+
+				// [3] the remainders from the contract operation
+				//     should go over to movement
+				if (contractRemainder) {
+					panel.moveToLeft(contractRemainder, { agent: &#x27;panels-control&#x27; });
+				}
+
+				// [4] update the global delta
+				delta = dMove + contractRemainder;
+			}
 		}
 
 	};
@@ -178,7 +247,7 @@ define(function (require, exports, module) {
 	 * have to be contracted towards the right.
 	 * It is a response to left-contraction on a panel.
 	 *
-	 * @method contractToLeft
+	 * @method expandPanelsToRight
 	 * @param panels {Array of panel panels}
 	 * @param delta {Number}
 	 */
@@ -186,12 +255,37 @@ define(function (require, exports, module) {
 
 		while (panels.length &gt; 0 &amp;&amp; delta !== 0) {
 
-			var panel = panels.pop(),
-				remainder = panel.expandToRight(delta, { agent: &#x27;panels-control&#x27; });
 
-			panel.moveToRight(remainder, { agent: &#x27;panels-control&#x27; });
+			var panel = panels.pop();
 
-			delta = remainder;
+			if (panels.length === 0) {
+				// this is the last panel,
+				// it has to contract all the delta
+				delta = panel.expandToRight(delta, { agent: &#x27;panels-control&#x27; });
+
+			} else {
+
+				var dMove = delta / 1.5,
+					dContract = delta - dMove;
+
+
+				// [1] move to the left the amount that
+				//     is required
+				var moveRemainder = panel.moveToRight(dMove, { agent: &#x27;panels-control&#x27; });
+
+
+				// [2] contract to the left the amount required
+				var contractRemainder = panel.expandToRight(dContract + moveRemainder, { agent: &#x27;panels-control&#x27; });
+
+				// [3] the remainders from the contract operation
+				//     should go over to movement
+				if (contractRemainder) {
+					panel.moveToRight(contractRemainder, { agent: &#x27;panels-control&#x27; });
+				}
+
+				// [4] update the global delta
+				delta = dMove + contractRemainder;
+			}
 		}
 	};
 });

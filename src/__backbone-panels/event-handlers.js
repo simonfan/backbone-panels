@@ -5,7 +5,7 @@
  * @submolude event-handlers
  */
 define(function (require, exports, module) {
-
+	'use strict';
 
 	var _ = require('lodash');
 
@@ -16,11 +16,12 @@ define(function (require, exports, module) {
 	 * @method handlePanelResize
 	 */
 	exports.handlePanelResize = function handlePanelResize(panel, edata) {
-		var index = this.panelIndex(panel),
-			delta = Math.abs(edata.delta);
 
 		if (edata.agent !== 'panels-control') {
 
+			var index = this.panelIndex(panel),
+				delta = Math.abs(edata.delta),
+				before, after;
 
 
 			if (edata.action === 'expand') {
@@ -29,13 +30,13 @@ define(function (require, exports, module) {
 				if (edata.handle === 'w') {
 					// contract before
 
-					var before = this.before(index);
+					before = this.before(index);
 
 					this.contractPanelsToLeft(before, delta);
 
 				} else if (edata.handle === 'e') {
 					// contract after
-					var after = this.after(index);
+					after = this.after(index);
 
 					this.contractPanelsToRight(after, delta);
 
@@ -47,13 +48,13 @@ define(function (require, exports, module) {
 				if (edata.handle === 'w') {
 					// expand before
 
-					var before = this.before(index);
+					before = this.before(index);
 
 					this.expandPanelsToRight(before, delta);
 
 				} else if (edata.handle === 'e') {
 					// expand after
-					var after = this.after(index);
+					after = this.after(index);
 
 					this.expandPanelsToLeft(after, delta);
 				}

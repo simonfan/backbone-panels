@@ -1,13 +1,13 @@
 {
   "name": "backbone-panels",
   "main": "built/backbone-panels.js",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Some module...",
   "dependencies": {
     "backbone": "~1.1.2",
     "jquery": "~2.1.0",
     "jquery-ui": "~1.10.4",
-    "backbone-ui-resizable": "0.6.8",
+    "backbone-ui-resizable": "0.6.9",
     "model-dock": "0.3.6"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
     "jquery": "~2.1.0",
     "model-dock": "~0.3.6",
     "subject": "~0.4.1",
-    "backbone-ui-resizable": "0.6.8",
-    "no": "0.1.1"
+    "backbone-ui-resizable": "0.6.9",
+    "backbone-ui-draggable": "0.5.5"
   }
 }
