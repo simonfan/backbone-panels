@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-builder.js - backbone-panels</title>
+    <title>src/__backbone-panels/enable-disable.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,80 +86,47 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-builder.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/enable-disable.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
+ * Logic for enabling and disabling panels
  *
  * @module backbone-panels
- * @submolude panel-builder
+ * @submodule enable-disable
  */
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var _ = require(&#x27;lodash&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;);
+	exports.enablePanel = function enablePanel(id) {
 
-	var panel = module.exports = resizable.extend({
+		this.getPanelById(id).enablePanel();
 
-		initialize: function initializePanel(options) {
-			resizable.prototype.initialize.call(this, options);
+		return this;
+	};
 
-			this.$el.addClass(this.panelClass);
+	exports.disablePanel = function disablePanel(id) {
 
-			// set an id for the panel.
-			this.id = this.$el.prop(&#x27;id&#x27;);
+		this.getPanelById(id).disablePanel();
 
-			if (!options.disabled) {
-				this.enablePanel();
-			}
-		},
+		return this;
+	};
 
-		handles: &#x27;w,e&#x27;,
+	exports.enablePanelAt = function enablePanelAt(index) {
 
-		handleOptions: {
-			clss: &#x27;handle&#x27;,
-			ratio: 0,
-			thickness: 25,
-		},
+		this.getPanelAt(index).enablePanel();
 
-		panelClass: &#x27;panel&#x27;,
+		return this;
 
-		enablePanel: function enablePanel() {
+	};
 
-			this.panelEnabled = true;
+	exports.disablePanelAt = function disablePanelAt(index) {
 
-			this.$el
-				.addClass(this.panelClass + &#x27;-enabled&#x27;)
-				.removeClass(this.panelClass + &#x27;-disabled&#x27;);
+		this.getPanelAt(index).disablePanel();
 
-			this.model.set(this.__minmax__);
-
-			return this;
-		},
-
-		disablePanel: function disablePanel() {
-
-			var model = this.model;
-
-			this.panelEnabled = false;
-
-			this.__minmax__ = {
-				minWidth: model.get(&#x27;minWidth&#x27;),
-				maxWidth: model.get(&#x27;maxWidth&#x27;)
-			};
-
-			model.set({
-				minWidth: model.get(&#x27;width&#x27;),
-				maxWidth: model.get(&#x27;width&#x27;)
-			});
-
-			this.$el
-				.addClass(this.panelClass + &#x27;-disabled&#x27;)
-				.removeClass(this.panelClass + &#x27;-enabled&#x27;);
-		},
-	});
+		return this;
+	};
 });
 
     </pre>

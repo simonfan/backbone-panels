@@ -134,6 +134,17 @@ define(function (require, exports, module) {
 			this.panels.splice(index, 1, panel);
 		},
 
+
+		getPanelById: function getPanelById(id) {
+			return this.find(function (panel) {
+				return panel.id === id;
+			});
+		},
+
+		getPanelAt: function getPanelAt(index) {
+			return this.panels[index];
+		},
+
 		/**
 		 * Css to be set on the main $el.
 		 *
@@ -149,4 +160,5 @@ define(function (require, exports, module) {
 	panels.proto(require('./__backbone-panels/panel-config'));
 	panels.proto(require('./__backbone-panels/event-handlers'));
 	panels.proto(require('./__backbone-panels/actions'));
+	panels.proto(require('./__backbone-panels/enable-disable'));
 });

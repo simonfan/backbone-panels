@@ -3,6 +3,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [],
     "modules": [
         "backbone-panels",
+        "enable-disable",
         "positioners"
     ],
     "allModules": [
@@ -10,6 +11,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "backbone-panels",
             "name": "backbone-panels",
             "description": "Logic for dealing with panel resizing"
+        },
+        {
+            "displayName": "enable-disable",
+            "name": "enable-disable",
+            "description": "Logic for enabling and disabling panels"
         },
         {
             "displayName": "positioners",

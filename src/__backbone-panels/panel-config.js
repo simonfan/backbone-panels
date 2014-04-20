@@ -96,6 +96,7 @@ define(function (require, exports, module) {
 			this.setPanelRightBoundaries(panel);
 
 			this.setPanelLeftBoundaries(panel);
+
 		}, this);
 	};
 });
