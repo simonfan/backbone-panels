@@ -204,7 +204,7 @@ define(function (require, exports, module) {
 			$el.addClass(this.panelClass)
 				.appendTo(this.$el);
 
-			var panel = this.panelBuilder(_.extend(options, {
+			var panel = this.panelBuilder(_.extend({}, this.handleOptions, options, {
 				el: $el,
 				model: backbone.model(options),
 			}));
