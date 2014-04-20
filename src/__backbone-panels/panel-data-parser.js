@@ -37,7 +37,7 @@ define(function (require, exports, module) {
 
 			if (data[measure] && isPercentage.test(data[measure])) {
 
-				var percentual = parseFloat(data[measure]);
+				var percentual = parseFloat(data[measure]) * 1 / 100;
 
 				data[measure] = percentual * height;
 			}
