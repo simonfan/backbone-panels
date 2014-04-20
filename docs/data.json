@@ -321,7 +321,7 @@
         },
         {
             "file": "src/__backbone-panels/panel-config.js",
-            "line": 75,
+            "line": 76,
             "description": "Puts all panels in their places\nby calculating left positions on them all.",
             "itemtype": "method",
             "name": "arrange",
@@ -368,6 +368,20 @@
         {
             "file": "src/index.js",
             "line": 81,
+            "description": "Parses the data retrieved from the $el.data() method.",
+            "methdo": "panelDataParser",
+            "params": [
+                {
+                    "name": "data",
+                    "description": ""
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 89,
             "description": "Adds a panel at a given index.",
             "itemtype": "method",
             "name": "addPanel",
@@ -388,7 +402,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 122,
+            "line": 137,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",
@@ -413,6 +427,14 @@
         {
             "message": "unknown tag: submolude",
             "line": " src/__backbone-panels/panel-builder.js:1"
+        },
+        {
+            "message": "unknown tag: methdo",
+            "line": " src/index.js:81"
+        },
+        {
+            "message": "Missing item type\nParses the data retrieved from the $el.data() method.",
+            "line": " src/index.js:81"
         }
     ]
 }

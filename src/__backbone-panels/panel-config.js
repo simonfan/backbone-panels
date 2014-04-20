@@ -72,6 +72,7 @@ define(function (require, exports, module) {
 		panel.model.set('minLeft', minWidthBefore);
 	};
 
+
 	/**
 	 * Puts all panels in their places
 	 * by calculating left positions on them all.
@@ -79,7 +80,17 @@ define(function (require, exports, module) {
 	 * @method arrange
 	 */
 	exports.arrange = function arrange() {
-		this.each(function (panel) {
+
+		this.each(function (panel, index) {
+
+			// disable limit handles
+			if (index === 0) {
+				panel.disableHandle('w');
+			} else if (index === this.panels.length - 1) {
+				panel.disableHandle('e');
+			}
+
+
 			this.postitionPanel(panel);
 
 			this.setPanelRightBoundaries(panel);

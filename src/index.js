@@ -55,7 +55,7 @@ define(function (require, exports, module) {
 			_.each(this.$el.children(), function (el, index) {
 
 				var $el = $(el),
-					data = $el.data();
+					data = this.panelDataParser($el.data());
 
 				data.el = $el;
 
@@ -77,6 +77,14 @@ define(function (require, exports, module) {
 		panelBuilder: require('./__backbone-panels/panel-builder'),
 		panelTemplate: '<div></div>',
 		panelClass: 'panel',
+
+		/**
+		 * Parses the data retrieved from the $el.data() method.
+		 *
+		 * @methdo panelDataParser
+		 * @param data
+		 */
+		panelDataParser: require('./__backbone-panels/panel-data-parser'),
 
 		/**
 		 * Adds a panel at a given index.
@@ -114,6 +122,13 @@ define(function (require, exports, module) {
 			this.listenTo(panel, 'resizestart', this.handlePanelResizeStart)
 				.listenTo(panel, 'resize-x', this.handlePanelResize)
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
+
+			// listen to changes on minWidth and maxWidth
+			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrange);
+
+			// listen to resize events on window
+		//	this.listenTo($(window), 'resize', this.arrange);
+
 
 			// put the panl in the panels array
 			this.panels.splice(index, 1, panel);
