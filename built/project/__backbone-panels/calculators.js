@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){var r=/[0-9.]+%/;t.evalMeasureX=function(t){if(r.test(t)){var n=parseFloat(t)*1/100;t=n*this.$el.width()}return t},t.evalMeasureY=function(t){if(r.test(t)){var n=parseFloat(t)*1/100;t=n*this.$el.height()}return t}});

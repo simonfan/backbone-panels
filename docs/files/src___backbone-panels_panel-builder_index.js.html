@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-builder.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel-builder/index.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,7 +86,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-builder.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-builder/index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -103,13 +103,27 @@ define(function (require, exports, module) {
 
 	var panel = module.exports = resizable.extend({
 
-		initialize: function initializePanel(options) {
+		initialize: function initialize(options) {
 			resizable.prototype.initialize.call(this, options);
 
-			this.$el.addClass(this.panelClass);
+			this.initializePanel(options);
+		},
+
+		initializePanel: function initializePanel(options) {
+
+			// reference to the panels object
+			this.panels = options.panels;
 
 			// set an id for the panel.
 			this.id = this.$el.prop(&#x27;id&#x27;);
+
+			// set initial data
+			var data = this.parseData(this.$el.data());
+			this.model.set(data);
+
+
+			this.$el.addClass(this.panelClass);
+
 
 			if (options.disabled) {
 				this.disablePanel();
@@ -117,6 +131,8 @@ define(function (require, exports, module) {
 				this.enablePanel();
 			}
 		},
+
+		parseData: require(&#x27;./parse-data&#x27;),
 
 		handles: &#x27;w,e&#x27;,
 
@@ -130,13 +146,13 @@ define(function (require, exports, module) {
 
 		enablePanel: function enablePanel() {
 
-			this.panelEnabled = true;
-
 			this.$el
 				.addClass(this.panelClass + &#x27;-enabled&#x27;)
 				.removeClass(this.panelClass + &#x27;-disabled&#x27;);
 
 			this.model.set(this.__minmax__);
+
+			this.model.set(&#x27;panelEnabled&#x27;, true);
 
 			return this;
 		},
@@ -145,8 +161,6 @@ define(function (require, exports, module) {
 
 			var model = this.model;
 
-			this.panelEnabled = false;
-
 			this.__minmax__ = {
 				minWidth: model.get(&#x27;minWidth&#x27;),
 				maxWidth: model.get(&#x27;maxWidth&#x27;)
@@ -154,7 +168,8 @@ define(function (require, exports, module) {
 
 			model.set({
 				minWidth: model.get(&#x27;width&#x27;),
-				maxWidth: model.get(&#x27;width&#x27;)
+				maxWidth: model.get(&#x27;width&#x27;),
+				panelEnabled: false,
 			});
 
 			this.$el
@@ -162,6 +177,8 @@ define(function (require, exports, module) {
 				.removeClass(this.panelClass + &#x27;-enabled&#x27;);
 		},
 	});
+
+	panel.proto(require(&#x27;./animations&#x27;));
 });
 
     </pre>

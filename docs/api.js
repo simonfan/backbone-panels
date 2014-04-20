@@ -9,8 +9,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "allModules": [
         {
             "displayName": "backbone-panels",
-            "name": "backbone-panels",
-            "description": "Logic for dealing with panel resizing"
+            "name": "backbone-panels"
         },
         {
             "displayName": "enable-disable",

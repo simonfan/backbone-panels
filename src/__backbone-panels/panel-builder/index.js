@@ -11,13 +11,27 @@ define(function (require, exports, module) {
 
 	var panel = module.exports = resizable.extend({
 
-		initialize: function initializePanel(options) {
+		initialize: function initialize(options) {
 			resizable.prototype.initialize.call(this, options);
 
-			this.$el.addClass(this.panelClass);
+			this.initializePanel(options);
+		},
+
+		initializePanel: function initializePanel(options) {
+
+			// reference to the panels object
+			this.panels = options.panels;
 
 			// set an id for the panel.
 			this.id = this.$el.prop('id');
+
+			// set initial data
+			var data = this.parseData(this.$el.data());
+			this.model.set(data);
+
+
+			this.$el.addClass(this.panelClass);
+
 
 			if (options.disabled) {
 				this.disablePanel();
@@ -25,6 +39,8 @@ define(function (require, exports, module) {
 				this.enablePanel();
 			}
 		},
+
+		parseData: require('./parse-data'),
 
 		handles: 'w,e',
 
@@ -38,13 +54,13 @@ define(function (require, exports, module) {
 
 		enablePanel: function enablePanel() {
 
-			this.panelEnabled = true;
-
 			this.$el
 				.addClass(this.panelClass + '-enabled')
 				.removeClass(this.panelClass + '-disabled');
 
 			this.model.set(this.__minmax__);
+
+			this.model.set('panelEnabled', true);
 
 			return this;
 		},
@@ -53,8 +69,6 @@ define(function (require, exports, module) {
 
 			var model = this.model;
 
-			this.panelEnabled = false;
-
 			this.__minmax__ = {
 				minWidth: model.get('minWidth'),
 				maxWidth: model.get('maxWidth')
@@ -62,7 +76,8 @@ define(function (require, exports, module) {
 
 			model.set({
 				minWidth: model.get('width'),
-				maxWidth: model.get('width')
+				maxWidth: model.get('width'),
+				panelEnabled: false,
 			});
 
 			this.$el
@@ -70,4 +85,6 @@ define(function (require, exports, module) {
 				.removeClass(this.panelClass + '-enabled');
 		},
 	});
+
+	panel.proto(require('./animations'));
 });

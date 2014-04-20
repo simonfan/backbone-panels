@@ -146,12 +146,9 @@ define(function (require, exports, module) {
 			// start panels that already are in the html
 			_.each(this.$el.children(), function (el, index) {
 
-				var $el = $(el),
-					data = this.panelDataParser($el.data());
-
-				data.el = $el;
-
-				this.addPanel(index, data);
+				this.addPanel(index, {
+					el: $(el)
+				});
 
 			}, this);
 
@@ -166,17 +163,9 @@ define(function (require, exports, module) {
 		 * @property panelBuilder
 		 * @type Function
 		 */
-		panelBuilder: require(&#x27;./__backbone-panels/panel-builder&#x27;),
+		panelBuilder: require(&#x27;./__backbone-panels/panel-builder/index&#x27;),
 		panelTemplate: &#x27;&lt;div&gt;&lt;/div&gt;&#x27;,
 		panelClass: &#x27;panel&#x27;,
-
-		/**
-		 * Parses the data retrieved from the $el.data() method.
-		 *
-		 * @methdo panelDataParser
-		 * @param data
-		 */
-		panelDataParser: require(&#x27;./__backbone-panels/panel-data-parser&#x27;),
 
 		/**
 		 * Adds a panel at a given index.
@@ -207,6 +196,8 @@ define(function (require, exports, module) {
 			var panel = this.panelBuilder(_.extend({}, this.handleOptions, options, {
 				el: $el,
 				model: backbone.model(options),
+
+				panels: this,
 			}));
 
 
@@ -252,6 +243,7 @@ define(function (require, exports, module) {
 	panels.proto(require(&#x27;./__backbone-panels/panel-config&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/event-handlers&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/actions&#x27;));
+	panels.proto(require(&#x27;./__backbone-panels/calculators&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/enable-disable&#x27;));
 });
 

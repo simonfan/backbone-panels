@@ -4,11 +4,18 @@
         "version": "0.0.0"
     },
     "files": {
-        "src/__backbone-panels/actions.js": {
-            "name": "src/__backbone-panels/actions.js",
+        "src/__backbone-panels/panel-builder/index.js": {
+            "name": "src/__backbone-panels/panel-builder/index.js",
             "modules": {
                 "backbone-panels": 1
             },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/actions.js": {
+            "name": "src/__backbone-panels/actions.js",
+            "modules": {},
             "classes": {},
             "fors": {},
             "namespaces": {}
@@ -31,13 +38,6 @@
         },
         "src/__backbone-panels/iterators.js": {
             "name": "src/__backbone-panels/iterators.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src/__backbone-panels/panel-builder.js": {
-            "name": "src/__backbone-panels/panel-builder.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -71,10 +71,9 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/__backbone-panels/actions.js",
+            "file": "src/__backbone-panels/panel-builder/index.js",
             "line": 1,
-            "description": "Logic for dealing with panel resizing",
-            "submolude": "actions"
+            "submolude": "panel-builder"
         },
         "enable-disable": {
             "name": "enable-disable",
@@ -380,7 +379,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 71,
+            "line": 68,
             "description": "The constructor method for the single panel view.",
             "itemtype": "property",
             "name": "panelBuilder",
@@ -390,21 +389,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 81,
-            "description": "Parses the data retrieved from the $el.data() method.",
-            "methdo": "panelDataParser",
-            "params": [
-                {
-                    "name": "data",
-                    "description": ""
-                }
-            ],
-            "class": "",
-            "module": "backbone-panels"
-        },
-        {
-            "file": "src/index.js",
-            "line": 89,
+            "line": 78,
             "description": "Adds a panel at a given index.",
             "itemtype": "method",
             "name": "addPanel",
@@ -425,7 +410,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 148,
+            "line": 139,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",
@@ -437,6 +422,10 @@
     "warnings": [
         {
             "message": "unknown tag: submolude",
+            "line": " src/__backbone-panels/panel-builder/index.js:1"
+        },
+        {
+            "message": "unknown tag: submolude",
             "line": " src/__backbone-panels/actions.js:1"
         },
         {
@@ -446,18 +435,6 @@
         {
             "message": "unknown tag: submolude",
             "line": " src/__backbone-panels/iterators.js:1"
-        },
-        {
-            "message": "unknown tag: submolude",
-            "line": " src/__backbone-panels/panel-builder.js:1"
-        },
-        {
-            "message": "unknown tag: methdo",
-            "line": " src/index.js:81"
-        },
-        {
-            "message": "Missing item type\nParses the data retrieved from the $el.data() method.",
-            "line": " src/index.js:81"
         }
     ]
 }
