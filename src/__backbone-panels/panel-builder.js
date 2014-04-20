@@ -19,7 +19,9 @@ define(function (require, exports, module) {
 			// set an id for the panel.
 			this.id = this.$el.prop('id');
 
-			if (!options.disabled) {
+			if (options.disabled) {
+				this.disablePanel();
+			} else {
 				this.enablePanel();
 			}
 		},

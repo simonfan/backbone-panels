@@ -1,7 +1,7 @@
 {
   "name": "backbone-panels",
   "main": "built/backbone-panels.js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Some module...",
   "dependencies": {
     "backbone": "~1.1.2",
