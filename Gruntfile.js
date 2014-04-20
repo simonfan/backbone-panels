@@ -125,19 +125,38 @@ module.exports = function (grunt) {
 					},
 				}
 			},
-
-			project: {
+			// run r.js to generate a single file as the output
+			// minifying and inlining all dependencies.
+			dev: {
 				options: {
-					// source files
-					appDir: 'src/',
-					// output here:
-					dir: 'built/project/',
+					// base url where to look for module files
+					// and relative to which the module paths will be defined
+					// (must coincide with that defined in mainConfigFile)
+					baseUrl: './src',
+					// module name
+					name: 'backbone-panels',
+					// output here
+					out: './built/backbone-panels.dev.js',
+					// config file
 					mainConfigFile: 'amdconfig.js',
 
-					// do not copy these files
-					fileExclusionRegExp: /^\./,
+					// include these modules
+					include: [],
+
+					// exclude these modules AND their dependencies
+					// (excluding your bower dependencies)
+					exclude: ["backbone", "jquery", "jquery-ui", "model-dock", "lowercase-backbone", "backbone-ui-resizable"],
+
+					// excludeShallow
+					excludeShallow: [],
+
+					optimize: 'none',
+
+					pragmas: {
+						exclude: true,
+					},
 				}
-			}
+			},
 		}
 	});
 

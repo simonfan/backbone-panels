@@ -13,7 +13,7 @@ define(function (require, exports, module) {
 
 		return direction === 'left' ?
 			this.aExpandToLeft(delta, options) :
-			this.aExpandToRighr(delta, options);
+			this.aExpandToRight(delta, options);
 	}
 
 	exports.openToRight = function openToRight(options) {
