@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){t.enablePanel=function(t){return this.getPanelById(t).enablePanel(),this},t.disablePanel=function(t){return this.getPanelById(t).disablePanel(),this},t.enablePanelAt=function(t){return this.getPanelAt(t).enablePanel(),this},t.disablePanelAt=function(t){return this.getPanelAt(t).disablePanel(),this}});

@@ -26,7 +26,7 @@ define(function (require, exports, module) {
 		_.each(measures.x, function (measure) {
 			if (data[measure] && isPercentage.test(data[measure])) {
 
-				var percentual = parseFloat(data[measure]) * 1/100;
+				var percentual = parseFloat(data[measure]) * 1 / 100;
 
 				data[measure] = percentual * width;
 			}

@@ -47,6 +47,8 @@
             
                 <li><a href="../modules/backbone-panels.html">backbone-panels</a></li>
             
+                <li><a href="../modules/enable-disable.html">enable-disable</a></li>
+            
                 <li><a href="../modules/positioners.html">positioners</a></li>
             
             </ul>
@@ -224,6 +226,17 @@ define(function (require, exports, module) {
 			this.panels.splice(index, 1, panel);
 		},
 
+
+		getPanelById: function getPanelById(id) {
+			return this.find(function (panel) {
+				return panel.id === id;
+			});
+		},
+
+		getPanelAt: function getPanelAt(index) {
+			return this.panels[index];
+		},
+
 		/**
 		 * Css to be set on the main $el.
 		 *
@@ -239,6 +252,7 @@ define(function (require, exports, module) {
 	panels.proto(require(&#x27;./__backbone-panels/panel-config&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/event-handlers&#x27;));
 	panels.proto(require(&#x27;./__backbone-panels/actions&#x27;));
+	panels.proto(require(&#x27;./__backbone-panels/enable-disable&#x27;));
 });
 
     </pre>
