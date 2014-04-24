@@ -33,6 +33,7 @@
 		.panel {
 			position: absolute;
 			border: 1px solid red;
+			overflow: hidden;
 		}
 
 		.handle {
@@ -58,6 +59,23 @@
 	<a href="../index.html">Menu</a>
 
 
+	<div id="open-control">
+		<input value="1,2">
+		<select>
+			<option>left</option>
+			<option selected>right</option>
+		</select>
+		<button>Open</button>
+	</div>
+
+	<div id="close-control">
+		<input value="1,2">
+		<select>
+			<option>left</option>
+			<option>right</option>
+		</select>
+		<button>Close</button>
+	</div>
 
 	<div id="panels">
 		<div
@@ -72,6 +90,14 @@
 			data-height="650">
 
 			<div class="panel-data">
+
+				status:
+				<select data-attribute="panelStatus">
+					<option>enabled</option>
+					<option>disabled</option>
+				</select>
+
+				<br>
 				minLeft: <input data-attribute="minLeft"></input><br>
 				left: <input data-attribute="left"></input><br>
 				maxLeft: <input data-attribute="maxLeft"></input><br>
@@ -87,6 +113,11 @@
 				minRight: <input data-attribute="minRight"></input><br>
 				right: <input data-attribute="right"></input><br>
 				maxRight: <input data-attribute="maxRight"></input><br>
+
+				<br>
+
+				openWidth: <input data-attribute="openWidth"></input><br>
+				closeWidth: <input data-attribute="closeWidth"></input><br>
 			</div>
 
 		</div>
@@ -98,11 +129,18 @@
 			data-open-width="15%"
 			data-max-width="40%"
 
-			data-disabled="true"
 
 			data-height="650">
 
 			<div class="panel-data">
+
+				status:
+				<select data-attribute="panelStatus">
+					<option>enabled</option>
+					<option>disabled</option>
+				</select>
+
+				<br>
 				minLeft: <input data-attribute="minLeft"></input><br>
 				left: <input data-attribute="left"></input><br>
 				maxLeft: <input data-attribute="maxLeft"></input><br>
@@ -118,6 +156,11 @@
 				minRight: <input data-attribute="minRight"></input><br>
 				right: <input data-attribute="right"></input><br>
 				maxRight: <input data-attribute="maxRight"></input><br>
+
+				<br>
+
+				openWidth: <input data-attribute="openWidth"></input><br>
+				closeWidth: <input data-attribute="closeWidth"></input><br>
 			</div>
 		</div>
 		<div
@@ -128,9 +171,18 @@
 			data-open-width="15%"
 			data-max-width="700"
 
+
 			data-height="650">
 
 			<div class="panel-data">
+
+				status:
+				<select data-attribute="panelStatus">
+					<option>enabled</option>
+					<option>disabled</option>
+				</select>
+
+				<br>
 				minLeft: <input data-attribute="minLeft"></input><br>
 				left: <input data-attribute="left"></input><br>
 				maxLeft: <input data-attribute="maxLeft"></input><br>
@@ -146,6 +198,11 @@
 				minRight: <input data-attribute="minRight"></input><br>
 				right: <input data-attribute="right"></input><br>
 				maxRight: <input data-attribute="maxRight"></input><br>
+
+				<br>
+
+				openWidth: <input data-attribute="openWidth"></input><br>
+				closeWidth: <input data-attribute="closeWidth"></input><br>
 			</div>
 		</div>
 
@@ -160,6 +217,15 @@
 			data-height="650">
 
 			<div class="panel-data">
+
+				status:
+				<select data-attribute="panelStatus">
+					<option>enabled</option>
+					<option>disabled</option>
+				</select>
+
+				<br>
+
 				minLeft: <input data-attribute="minLeft"></input><br>
 				left: <input data-attribute="left"></input><br>
 				maxLeft: <input data-attribute="maxLeft"></input><br>
@@ -175,6 +241,11 @@
 				minRight: <input data-attribute="minRight"></input><br>
 				right: <input data-attribute="right"></input><br>
 				maxRight: <input data-attribute="maxRight"></input><br>
+
+				<br>
+
+				openWidth: <input data-attribute="openWidth"></input><br>
+				closeWidth: <input data-attribute="closeWidth"></input><br>
 			</div>
 		</div>
 	</div>

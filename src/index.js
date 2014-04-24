@@ -103,7 +103,7 @@ define(function (require, exports, module) {
 
 			var panel = this.panelBuilder(_.extend({}, this.handleOptions, options, {
 				el: $el,
-				model: backbone.model(options),
+				model: backbone.model(),
 
 				panels: this,
 			}));
@@ -115,7 +115,7 @@ define(function (require, exports, module) {
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrange);
+	//		this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrange);
 
 			// listen to resize events on window
 		//	this.listenTo($(window), 'resize', this.arrange);

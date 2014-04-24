@@ -23,7 +23,6 @@ define(function (require, exports, module) {
 				delta = Math.abs(edata.delta),
 				before, after;
 
-
 			if (edata.action === 'expand') {
 				// contract other guys
 
@@ -69,6 +68,6 @@ define(function (require, exports, module) {
 	};
 
 	exports.handlePanelResizeStop = function handlePanelResizeStop(panel, edata) {
-
+		this.arrange();
 	};
 });

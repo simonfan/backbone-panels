@@ -148,7 +148,7 @@
         },
         {
             "file": "src/__backbone-panels/actions.js",
-            "line": 107,
+            "line": 113,
             "description": "Invoked whenever the panels to the right of a panel\nhave to be expanded towards the left.\nIt is a response to right-contraction on a panel.",
             "itemtype": "method",
             "name": "expandToLeft",
@@ -169,7 +169,7 @@
         },
         {
             "file": "src/__backbone-panels/actions.js",
-            "line": 155,
+            "line": 166,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the right.\nIt is a response to left-contraction on a panel.",
             "itemtype": "method",
             "name": "expandPanelsToRight",

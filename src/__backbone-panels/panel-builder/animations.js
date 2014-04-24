@@ -5,11 +5,32 @@ define(function (require, exports, module) {
 
 	exports.open = function open(direction, options) {
 
-		this.enablePanel();
+
+	//	console.log(this.model.get('minWidth'));
+		this.unfreeze();
 
 		var openWidth = parseFloat(this.panels.evalMeasureX(this.model.get('openWidth'))),
 			currWidth = parseFloat(this.model.get('width')),
 			delta = Math.abs(openWidth - currWidth);
+
+
+		// UNSET TEMPORARY MINWIDTH
+		options = options || {};
+
+	//	console.log(this.model.get('minWidth'));
+
+		var originalCompleteFunc = options.complete;
+		options.complete = _.bind(function() {
+			if (originalCompleteFunc) {
+				originalCompleteFunc.apply(this.$el, arguments);
+			}
+
+			if (!_.isUndefined(this.__before_close_minwidth__)) {
+				this.model.set('minWidth', this.__before_close_minwidth__);
+			}
+		}, this);
+
+
 
 		return direction === 'left' ?
 			this.aExpandToLeft(delta, options) :
@@ -31,6 +52,8 @@ define(function (require, exports, module) {
 				// options
 		options = options || {};
 
+		var model = this.model;
+
 		var originalCompleteFunc = options.complete;
 
 		options.complete = _.bind(function() {
@@ -38,13 +61,18 @@ define(function (require, exports, module) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
 
-			this.disablePanel();
+			console.log(this.model.get('width'))
+			this.freeze();
 		}, this);
 
 		// delta
-		var closeWidth = parseFloat(this.panels.evalMeasureX(this.model.get('closeWidth'))) || 0,
-			currWidth = parseFloat(this.model.get('width')),
+		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
+			currWidth = parseFloat(model.get('width')),
 			delta = Math.abs(closeWidth - currWidth);
+
+		// SET TEMPORARY MINWIDTH
+		this.__before_close_minwidth__ = model.get('minWidth');
+		model.set('minWidth', closeWidth);
 
 		return direction === 'left' ?
 			this.aContractToLeft(delta, options) :

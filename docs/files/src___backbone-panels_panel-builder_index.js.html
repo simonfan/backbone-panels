@@ -117,19 +117,21 @@ define(function (require, exports, module) {
 			// set an id for the panel.
 			this.id = this.$el.prop(&#x27;id&#x27;);
 
+
+
+			// initialize enable-disable system
+			this._initializePanelEnableDisable();
+
+
 			// set initial data
 			var data = this.parseData(this.$el.data());
+			_.defaults(data, {
+				panelStatus: &#x27;enabled&#x27;
+			});
 			this.model.set(data);
 
 
 			this.$el.addClass(this.panelClass);
-
-
-			if (options.disabled) {
-				this.disablePanel();
-			} else {
-				this.enablePanel();
-			}
 		},
 
 		parseData: require(&#x27;./parse-data&#x27;),
@@ -143,42 +145,12 @@ define(function (require, exports, module) {
 		},
 
 		panelClass: &#x27;panel&#x27;,
-
-		enablePanel: function enablePanel() {
-
-			this.$el
-				.addClass(this.panelClass + &#x27;-enabled&#x27;)
-				.removeClass(this.panelClass + &#x27;-disabled&#x27;);
-
-			this.model.set(this.__minmax__);
-
-			this.model.set(&#x27;panelEnabled&#x27;, true);
-
-			return this;
-		},
-
-		disablePanel: function disablePanel() {
-
-			var model = this.model;
-
-			this.__minmax__ = {
-				minWidth: model.get(&#x27;minWidth&#x27;),
-				maxWidth: model.get(&#x27;maxWidth&#x27;)
-			};
-
-			model.set({
-				minWidth: model.get(&#x27;width&#x27;),
-				maxWidth: model.get(&#x27;width&#x27;),
-				panelEnabled: false,
-			});
-
-			this.$el
-				.addClass(this.panelClass + &#x27;-disabled&#x27;)
-				.removeClass(this.panelClass + &#x27;-enabled&#x27;);
-		},
 	});
 
-	panel.proto(require(&#x27;./animations&#x27;));
+	panel
+		.proto(require(&#x27;./animations&#x27;))
+		.proto(require(&#x27;./enable-disable&#x27;))
+		.proto(require(&#x27;./freeze-unfreeze&#x27;));
 });
 
     </pre>

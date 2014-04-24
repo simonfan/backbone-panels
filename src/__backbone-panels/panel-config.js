@@ -11,13 +11,13 @@ define(function (require, exports, module) {
 
 	exports.sumBefore = function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.get(attr);
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	};
 
 	exports.sumAfter = function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return value + panel.get(attr);
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	};
 

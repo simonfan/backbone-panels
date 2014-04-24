@@ -7,14 +7,25 @@ define(function (require, exports, module) {
 	'use strict';
 
 	var _ = require('lodash'),
-		resizable = require('backbone-ui-resizable');
+		resizable = require('backbone-ui-resizable'),
+		backbone = require('lowercase-backbone');
 
 	var panel = module.exports = resizable.extend({
 
 		initialize: function initialize(options) {
-			resizable.prototype.initialize.call(this, options);
+
+
+			backbone.view.prototype.initialize.call(this, options);
+
+			this.initializeModelDock(options);
+
+			this.initializeUIDraggable(options);
 
 			this.initializePanel(options);
+
+
+			this.initializeUIResizable(options);
+
 		},
 
 		initializePanel: function initializePanel(options) {
@@ -27,17 +38,17 @@ define(function (require, exports, module) {
 
 			// set initial data
 			var data = this.parseData(this.$el.data());
+			_.defaults(data, {
+				panelStatus: 'enabled'
+			});
 			this.model.set(data);
 
 
+			// initialize enable-disable system
+			this._initializePanelEnableDisable();
+
+
 			this.$el.addClass(this.panelClass);
-
-
-			if (options.disabled) {
-				this.disablePanel();
-			} else {
-				this.enablePanel();
-			}
 		},
 
 		parseData: require('./parse-data'),
@@ -51,40 +62,10 @@ define(function (require, exports, module) {
 		},
 
 		panelClass: 'panel',
-
-		enablePanel: function enablePanel() {
-
-			this.$el
-				.addClass(this.panelClass + '-enabled')
-				.removeClass(this.panelClass + '-disabled');
-
-			this.model.set(this.__minmax__);
-
-			this.model.set('panelEnabled', true);
-
-			return this;
-		},
-
-		disablePanel: function disablePanel() {
-
-			var model = this.model;
-
-			this.__minmax__ = {
-				minWidth: model.get('minWidth'),
-				maxWidth: model.get('maxWidth')
-			};
-
-			model.set({
-				minWidth: model.get('width'),
-				maxWidth: model.get('width'),
-				panelEnabled: false,
-			});
-
-			this.$el
-				.addClass(this.panelClass + '-disabled')
-				.removeClass(this.panelClass + '-enabled');
-		},
 	});
 
-	panel.proto(require('./animations'));
+	panel
+		.proto(require('./animations'))
+		.proto(require('./enable-disable'))
+		.proto(require('./freeze-unfreeze'));
 });

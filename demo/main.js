@@ -1,4 +1,4 @@
-define(['backbone-panels'], function (bbPanels) {
+define(['backbone-panels', 'lodash'], function (bbPanels, _) {
 
 	var bbPanels2 = bbPanels.extend({
 		panelBuilder: bbPanels.prototype.panelBuilder.extend({
@@ -33,6 +33,11 @@ define(['backbone-panels'], function (bbPanels) {
 				height: '->css:height',
 				minHeight: '->css:min-height',
 				maxHeight: '->css:max-height',
+
+				panelStatus: '[data-attribute="panelStatus"]',
+
+				openWidth: '[data-attribute="openWidth"]',
+				closeWidth: '[data-attribute="closeWidth"]',
 			},
 		})
 	})
@@ -41,4 +46,37 @@ define(['backbone-panels'], function (bbPanels) {
 	window.panels = bbPanels2({
 		el: $('#panels')
 	});
+
+
+
+
+
+
+	// controls
+	var $openControl = $('#open-control'),
+		$closeControl = $('#close-control');
+
+	$openControl.find('button').click(function () {
+		var pindexes = $openControl.find('input').val().split(','),
+			direction = $openControl.find('select').val();
+
+		_.each(pindexes, function (index) {
+
+			var panel = panels.getPanelAt(index);
+
+			panel.open(direction);
+		})
+	});
+
+	$closeControl.find('button').click(function () {
+		var pindexes = $closeControl.find('input').val().split(','),
+			direction = $closeControl.find('select').val();
+
+		_.each(pindexes, function (index) {
+
+			var panel = panels.getPanelAt(index);
+
+			panel.close(direction);
+		})
+	})
 });
