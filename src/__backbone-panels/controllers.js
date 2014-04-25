@@ -95,6 +95,12 @@ define(function (require, exports, module) {
 					delta = panel[_o.absorb](delta, coptions);
 				}
 			}
+
+/*
+			console.log('---remaining delta---')
+			console.log(delta);
+			console.log('---remaining delta---')
+*/
 		}
 
 	};

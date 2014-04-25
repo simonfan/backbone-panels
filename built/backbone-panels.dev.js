@@ -40,44 +40,42 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 	exports.open = function open(direction, options) {
 
+		this.enablePanel();
 
-	//	console.log(this.model.get('minWidth'));
-		this.unfreeze();
+		var openWidth = parseInt(this.panels.evalMeasureX(this.model.get('openWidth'))),
+			currWidth = parseInt(this.model.get('width')),
+			delta = openWidth - currWidth;
 
-		var openWidth = parseFloat(this.panels.evalMeasureX(this.model.get('openWidth'))),
-			currWidth = parseFloat(this.model.get('width')),
-			delta = Math.abs(openWidth - currWidth);
 
 
 		// UNSET TEMPORARY MINWIDTH
 		options = options || {};
-
-	//	console.log(this.model.get('minWidth'));
-
 		var originalCompleteFunc = options.complete;
 		options.complete = _.bind(function() {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
+			// restore min width
+			if (_.isNumber(this._real_min_width_before_close_)) {
+				this.model.set('minWidth', this._real_min_width_before_close_);
 
-			if (!_.isUndefined(this.__before_close_minwidth__)) {
-				this.model.set('minWidth', this.__before_close_minwidth__);
+				delete this._real_min_width_before_close_;
 			}
+
 		}, this);
 
 
-
-		return direction === 'left' ?
-			this.aExpandToLeft(delta, options) :
-			this.aExpandToRight(delta, options);
+		return direction === 'w' ?
+			this.aExpandToW(delta, options) :
+			this.aExpandToE(delta, options);
 	}
 
-	exports.openToRight = function openToRight(options) {
-		return this.open('right', options);
+	exports.openToE = function openToE(options) {
+		return this.open('e', options);
 	};
 
-	exports.openToLeft = function openToLeft(options) {
-		return this.open('left', options);
+	exports.openToW = function openToW(options) {
+		return this.open('w', options);
 	};
 
 
@@ -96,8 +94,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
 
-			console.log(this.model.get('width'))
-			this.freeze();
+			this.disablePanel();
 		}, this);
 
 		// delta
@@ -105,21 +102,36 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			currWidth = parseFloat(model.get('width')),
 			delta = Math.abs(closeWidth - currWidth);
 
-		// SET TEMPORARY MINWIDTH
-		this.__before_close_minwidth__ = model.get('minWidth');
+		console.log('delta ' + delta);
+
+
+		console.log('attributes before setting temporary min width');
+
+		console.log(model.toJSON());
+
+		console.log(currWidth);
+		console.log(model.get('width'))
+
+		// set temporary min width
+		this._real_min_width_before_close_ = model.get('minWidth');
 		model.set('minWidth', closeWidth);
 
-		return direction === 'left' ?
-			this.aContractToLeft(delta, options) :
-			this.aContractToRight(delta, options);
+
+		console.log('attributes before animation')
+		console.log(model.toJSON());
+		console.log('deltaE ' +  this.deltaE(delta));
+
+		return direction === 'w' ?
+			this.aContractToW(delta, options) :
+			this.aContractToE(delta, options);
 
 	};
 	exports.closeToRight = function closeToRight(options) {
-		return this.close('right', options);
+		return this.close('e', options);
 	};
 
 	exports.closeToLeft = function closeToLeft(options) {
-		return this.close('left', options);
+		return this.close('w', options);
 	};
 });
 
@@ -175,52 +187,12 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 
 });
 
-define('__backbone-panels/panel-builder/freeze-unfreeze',['require','exports','module'],function (require, exports, module) {
-	
-
-	exports.freeze = function freeze() {
-
-		var model = this.model;
-
-		// [1] store min and max
-		this._before_freeze_minmax_ = {
-			minWidth: model.get('minWidth'),
-			maxWidth: model.get('maxWidth')
-		};
-
-		// [2] set the min and max widthes to the current width
-		model.set({
-			minWidth: model.get('width'),
-			maxWidth: model.get('width')
-		});
-
-		// [3] disable handles
-		this.disableResizable();
-
-		return this;
-	};
-
-	exports.unfreeze = function unfreeze() {
-
-		// [1] reset real min and max
-		this.model.set(this._before_freeze_minmax_);
-
-		// [2] delete
-		delete this._before_freeze_minmax_;
-
-		// [3] enable resizable
-		this.enableResizable();
-
-		return this;
-	};
-});
-
 /**
  *
  * @module backbone-panels
  * @submolude panel-builder
  */
-define('__backbone-panels/panel-builder/index',['require','exports','module','lodash','backbone-ui-resizable','lowercase-backbone','./parse-data','./animations','./enable-disable','./freeze-unfreeze'],function (require, exports, module) {
+define('__backbone-panels/panel-builder/index',['require','exports','module','lodash','backbone-ui-resizable','lowercase-backbone','./parse-data','./animations','./enable-disable'],function (require, exports, module) {
 	
 
 	var _ = require('lodash'),
@@ -238,6 +210,8 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 
 			this.initializeUIDraggable(options);
 
+
+			// initialize panel before initialize resizable.
 			this.initializePanel(options);
 
 
@@ -283,8 +257,8 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 
 	panel
 		.proto(require('./animations'))
-		.proto(require('./enable-disable'))
-		.proto(require('./freeze-unfreeze'));
+		.proto(require('./enable-disable'));
+	//	.proto(require('./freeze-unfreeze'));
 });
 
 /**
@@ -566,10 +540,101 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
  * @module backbone-panels
  * @submolude actions
  */
-define('__backbone-panels/actions',['require','exports','module','lodash'],function (require, exports, module) {
+define('__backbone-panels/controllers',['require','exports','module','lodash'],function (require, exports, module) {
 	
 
 	var _ = require('lodash');
+
+
+
+	exports.controlOptions = {
+		agent: 'panels-control',
+		elasticity: 1.5,
+	};
+
+	function generateController(_o) {
+
+		/**
+		 * _o:
+		 *     next: 'shift' | 'pop'
+		 *     move:
+		 *     absorb:
+		 *
+		 */
+
+		return function controller(panels, delta) {
+
+			var coptions = this.controlOptions;
+
+			// [1] variable to hold panels that were
+			//     sized once.
+			var _panels = [];
+
+			// [2] loop through panels
+			while (panels.length && delta !== 0) {
+
+				// [2.1] get the next panel to be sized
+				//     this method should reduce the panels array length
+				//     (either pop or shift)
+				var panel = panels[_o.next]();
+
+				// [2.2] check panel status
+				if (panel.panelEnabled()) {
+					// [2.2-A] panel ENABLED
+
+					// Add the panel to the list of 'sized panels'
+					_panels.push(panel);
+
+					if (panels.length === 0) {
+						// [A-1] LAST PANEL
+
+						// this is the last panel, it should absorb the rest
+						// of the delta by either contracting or expanding
+
+						delta = panel[_o.absorb](delta, coptions);
+
+					} else {
+						// [A-2] NORMAL PANEL
+
+						// [A-2.1] Separate delta into movement and absorption
+						var dMove = delta / coptions.elasticity,
+							dAbsorb = delta - dMove;
+
+						// [A-2.2] Absorb
+						var absorbRemainder = panel[_o.absorb](dAbsorb, coptions);
+
+						// [A-2.3] Move
+						var moveRemainder = panel[_o.move](dMove + absorbRemainder, coptions);
+
+						// [A-2.4] update the global delta
+						//         by subtracting the delta that was absorbed
+						delta -= (dAbsorb - absorbRemainder);
+					}
+
+
+				} else {
+					// [2.2-B] panel DISABLED
+					//     Just move it.
+					//     Do not alter the delta at all.
+					panel[_o.move](delta, coptions);
+				}
+
+			}
+
+
+			// [3] If there is still delta to be absorbed,
+			//     divide it among all panels
+			if (delta) {
+				while (_panels.length > 0 && delta !== 0) {
+					var panel = _panels.pop();
+
+					delta = panel[_o.absorb](delta, coptions);
+				}
+			}
+		}
+
+	};
+
 
 	/**
 	 * Invoked whenever the panels to the left of a panel
@@ -580,70 +645,11 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 	 * @param panels {Array of panels}
 	 * @param delta {Number}
 	 */
-	exports.contractPanelsToLeft = function contractPanelsToLeft(panels, delta) {
-
-
-		var _panels = [];
-
-
-		while (panels.length > 0 && delta !== 0) {
-
-			var panel = panels.pop();
-
-			if (panel.panelEnabled()) {
-				// ENABLED
-
-				_panels.push(panel);
-
-				if (panels.length === 0) {
-					// LAST PANEL
-
-					// this is the last panel,
-					// it has to contract all the delta
-					delta = panel.contractToLeft(delta, { agent: 'panels-control' });
-
-
-				} else if (panel.panelEnabled()) {
-					// NORMAL
-
-					var dMove = delta / 1.5,
-						dContract = delta - dMove;
-
-
-
-					// [2] contract to the left the amount required
-					var contractRemainder = panel.contractToLeft(dContract, { agent: 'panels-control' });
-
-					// [1] move to the left the amount that
-					//     is required
-					var moveRemainder = panel.moveToLeft(dMove + contractRemainder, { agent: 'panels-control' });
-
-					// [4] update the global delta
-					delta -= (dContract - contractRemainder);
-				}
-
-
-			} else {
-				// DISABLED
-
-				panel.moveToLeft(delta, { agent: 'panels-control' });
-
-			}
-		}
-
-
-
-		// IF THERE IS A LAST REMAINDER,
-		// it must go back
-		if (delta) {
-			while (_panels.length > 0 && delta !== 0) {
-				var panel = _panels.pop();
-
-				delta = panel.contractToLeft(delta, { agent: 'panels-control' });
-			}
-		}
-
-	};
+	exports.contractPanelsToLeft = generateController({
+		absorb: 'contractToLeft',
+		move: 'moveToLeft',
+		next: 'pop'
+	});
 
 	/**
 	 * This method is called whenever a panel
@@ -655,57 +661,11 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 	 * @param panels {Array of panelViews}
 	 * @param delta {+Number}
 	 */
-	exports.contractPanelsToRight = function contractPanelsToRight(panels, delta) {
-
-
-		var moveoptions = {
-			agent: 'panels-control'
-		};
-
-
-		var _panels = [];
-
-		while (panels.length > 0 && delta > 0) {
-
-			// get the first panel from the panels to the right
-			var panel = panels.shift();
-
-			_panels.push(panel);
-
-			if (panels.length === 0) {
-				// this is the last panel,
-				// it has to contract all the delta
-				var lastRemainder = panel.contractToRight(delta, moveoptions);
-
-				while (_panels.length > 0 && lastRemainder !== 0) {
-					_panels.pop().contractToRight(lastRemainder, moveoptions);
-				}
-
-			} else if (panel.panelEnabled()) {
-
-				// PANEL ENABLED
-
-				var dMove = delta / 1.5,
-					dContract = delta - dMove;
-
-
-				// [2] contract to the left the amount required
-				var contractRemainder = panel.contractToRight(dContract, moveoptions);
-
-				// [1] move to the left the amount that
-				//     is required
-  				var moveRemainder = panel.moveToRight(dMove + contractRemainder, moveoptions);
-
-				// [4] update the global delta
-				delta -= (dContract - contractRemainder);
-			} else {
-				// PANEL DISABLED
-
-				panel.moveToRight(delta, moveoptions);
-
-			}
-		}
-	};
+	exports.contractPanelsToRight = generateController({
+		absorb: 'contractToRight',
+		move: 'moveToRight',
+		next: 'shift',
+	});
 
 	/**
 	 * Invoked whenever the panels to the right of a panel
@@ -716,49 +676,12 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 	 * @param panels {Array of panel panels}
 	 * @param delta {Number}
 	 */
-	exports.expandPanelsToLeft = function expandPanelsToLeft(panels, delta) {
+	exports.expandPanelsToLeft = generateController({
+		absorb: 'expandToLeft',
+		move: 'moveToLeft',
+		next: 'shift',
+	});
 
-		var moveoptions = {
-			agent: 'panels-control'
-		};
-
-		while (panels.length > 0 && delta !== 0) {
-
-			// get the first panel from the panels to the right
-			var panel = panels.shift();
-
-			if (panels.length === 0) {
-				// this is the last panel,
-				// it has to contract all the delta
-				delta = panel.expandToLeft(delta, moveoptions);
-
-			} else if (panel.panelEnabled()) {
-
-				// PANEL ENABLED
-
-				var dMove = delta / 1.5,
-					dExpand = delta - dMove;
-
-
-				// [2] contract to the left the amount required
-				var expandRemainder = panel.expandToLeft(dExpand, moveoptions);
-
-				// [1] move to the left the amount that
-				//     is required
-				var moveRemainder = panel.moveToLeft(dMove + expandRemainder, moveoptions);
-
-				// [4] update the global delta
-				delta -= (dExpand - expandRemainder);
-
-			} else {
-				// PANEL DISABLED
-
-				panel.moveToLeft(delta, moveoptions);
-
-			}
-		}
-
-	};
 
 	/**
 	 * Invoked whenever the panels to the left of a panel
@@ -769,58 +692,11 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 	 * @param panels {Array of panel panels}
 	 * @param delta {Number}
 	 */
-	exports.expandPanelsToRight = function expandPanelsToRight(panels, delta) {
-
-		var moveoptions = {
-			agent: 'panels-control'
-		};
-
-		var _panels = [];
-
-		while (panels.length > 0 && delta !== 0) {
-
-
-			var panel = panels.pop();
-
-			_panels.push(panel);
-
-			if (panels.length === 0) {
-				// this is the last panel,
-				// it has to contract all the delta
-				var lastRemainder = panel.expandToRight(delta, { agent: 'panels-control' });
-
-				while (_panels.length > 0 && lastRemainder) {
-
-			//		console.log(lastRemainder);
-					lastRemainder = _panels.pop().expandToRight(lastRemainder, {agent: 'panels-control'});
-				}
-
-				console.log(lastRemainder);
-
-			} else if (panel.panelEnabled()) {
-
-				var dMove = delta / 1.5,
-					dExpand = delta - dMove;
-
-
-				// [2] contract to the left the amount required
-				var expandRemainder = panel.expandToRight(dExpand, { agent: 'panels-control' });
-
-
-				// [1] move to the left the amount that
-				//     is required
-				var moveRemainder = panel.moveToRight(dMove + expandRemainder, { agent: 'panels-control' });
-
-				// [4] update the global delta
-				delta -= (dExpand - expandRemainder);
-
-			} else {
-
-
-				panel.moveToRight(delta);
-			}
-		}
-	};
+	exports.expandPanelsToRight = generateController({
+		absorb: 'expandToRight',
+		move: 'moveToRight',
+		next: 'pop',
+	});
 });
 
 define('__backbone-panels/calculators',['require','exports','module'],function (require, exports, module) {
@@ -903,7 +779,7 @@ define('__backbone-panels/enable-disable',['require','exports','module'],functio
  *
  * @module backbone-panels
  */
-define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/panel-config','./__backbone-panels/event-handlers','./__backbone-panels/actions','./__backbone-panels/calculators','./__backbone-panels/enable-disable'],function (require, exports, module) {
+define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/panel-config','./__backbone-panels/event-handlers','./__backbone-panels/controllers','./__backbone-panels/calculators','./__backbone-panels/enable-disable'],function (require, exports, module) {
 	
 
 	var $ = require('jquery'),
@@ -1046,7 +922,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 	panels.proto(require('./__backbone-panels/iterators'));
 	panels.proto(require('./__backbone-panels/panel-config'));
 	panels.proto(require('./__backbone-panels/event-handlers'));
-	panels.proto(require('./__backbone-panels/actions'));
+	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));
 	panels.proto(require('./__backbone-panels/enable-disable'));
 });

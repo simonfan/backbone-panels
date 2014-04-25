@@ -68,6 +68,6 @@ define(function (require, exports, module) {
 	};
 
 	exports.handlePanelResizeStop = function handlePanelResizeStop(panel, edata) {
-		this.arrange();
+	//	this.arrange();
 	};
 });

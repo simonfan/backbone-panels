@@ -7,7 +7,6 @@ define(function (require, exports, module) {
 
 			if (this.panelEnabled()) {
 				// enabled
-			//	this.unfreeze();
 				this.enableResizable();
 
 				// [3] set classes
@@ -17,8 +16,6 @@ define(function (require, exports, module) {
 
 			} else {
 				// disabled
-
-			//	this.freeze();
 				this.disableResizable();
 
 
@@ -28,7 +25,7 @@ define(function (require, exports, module) {
 					.removeClass(this.panelClass + '-enabled');
 			}
 
-			this.panels.arrange();
+			this.panels.arrangeBoundaries();
 
 		});
 

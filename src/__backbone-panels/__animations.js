@@ -27,9 +27,6 @@ define(function (require, exports, module) {
 				delete this._real_min_width_before_close_;
 			}
 
-
-			this.panels.arrangePositions();
-
 		}, this);
 
 
@@ -73,9 +70,6 @@ define(function (require, exports, module) {
 
 			// disable the panel after the animation is complete
 			this.disablePanel();
-
-
-			this.panels.arrangePositions();
 		}, this);
 
 		// set temporary min width

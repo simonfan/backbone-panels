@@ -13,17 +13,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/__backbone-panels/__panel-config.js": {
-            "name": "src/__backbone-panels/__panel-config.js",
-            "modules": {
-                "positioners": 1
-            },
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src/__backbone-panels/actions.js": {
-            "name": "src/__backbone-panels/actions.js",
+        "src/__backbone-panels/controllers.js": {
+            "name": "src/__backbone-panels/controllers.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -54,7 +45,9 @@
         },
         "src/__backbone-panels/panel-config.js": {
             "name": "src/__backbone-panels/panel-config.js",
-            "modules": {},
+            "modules": {
+                "positioners": 1
+            },
             "classes": {},
             "fors": {},
             "namespaces": {}
@@ -71,8 +64,8 @@
         "backbone-panels": {
             "name": "backbone-panels",
             "submodules": {
-                "positioners": 1,
-                "enable-disable": 1
+                "enable-disable": 1,
+                "positioners": 1
             },
             "classes": {},
             "fors": {},
@@ -81,19 +74,6 @@
             "file": "src/__backbone-panels/panel-builder/index.js",
             "line": 1,
             "submolude": "panel-builder"
-        },
-        "positioners": {
-            "name": "positioners",
-            "submodules": {},
-            "classes": {},
-            "fors": {},
-            "is_submodule": 1,
-            "namespaces": {},
-            "module": "backbone-panels",
-            "namespace": "",
-            "file": "src/__backbone-panels/__panel-config.js",
-            "line": 1,
-            "description": "Logic for positioning the panels at the right starting place."
         },
         "enable-disable": {
             "name": "enable-disable",
@@ -107,40 +87,33 @@
             "file": "src/__backbone-panels/enable-disable.js",
             "line": 1,
             "description": "Logic for enabling and disabling panels"
+        },
+        "positioners": {
+            "name": "positioners",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "backbone-panels",
+            "namespace": "",
+            "file": "src/__backbone-panels/panel-config.js",
+            "line": 1,
+            "description": "Logic for positioning the panels at the right starting place."
         }
     },
     "classes": {},
     "classitems": [
         {
-            "file": "src/__backbone-panels/__panel-config.js",
-            "line": 24,
-            "description": "Set the place for the panel.",
-            "itemtype": "method",
-            "name": "postitionPanel",
-            "params": [
-                {
-                    "name": "panel",
-                    "description": "",
-                    "type": "Backbone Model"
-                }
-            ],
+            "file": "src/__backbone-panels/controllers.js",
+            "line": 21,
+            "description": "_o:\n    next: 'shift' | 'pop'\n    move:\n    absorb:",
             "class": "",
-            "module": "backbone-panels",
-            "submodule": "positioners"
+            "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/__panel-config.js",
-            "line": 97,
-            "description": "Puts all panels in their places\nby calculating left positions on them all.",
-            "itemtype": "method",
-            "name": "arrange",
-            "class": "",
-            "module": "backbone-panels",
-            "submodule": "positioners"
-        },
-        {
-            "file": "src/__backbone-panels/actions.js",
-            "line": 12,
+            "file": "src/__backbone-panels/controllers.js",
+            "line": 103,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the left.\nIt is a response to left-expansion on a panel.",
             "itemtype": "method",
             "name": "contractToLeft",
@@ -160,8 +133,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/actions.js",
-            "line": 86,
+            "file": "src/__backbone-panels/controllers.js",
+            "line": 118,
             "description": "This method is called whenever a panel\nis on expansion towards the Right side,\nso that the panels right to it have to contract",
             "itemtype": "method",
             "name": "contractToRight",
@@ -181,8 +154,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/actions.js",
-            "line": 148,
+            "file": "src/__backbone-panels/controllers.js",
+            "line": 134,
             "description": "Invoked whenever the panels to the right of a panel\nhave to be expanded towards the left.\nIt is a response to right-contraction on a panel.",
             "itemtype": "method",
             "name": "expandToLeft",
@@ -202,8 +175,8 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/actions.js",
-            "line": 201,
+            "file": "src/__backbone-panels/controllers.js",
+            "line": 150,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the right.\nIt is a response to left-contraction on a panel.",
             "itemtype": "method",
             "name": "expandPanelsToRight",
@@ -460,7 +433,7 @@
         },
         {
             "message": "unknown tag: submolude",
-            "line": " src/__backbone-panels/actions.js:1"
+            "line": " src/__backbone-panels/controllers.js:1"
         },
         {
             "message": "unknown tag: submolude",
@@ -469,6 +442,10 @@
         {
             "message": "unknown tag: submolude",
             "line": " src/__backbone-panels/iterators.js:1"
+        },
+        {
+            "message": "Missing item type\n_o:\n    next: 'shift' | 'pop'\n    move:\n    absorb:",
+            "line": " src/__backbone-panels/controllers.js:21"
         }
     ]
 }

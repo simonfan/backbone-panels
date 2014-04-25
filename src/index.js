@@ -115,10 +115,10 @@ define(function (require, exports, module) {
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-	//		this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrange);
+			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
-		//	this.listenTo($(window), 'resize', this.arrange);
+			$(window).on('resize', _.bind(this.arrange, this));
 
 
 			// put the panl in the panels array
@@ -148,7 +148,7 @@ define(function (require, exports, module) {
 	});
 
 	panels.proto(require('./__backbone-panels/iterators'));
-	panels.proto(require('./__backbone-panels/panel-config'));
+	panels.proto(require('./__backbone-panels/arrange/index'));
 	panels.proto(require('./__backbone-panels/event-handlers'));
 	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));

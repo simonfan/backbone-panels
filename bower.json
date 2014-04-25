@@ -26,7 +26,7 @@
     "jquery": "~2.1.0"
   },
   "dependencies": {
-    "backbone-ui-resizable": "~0.8.16",
+    "backbone-ui-resizable": "0.8.17",
     "jquery": "~2.1.0",
     "requirejs": "~2.1.11"
   }

@@ -113,6 +113,8 @@ define(function (require, exports, module) {
 
 			this.initializeUIDraggable(options);
 
+
+			// initialize panel before initialize resizable.
 			this.initializePanel(options);
 
 
@@ -158,8 +160,8 @@ define(function (require, exports, module) {
 
 	panel
 		.proto(require(&#x27;./animations&#x27;))
-		.proto(require(&#x27;./enable-disable&#x27;))
-		.proto(require(&#x27;./freeze-unfreeze&#x27;));
+		.proto(require(&#x27;./enable-disable&#x27;));
+	//	.proto(require(&#x27;./freeze-unfreeze&#x27;));
 });
 
     </pre>

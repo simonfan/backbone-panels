@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/__backbone-panels/controllers.js - backbone-panels</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="backbone-panels"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/backbone-panels.html">backbone-panels</a></li>
+            
+                <li><a href="../modules/enable-disable.html">enable-disable</a></li>
+            
+                <li><a href="../modules/positioners.html">positioners</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src/__backbone-panels/controllers.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Logic for dealing with panel resizing
+ *
+ * @module backbone-panels
+ * @submolude actions
+ */
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
+
+	var _ = require(&#x27;lodash&#x27;);
+
+
+
+	exports.controlOptions = {
+		agent: &#x27;panels-control&#x27;,
+		elasticity: 1.5,
+	};
+
+	function generateController(_o) {
+
+		/**
+		 * _o:
+		 *     next: &#x27;shift&#x27; | &#x27;pop&#x27;
+		 *     move:
+		 *     absorb:
+		 *
+		 */
+
+		return function controller(panels, delta) {
+
+			var coptions = this.controlOptions;
+
+			// [1] variable to hold panels that were
+			//     sized once.
+			var _panels = [];
+
+			// [2] loop through panels
+			while (panels.length &amp;&amp; delta !== 0) {
+
+				// [2.1] get the next panel to be sized
+				//     this method should reduce the panels array length
+				//     (either pop or shift)
+				var panel = panels[_o.next]();
+
+				// [2.2] check panel status
+				if (panel.panelEnabled()) {
+					// [2.2-A] panel ENABLED
+
+					// Add the panel to the list of &#x27;sized panels&#x27;
+					_panels.push(panel);
+
+					if (panels.length === 0) {
+						// [A-1] LAST PANEL
+
+						// this is the last panel, it should absorb the rest
+						// of the delta by either contracting or expanding
+
+						delta = panel[_o.absorb](delta, coptions);
+
+					} else {
+						// [A-2] NORMAL PANEL
+
+						// [A-2.1] Separate delta into movement and absorption
+						var dMove = delta / coptions.elasticity,
+							dAbsorb = delta - dMove;
+
+						// [A-2.2] Absorb
+						var absorbRemainder = panel[_o.absorb](dAbsorb, coptions);
+
+						// [A-2.3] Move
+						var moveRemainder = panel[_o.move](dMove + absorbRemainder, coptions);
+
+						// [A-2.4] update the global delta
+						//         by subtracting the delta that was absorbed
+						delta -= (dAbsorb - absorbRemainder);
+					}
+
+
+				} else {
+					// [2.2-B] panel DISABLED
+					//     Just move it.
+					//     Do not alter the delta at all.
+					panel[_o.move](delta, coptions);
+				}
+
+			}
+
+
+			// [3] If there is still delta to be absorbed,
+			//     divide it among all panels
+			if (delta) {
+				while (_panels.length &gt; 0 &amp;&amp; delta !== 0) {
+					var panel = _panels.pop();
+
+					delta = panel[_o.absorb](delta, coptions);
+				}
+			}
+		}
+
+	};
+
+
+	/**
+	 * Invoked whenever the panels to the left of a panel
+	 * have to be contracted towards the left.
+	 * It is a response to left-expansion on a panel.
+	 *
+	 * @method contractToLeft
+	 * @param panels {Array of panels}
+	 * @param delta {Number}
+	 */
+	exports.contractPanelsToLeft = generateController({
+		absorb: &#x27;contractToLeft&#x27;,
+		move: &#x27;moveToLeft&#x27;,
+		next: &#x27;pop&#x27;
+	});
+
+	/**
+	 * This method is called whenever a panel
+	 * is on expansion towards the Right side,
+	 * so that the panels right to it have to contract
+	 *
+	 *
+	 * @method contractToRight
+	 * @param panels {Array of panelViews}
+	 * @param delta {+Number}
+	 */
+	exports.contractPanelsToRight = generateController({
+		absorb: &#x27;contractToRight&#x27;,
+		move: &#x27;moveToRight&#x27;,
+		next: &#x27;shift&#x27;,
+	});
+
+	/**
+	 * Invoked whenever the panels to the right of a panel
+	 * have to be expanded towards the left.
+	 * It is a response to right-contraction on a panel.
+	 *
+	 * @method expandToLeft
+	 * @param panels {Array of panel panels}
+	 * @param delta {Number}
+	 */
+	exports.expandPanelsToLeft = generateController({
+		absorb: &#x27;expandToLeft&#x27;,
+		move: &#x27;moveToLeft&#x27;,
+		next: &#x27;shift&#x27;,
+	});
+
+
+	/**
+	 * Invoked whenever the panels to the left of a panel
+	 * have to be contracted towards the right.
+	 * It is a response to left-contraction on a panel.
+	 *
+	 * @method expandPanelsToRight
+	 * @param panels {Array of panel panels}
+	 * @param delta {Number}
+	 */
+	exports.expandPanelsToRight = generateController({
+		absorb: &#x27;expandToRight&#x27;,
+		move: &#x27;moveToRight&#x27;,
+		next: &#x27;pop&#x27;,
+	});
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
