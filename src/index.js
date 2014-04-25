@@ -118,7 +118,7 @@ define(function (require, exports, module) {
 			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
-			$(window).on('resize', _.bind(this.arrange, this));
+		//	$(window).on('resize', _.bind(this.arrange, this));
 
 
 			// put the panl in the panels array

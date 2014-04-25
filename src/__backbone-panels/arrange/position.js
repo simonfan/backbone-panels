@@ -34,7 +34,7 @@ define(function (require, exports, module) {
 	 */
 	module.exports = _.throttle(function arrangePositions() {
 
-		console.log('arrange positions')
+	//	console.log('arrange positions')
 
 		this.each(function (panel, index) {
 

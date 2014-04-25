@@ -51,7 +51,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 		// UNSET TEMPORARY MINWIDTH
 		options = options || {};
 		var originalCompleteFunc = options.complete;
-		options.complete = _.bind(function() {
+		options.complete = _.bind(function () {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
@@ -71,7 +71,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 		return direction === 'w' ?
 			this.aExpandToW(delta, options) :
 			this.aExpandToE(delta, options);
-	}
+	};
 
 	exports.openToE = function openToE(options) {
 		return this.open('e', options);
@@ -100,7 +100,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 		var originalCompleteFunc = options.complete;
 
-		options.complete = _.bind(function() {
+		options.complete = _.bind(function () {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
@@ -386,7 +386,7 @@ define('__backbone-panels/arrange/position',['require','exports','module','lodas
 	 */
 	module.exports = _.throttle(function arrangePositions() {
 
-		console.log('arrange positions')
+	//	console.log('arrange positions')
 
 		this.each(function (panel, index) {
 
@@ -459,7 +459,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 
 	module.exports = function arrangeBoundaries() {
 
-		console.log('arrange boundaries');
+	//	console.log('arrange boundaries');
 
 		this.each(function (panel, index) {
 
@@ -477,8 +477,11 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
  * @module backbone-panels
  * @submodule positioners
  */
-define('__backbone-panels/arrange/index',['require','exports','module','./position','./boundaries'],function (require, exports, module) {
+define('__backbone-panels/arrange/index',['require','exports','module','lodash','./position','./boundaries'],function (require, exports, module) {
 	
+
+
+	var _ = require('lodash');
 
 	exports.arrangePositions = require('./position');
 
@@ -506,7 +509,7 @@ define('__backbone-panels/arrange/index',['require','exports','module','./positi
 
 		}, this);
 
-	}
+	};
 
 	/**
 	 * Puts all panels in their places
@@ -517,7 +520,7 @@ define('__backbone-panels/arrange/index',['require','exports','module','./positi
 	exports.arrange = function arrange() {
 
 
-		console.log('arrange')
+	//	console.log('arrange')
 
 		this.arrangePositions();
 		this.arrangeBoundaries();
@@ -628,7 +631,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
 
 		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
-	},
+	};
 
 	exports.controlOptions = {
 		agent: 'panels-control',
@@ -726,9 +729,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 			//     divide it among all panels
 			if (delta) {
 				while (_panels.length > 0 && delta !== 0) {
-					var panel = _panels.pop();
-
-					delta = panel[_o.absorb](delta, coptions);
+					delta = _panels.pop()[_o.absorb](delta, coptions);
 				}
 			}
 
@@ -737,9 +738,9 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 			console.log(delta);
 			console.log('---remaining delta---')
 */
-		}
+		};
 
-	};
+	}
 
 
 	/**
@@ -1000,7 +1001,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
-			$(window).on('resize', _.bind(this.arrange, this));
+		//	$(window).on('resize', _.bind(this.arrange, this));
 
 
 			// put the panl in the panels array

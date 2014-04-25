@@ -55,7 +55,7 @@ define(function (require, exports, module) {
 
 	module.exports = function arrangeBoundaries() {
 
-		console.log('arrange boundaries');
+	//	console.log('arrange boundaries');
 
 		this.each(function (panel, index) {
 

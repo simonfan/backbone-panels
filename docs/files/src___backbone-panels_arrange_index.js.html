@@ -99,6 +99,9 @@
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
+
+	var _ = require(&#x27;lodash&#x27;);
+
 	exports.arrangePositions = require(&#x27;./position&#x27;);
 
 
@@ -125,7 +128,7 @@ define(function (require, exports, module) {
 
 		}, this);
 
-	}
+	};
 
 	/**
 	 * Puts all panels in their places
@@ -136,7 +139,7 @@ define(function (require, exports, module) {
 	exports.arrange = function arrange() {
 
 
-		console.log(&#x27;arrange&#x27;)
+	//	console.log(&#x27;arrange&#x27;)
 
 		this.arrangePositions();
 		this.arrangeBoundaries();

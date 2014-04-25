@@ -7,6 +7,9 @@
 define(function (require, exports, module) {
 	'use strict';
 
+
+	var _ = require('lodash');
+
 	exports.arrangePositions = require('./position');
 
 
@@ -33,7 +36,7 @@ define(function (require, exports, module) {
 
 		}, this);
 
-	}
+	};
 
 	/**
 	 * Puts all panels in their places
@@ -44,7 +47,7 @@ define(function (require, exports, module) {
 	exports.arrange = function arrange() {
 
 
-		console.log('arrange')
+	//	console.log('arrange')
 
 		this.arrangePositions();
 		this.arrangeBoundaries();

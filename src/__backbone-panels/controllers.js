@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
 
 		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
-	},
+	};
 
 	exports.controlOptions = {
 		agent: 'panels-control',
@@ -122,9 +122,7 @@ define(function (require, exports, module) {
 			//     divide it among all panels
 			if (delta) {
 				while (_panels.length > 0 && delta !== 0) {
-					var panel = _panels.pop();
-
-					delta = panel[_o.absorb](delta, coptions);
+					delta = _panels.pop()[_o.absorb](delta, coptions);
 				}
 			}
 
@@ -133,9 +131,9 @@ define(function (require, exports, module) {
 			console.log(delta);
 			console.log('---remaining delta---')
 */
-		}
+		};
 
-	};
+	}
 
 
 	/**

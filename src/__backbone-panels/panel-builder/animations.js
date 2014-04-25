@@ -16,7 +16,7 @@ define(function (require, exports, module) {
 		// UNSET TEMPORARY MINWIDTH
 		options = options || {};
 		var originalCompleteFunc = options.complete;
-		options.complete = _.bind(function() {
+		options.complete = _.bind(function () {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
@@ -36,7 +36,7 @@ define(function (require, exports, module) {
 		return direction === 'w' ?
 			this.aExpandToW(delta, options) :
 			this.aExpandToE(delta, options);
-	}
+	};
 
 	exports.openToE = function openToE(options) {
 		return this.open('e', options);
@@ -65,7 +65,7 @@ define(function (require, exports, module) {
 
 		var originalCompleteFunc = options.complete;
 
-		options.complete = _.bind(function() {
+		options.complete = _.bind(function () {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}

@@ -120,7 +120,7 @@
     "classitems": [
         {
             "file": "src/__backbone-panels/arrange/index.js",
-            "line": 38,
+            "line": 41,
             "description": "Puts all panels in their places\nby calculating left positions on them all.",
             "itemtype": "method",
             "name": "arrange",
@@ -204,7 +204,7 @@
         },
         {
             "file": "src/__backbone-panels/controllers.js",
-            "line": 141,
+            "line": 139,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the left.\nIt is a response to left-expansion on a panel.",
             "itemtype": "method",
             "name": "contractToLeft",
@@ -225,7 +225,7 @@
         },
         {
             "file": "src/__backbone-panels/controllers.js",
-            "line": 157,
+            "line": 155,
             "description": "This method is called whenever a panel\nis on expansion towards the Right side,\nso that the panels right to it have to contract",
             "itemtype": "method",
             "name": "contractToRight",
@@ -246,7 +246,7 @@
         },
         {
             "file": "src/__backbone-panels/controllers.js",
-            "line": 174,
+            "line": 172,
             "description": "Invoked whenever the panels to the right of a panel\nhave to be expanded towards the left.\nIt is a response to right-contraction on a panel.",
             "itemtype": "method",
             "name": "expandToLeft",
@@ -267,7 +267,7 @@
         },
         {
             "file": "src/__backbone-panels/controllers.js",
-            "line": 191,
+            "line": 189,
             "description": "Invoked whenever the panels to the left of a panel\nhave to be contracted towards the right.\nIt is a response to left-contraction on a panel.",
             "itemtype": "method",
             "name": "expandPanelsToRight",
