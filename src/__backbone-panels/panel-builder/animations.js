@@ -6,43 +6,25 @@ define(function (require, exports, module) {
 	exports.open = function open(direction, options) {
 
 
-	//	console.log(this.model.get('minWidth'));
-		this.unfreeze();
-
 		var openWidth = parseFloat(this.panels.evalMeasureX(this.model.get('openWidth'))),
 			currWidth = parseFloat(this.model.get('width')),
-			delta = Math.abs(openWidth - currWidth);
+			delta = openWidth - currWidth;
 
 
 		// UNSET TEMPORARY MINWIDTH
 		options = options || {};
 
-	//	console.log(this.model.get('minWidth'));
-
-		var originalCompleteFunc = options.complete;
-		options.complete = _.bind(function() {
-			if (originalCompleteFunc) {
-				originalCompleteFunc.apply(this.$el, arguments);
-			}
-
-			if (!_.isUndefined(this.__before_close_minwidth__)) {
-				this.model.set('minWidth', this.__before_close_minwidth__);
-			}
-		}, this);
-
-
-
-		return direction === 'left' ?
-			this.aExpandToLeft(delta, options) :
-			this.aExpandToRight(delta, options);
+		return direction === 'w' ?
+			this.aExpandToW(delta, options) :
+			this.aExpandToE(delta, options);
 	}
 
 	exports.openToRight = function openToRight(options) {
-		return this.open('right', options);
+		return this.open('e', options);
 	};
 
 	exports.openToLeft = function openToLeft(options) {
-		return this.open('left', options);
+		return this.open('w', options);
 	};
 
 
@@ -60,30 +42,27 @@ define(function (require, exports, module) {
 			if (originalCompleteFunc) {
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
-
-			console.log(this.model.get('width'))
-			this.freeze();
 		}, this);
 
 		// delta
 		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
 			currWidth = parseFloat(model.get('width')),
-			delta = Math.abs(closeWidth - currWidth);
+			delta = closeWidth - currWidth;
 
-		// SET TEMPORARY MINWIDTH
-		this.__before_close_minwidth__ = model.get('minWidth');
+		// set temporary min width
+		this._real_min_width_before_close_ = model.get('minWidth');
 		model.set('minWidth', closeWidth);
 
-		return direction === 'left' ?
-			this.aContractToLeft(delta, options) :
-			this.aContractToRight(delta, options);
+		return direction === 'w' ?
+			this.aContractToW(delta, options) :
+			this.aContractToE(delta, options);
 
 	};
 	exports.closeToRight = function closeToRight(options) {
-		return this.close('right', options);
+		return this.close('e', options);
 	};
 
 	exports.closeToLeft = function closeToLeft(options) {
-		return this.close('left', options);
+		return this.close('w', options);
 	};
 });

@@ -66,6 +66,6 @@ define(function (require, exports, module) {
 
 	panel
 		.proto(require('./animations'))
-		.proto(require('./enable-disable'))
-		.proto(require('./freeze-unfreeze'));
+		.proto(require('./enable-disable'));
+	//	.proto(require('./freeze-unfreeze'));
 });

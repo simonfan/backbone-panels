@@ -99,14 +99,25 @@ define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
 	var _ = require(&#x27;lodash&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;);
+		resizable = require(&#x27;backbone-ui-resizable&#x27;),
+		backbone = require(&#x27;lowercase-backbone&#x27;);
 
 	var panel = module.exports = resizable.extend({
 
 		initialize: function initialize(options) {
-			resizable.prototype.initialize.call(this, options);
+
+
+			backbone.view.prototype.initialize.call(this, options);
+
+			this.initializeModelDock(options);
+
+			this.initializeUIDraggable(options);
 
 			this.initializePanel(options);
+
+
+			this.initializeUIResizable(options);
+
 		},
 
 		initializePanel: function initializePanel(options) {
@@ -117,18 +128,16 @@ define(function (require, exports, module) {
 			// set an id for the panel.
 			this.id = this.$el.prop(&#x27;id&#x27;);
 
-
-
-			// initialize enable-disable system
-			this._initializePanelEnableDisable();
-
-
 			// set initial data
 			var data = this.parseData(this.$el.data());
 			_.defaults(data, {
 				panelStatus: &#x27;enabled&#x27;
 			});
 			this.model.set(data);
+
+
+			// initialize enable-disable system
+			this._initializePanelEnableDisable();
 
 
 			this.$el.addClass(this.panelClass);

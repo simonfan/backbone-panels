@@ -150,7 +150,7 @@ define(function (require, exports, module) {
 	panels.proto(require('./__backbone-panels/iterators'));
 	panels.proto(require('./__backbone-panels/panel-config'));
 	panels.proto(require('./__backbone-panels/event-handlers'));
-	panels.proto(require('./__backbone-panels/actions'));
+	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));
 	panels.proto(require('./__backbone-panels/enable-disable'));
 });

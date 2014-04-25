@@ -133,6 +133,7 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 			if (this.panelEnabled()) {
 				// enabled
 			//	this.unfreeze();
+				this.enableResizable();
 
 				// [3] set classes
 				this.$el
@@ -143,6 +144,8 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 				// disabled
 
 			//	this.freeze();
+				this.disableResizable();
+
 
 				// [4] set classes
 				this.$el
@@ -217,18 +220,29 @@ define('__backbone-panels/panel-builder/freeze-unfreeze',['require','exports','m
  * @module backbone-panels
  * @submolude panel-builder
  */
-define('__backbone-panels/panel-builder/index',['require','exports','module','lodash','backbone-ui-resizable','./parse-data','./animations','./enable-disable','./freeze-unfreeze'],function (require, exports, module) {
+define('__backbone-panels/panel-builder/index',['require','exports','module','lodash','backbone-ui-resizable','lowercase-backbone','./parse-data','./animations','./enable-disable','./freeze-unfreeze'],function (require, exports, module) {
 	
 
 	var _ = require('lodash'),
-		resizable = require('backbone-ui-resizable');
+		resizable = require('backbone-ui-resizable'),
+		backbone = require('lowercase-backbone');
 
 	var panel = module.exports = resizable.extend({
 
 		initialize: function initialize(options) {
-			resizable.prototype.initialize.call(this, options);
+
+
+			backbone.view.prototype.initialize.call(this, options);
+
+			this.initializeModelDock(options);
+
+			this.initializeUIDraggable(options);
 
 			this.initializePanel(options);
+
+
+			this.initializeUIResizable(options);
+
 		},
 
 		initializePanel: function initializePanel(options) {
@@ -239,18 +253,16 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 			// set an id for the panel.
 			this.id = this.$el.prop('id');
 
-
-
-			// initialize enable-disable system
-			this._initializePanelEnableDisable();
-
-
 			// set initial data
 			var data = this.parseData(this.$el.data());
 			_.defaults(data, {
 				panelStatus: 'enabled'
 			});
 			this.model.set(data);
+
+
+			// initialize enable-disable system
+			this._initializePanelEnableDisable();
 
 
 			this.$el.addClass(this.panelClass);
@@ -384,13 +396,13 @@ define('__backbone-panels/panel-config',['require','exports','module'],function 
 
 	exports.sumBefore = function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.get(attr);
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	};
 
 	exports.sumAfter = function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return value + panel.get(attr);
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	};
 
@@ -544,7 +556,7 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
 	};
 
 	exports.handlePanelResizeStop = function handlePanelResizeStop(panel, edata) {
-
+		this.arrange();
 	};
 });
 
@@ -571,37 +583,63 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 	exports.contractPanelsToLeft = function contractPanelsToLeft(panels, delta) {
 
 
+		var _panels = [];
+
+
 		while (panels.length > 0 && delta !== 0) {
 
 			var panel = panels.pop();
 
-			if (panels.length === 0) {
-				// this is the last panel,
-				// it has to contract all the delta
-				panel.contractToLeft(delta, { agent: 'panels-control' });
-
-			} else if (panel.panelEnabled()) {
+			if (panel.panelEnabled()) {
 				// ENABLED
 
-				var dMove = delta / 1.5,
-					dContract = delta - dMove;
+				_panels.push(panel);
+
+				if (panels.length === 0) {
+					// LAST PANEL
+
+					// this is the last panel,
+					// it has to contract all the delta
+					delta = panel.contractToLeft(delta, { agent: 'panels-control' });
+
+
+				} else if (panel.panelEnabled()) {
+					// NORMAL
+
+					var dMove = delta / 1.5,
+						dContract = delta - dMove;
 
 
 
-				// [2] contract to the left the amount required
-				var contractRemainder = panel.contractToLeft(dContract, { agent: 'panels-control' });
+					// [2] contract to the left the amount required
+					var contractRemainder = panel.contractToLeft(dContract, { agent: 'panels-control' });
 
-				// [1] move to the left the amount that
-				//     is required
-				var moveRemainder = panel.moveToLeft(dMove + contractRemainder, { force: true, agent: 'panels-control' });
+					// [1] move to the left the amount that
+					//     is required
+					var moveRemainder = panel.moveToLeft(dMove + contractRemainder, { agent: 'panels-control' });
 
-				// [4] update the global delta
-				delta -= (dContract - contractRemainder);
+					// [4] update the global delta
+					delta -= (dContract - contractRemainder);
+				}
+
+
 			} else {
 				// DISABLED
 
 				panel.moveToLeft(delta, { agent: 'panels-control' });
 
+			}
+		}
+
+
+
+		// IF THERE IS A LAST REMAINDER,
+		// it must go back
+		if (delta) {
+			while (_panels.length > 0 && delta !== 0) {
+				var panel = _panels.pop();
+
+				delta = panel.contractToLeft(delta, { agent: 'panels-control' });
 			}
 		}
 
@@ -624,15 +662,24 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 			agent: 'panels-control'
 		};
 
+
+		var _panels = [];
+
 		while (panels.length > 0 && delta > 0) {
 
 			// get the first panel from the panels to the right
 			var panel = panels.shift();
 
+			_panels.push(panel);
+
 			if (panels.length === 0) {
 				// this is the last panel,
 				// it has to contract all the delta
-				delta = panel.contractToRight(delta, moveoptions);
+				var lastRemainder = panel.contractToRight(delta, moveoptions);
+
+				while (_panels.length > 0 && lastRemainder !== 0) {
+					_panels.pop().contractToRight(lastRemainder, moveoptions);
+				}
 
 			} else if (panel.panelEnabled()) {
 
@@ -728,15 +775,27 @@ define('__backbone-panels/actions',['require','exports','module','lodash'],funct
 			agent: 'panels-control'
 		};
 
+		var _panels = [];
+
 		while (panels.length > 0 && delta !== 0) {
 
 
 			var panel = panels.pop();
 
+			_panels.push(panel);
+
 			if (panels.length === 0) {
 				// this is the last panel,
 				// it has to contract all the delta
-				panel.expandToRight(delta, { agent: 'panels-control' });
+				var lastRemainder = panel.expandToRight(delta, { agent: 'panels-control' });
+
+				while (_panels.length > 0 && lastRemainder) {
+
+			//		console.log(lastRemainder);
+					lastRemainder = _panels.pop().expandToRight(lastRemainder, {agent: 'panels-control'});
+				}
+
+				console.log(lastRemainder);
 
 			} else if (panel.panelEnabled()) {
 

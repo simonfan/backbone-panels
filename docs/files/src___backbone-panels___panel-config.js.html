@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-config.js - backbone-panels</title>
+    <title>src/__backbone-panels/__panel-config.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,7 +86,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-config.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/__panel-config.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -103,26 +103,14 @@ define(function (require, exports, module) {
 
 	exports.sumBefore = function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
+			return value + panel.get(attr);
 		}, 0);
 	};
 
 	exports.sumAfter = function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
+			return value + panel.get(attr);
 		}, 0);
-	};
-
-
-	/**
-	 * Returns the left position at which a given
-	 * panel should be placed.
-	 *
-	 * @method calculateLeftPos
-	 * @param panel {Bakcbone Model}
-	 */
-	exports.calculateLeftPos = function calculateLeftPos(index) {
-		return this.sumBefore(&#x27;width&#x27;, index);
 	};
 
 	/**
@@ -133,7 +121,7 @@ define(function (require, exports, module) {
 	 */
 	exports.postitionPanel = function postitionPanel(panel) {
 		var index = this.panelIndex(panel),
-			left = this.calculateLeftPos(index);
+			left = this.sumBefore(&#x27;width&#x27;, index);
 
 		panel.model.set({
 			left: left,
@@ -142,26 +130,59 @@ define(function (require, exports, module) {
 	};
 
 
-	exports.setPanelRightBoundaries = function setPanelRightBoundaries(panel) {
+	exports.panelMinRight = function panelMaxRight(panel) {
 		var index = this.panelIndex(panel),
-			minWidthAfter = this.sumAfter(&#x27;minWidth&#x27;, index),
-			maxWidthAfter = this.sumAfter(&#x27;maxWidth&#x27;, index);
+			totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
 
-		var totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
-
-		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
+		var maxWidthAfter = this.reduceAfter(index, function (res, panel) {
+			return panel.panelEnabled() ? res + panel.model.get(&#x27;maxWidth&#x27;) : res + panel.model.get(&#x27;width&#x27;);
+		}, 0);
 
 		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
 	};
 
-	exports.setPanelLeftBoundaries = function setPanelLeftBoundaries(panel) {
+
+	exports.panelMaxRight = function panelMinRight(panel) {
 		var index = this.panelIndex(panel),
-			maxWidthBefore = this.sumBefore(&#x27;maxWidth&#x27;, index),
-			minWidthBefore = this.sumBefore(&#x27;minWidth&#x27;, index);
+			totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
 
-		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
+		var minWidthAfter = this.reduceAfter(index, function (res, panel) {
+			return panel.panelEnabled() ? res + panel.model.get(&#x27;minWidth&#x27;) : res + panel.model.get(&#x27;width&#x27;);
+		}, 0);
 
-		panel.model.set(&#x27;minLeft&#x27;, minWidthBefore);
+		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
+	};
+
+
+
+
+	exports.panelMinLeft = function panelsMinLeft(panel) {
+
+		var index = this.panelIndex(panel);
+
+		var minLeft = this.reduceBefore(index, function (res, panel) {
+
+			var model = panel.model;
+
+
+			// sum the widths of panels
+			return panel.panelEnabled() ? res + model.get(&#x27;minWidth&#x27;) : res + model.get(&#x27;width&#x27;);
+
+		}, 0);
+
+		panel.model.set(&#x27;minLeft&#x27;, minLeft);
+	};
+
+	exports.panelMaxLeft = function panelMaxLeft(panel) {
+		var index = this.panelIndex(panel);
+
+		var maxLeft = this.reduceAfter(index, function (res, panel) {
+			var model = panel.model;
+
+			return panel.panelEnabled() ? res + model.get(&#x27;maxWidth&#x27;) : res + model.get(&#x27;width&#x27;);
+		}, 0);
+
+		panel.model.set(&#x27;maxLeft&#x27;, maxLeft);
 	};
 
 
@@ -185,9 +206,11 @@ define(function (require, exports, module) {
 
 			this.postitionPanel(panel);
 
-			this.setPanelRightBoundaries(panel);
+			this.panelMinRight(panel);
+			this.panelMaxRight(panel);
 
-			this.setPanelLeftBoundaries(panel);
+			this.panelMinLeft(panel);
+			this.panelMaxLeft(panel);
 
 		}, this);
 	};
