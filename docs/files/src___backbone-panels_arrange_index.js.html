@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>positioners - backbone-panels</title>
+    <title>src/__backbone-panels/arrange/index.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,38 +86,65 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>positioners Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__backbone-panels/arrange/index.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Logic for positioning the panels at the right starting place.
+ *
+ * @module backbone-panels
+ * @submodule positioners
+ */
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src___backbone-panels_arrange_boundaries.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;arrange&#x2F;boundaries.js:1</code></a>
-        </div>
-    
-
-    
-</div>
-
-
-
-<div class="box intro">
-    <p>Logic for positioning the panels at the right starting place.</p>
-
-</div>
+	exports.arrangePositions = require(&#x27;./position&#x27;);
 
 
+	exports.arrangeBoundaries = require(&#x27;./boundaries&#x27;);
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+	exports.arrangeHandles = function arrangeHandles() {
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+		var enabledPanels = this.filter(function (p) {
+			return p.panelEnabled();
+		});
+
+		_.each(enabledPanels, function (panel, index) {
+
+			// disable limit handles
+			if (index === 0) {
+				panel.disableHandle(&#x27;w&#x27;);
+			} else if (index === this.panels.length - 1) {
+				panel.disableHandle(&#x27;e&#x27;);
+			} else {
+				panel
+					.enableHandle(&#x27;w&#x27;)
+					.enableHandle(&#x27;e&#x27;);
+			}
+
+		}, this);
+
+	}
+
+	/**
+	 * Puts all panels in their places
+	 * by calculating left positions on them all.
+	 *
+	 * @method arrange
+	 */
+	exports.arrange = function arrange() {
+
+
+		console.log(&#x27;arrange&#x27;)
+
+		this.arrangePositions();
+		this.arrangeBoundaries();
+		this.arrangeHandles();
+	};
+});
+
+    </pre>
 </div>
 
                     </div>

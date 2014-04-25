@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-config.js - backbone-panels</title>
+    <title>src/__backbone-panels/arrange/boundaries.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,7 +86,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-config.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/arrange/boundaries.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -100,94 +100,60 @@ define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
 
-
-	exports.sumBefore = function sumBefore(attr, index) {
+	// private
+	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
 			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
 		}, 0);
-	};
-
-	exports.sumAfter = function sumAfter(attr, index) {
-		return this.reduceAfter(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
-		}, 0);
-	};
+	}
 
 
-	/**
-	 * Returns the left position at which a given
-	 * panel should be placed.
-	 *
-	 * @method calculateLeftPos
-	 * @param panel {Bakcbone Model}
-	 */
-	exports.calculateLeftPos = function calculateLeftPos(index) {
-		return this.sumBefore(&#x27;width&#x27;, index);
-	};
-
-	/**
-	 * Set the place for the panel.
-	 *
-	 * @method postitionPanel
-	 * @param panel {Backbone Model}
-	 */
-	exports.postitionPanel = function postitionPanel(panel) {
-		var index = this.panelIndex(panel),
-			left = this.calculateLeftPos(index);
-
-		panel.model.set({
-			left: left,
-			top: 0
-		});
-	};
 
 
-	exports.setPanelRightBoundaries = function setPanelRightBoundaries(panel) {
-		var index = this.panelIndex(panel),
-			minWidthAfter = this.sumAfter(&#x27;minWidth&#x27;, index),
-			maxWidthAfter = this.sumAfter(&#x27;maxWidth&#x27;, index);
-
-		var totalWidth = this.sumAfter(&#x27;width&#x27;, -1);
-
-		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
-
-		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
-	};
-
-	exports.setPanelLeftBoundaries = function setPanelLeftBoundaries(panel) {
-		var index = this.panelIndex(panel),
-			maxWidthBefore = this.sumBefore(&#x27;maxWidth&#x27;, index),
-			minWidthBefore = this.sumBefore(&#x27;minWidth&#x27;, index);
+	function setPanelLeftBoundaries(panel, index) {
+		var maxWidthBefore = sumBefore.call(this, &#x27;maxWidth&#x27;, index),
+			minWidthBefore = sumBefore.call(this, &#x27;minWidth&#x27;, index);
 
 		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
 
 		panel.model.set(&#x27;minLeft&#x27;, minWidthBefore);
-	};
+	}
+
+	// after
+	function sumAfter(attr, index) {
+		return this.reduceAfter(index, function (value, panel) {
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
+		}, 0);
+	}
+
+	function setPanelRightBoundaries(panel, index) {
+
+		var minWidthAfter = sumAfter.call(this, &#x27;minWidth&#x27;, index),
+			maxWidthAfter = sumAfter.call(this, &#x27;maxWidth&#x27;, index);
+
+		var totalWidth = sumAfter.call(this, &#x27;width&#x27;, -1);
+
+		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
+
+		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
+	}
 
 
-	/**
-	 * Puts all panels in their places
-	 * by calculating left positions on them all.
-	 *
-	 * @method arrange
-	 */
-	exports.arrange = function arrange() {
+
+
+
+
+
+
+	module.exports = function arrangeBoundaries() {
+
+		console.log(&#x27;arrange boundaries&#x27;);
 
 		this.each(function (panel, index) {
 
-			// disable limit handles
-			if (index === 0) {
-				panel.disableHandle(&#x27;w&#x27;);
-			} else if (index === this.panels.length - 1) {
-				panel.disableHandle(&#x27;e&#x27;);
-			}
+			setPanelLeftBoundaries.call(this, panel, index);
 
-
-			this.postitionPanel(panel);
-
-			this.setPanelRightBoundaries(panel);
-
-			this.setPanelLeftBoundaries(panel);
+			setPanelRightBoundaries.call(this, panel, index);
 
 		}, this);
 	};

@@ -10,37 +10,57 @@ define(function (require, exports, module) {
 	var _ = require('lodash');
 
 
+	/**
+	 *
+	 *
+	 * @param data {Object}
+	 *     @param index
+	 *     @param panel
+	 *     @param panels
+	 *     @param operation
+	 *     @param eventData
+	 */
+	exports.calcPanelElasticity = function calcPanelElasticity(d) {
+		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
+
+		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
+	},
 
 	exports.controlOptions = {
 		agent: 'panels-control',
-		elasticity: 1.5,
+		elasticity: 0.3,
 	};
 
 	function generateController(_o) {
 
 		/**
 		 * _o:
-		 *     next: 'shift' | 'pop'
+		 *     loopDirection: 'shift' | 'pop'
 		 *     move:
 		 *     absorb:
 		 *
 		 */
 
-		return function controller(panels, delta) {
+		return function controller(panels, delta, edata) {
 
 			var coptions = this.controlOptions;
+
+			// [0] variable to hold panels to be looped through
+			//     array direction is controlled by loopDirection option
+			var loop = _.clone(panels);
+			if (_o.loopDirection === -1) {
+				loop.reverse();
+			}
 
 			// [1] variable to hold panels that were
 			//     sized once.
 			var _panels = [];
 
 			// [2] loop through panels
-			while (panels.length && delta !== 0) {
+			while (loop.length && delta !== 0) {
 
-				// [2.1] get the next panel to be sized
-				//     this method should reduce the panels array length
-				//     (either pop or shift)
-				var panel = panels[_o.next]();
+				// [2.1] get the loop panel to be sized
+				var panel = loop.pop();
 
 				// [2.2] check panel status
 				if (panel.panelEnabled()) {
@@ -49,7 +69,7 @@ define(function (require, exports, module) {
 					// Add the panel to the list of 'sized panels'
 					_panels.push(panel);
 
-					if (panels.length === 0) {
+					if (loop.length === 0) {
 						// [A-1] LAST PANEL
 
 						// this is the last panel, it should absorb the rest
@@ -58,11 +78,23 @@ define(function (require, exports, module) {
 						delta = panel[_o.absorb](delta, coptions);
 
 					} else {
+
+
+
+
+						var elasticity = this.calcPanelElasticity({
+							index: panels.length - loop.length - 1,
+							panel: panel,
+							panels: panels,
+							operation: _o.operation,
+							eventData: edata,
+						});
+
 						// [A-2] NORMAL PANEL
 
 						// [A-2.1] Separate delta into movement and absorption
-						var dMove = delta / coptions.elasticity,
-							dAbsorb = delta - dMove;
+						var dAbsorb = delta * elasticity,
+							dMove = delta - dAbsorb;
 
 						// [A-2.2] Absorb
 						var absorbRemainder = panel[_o.absorb](dAbsorb, coptions);
@@ -118,7 +150,8 @@ define(function (require, exports, module) {
 	exports.contractPanelsToLeft = generateController({
 		absorb: 'contractToLeft',
 		move: 'moveToLeft',
-		next: 'pop'
+		loopDirection: 1,
+		operation: 'contract',
 	});
 
 	/**
@@ -134,7 +167,8 @@ define(function (require, exports, module) {
 	exports.contractPanelsToRight = generateController({
 		absorb: 'contractToRight',
 		move: 'moveToRight',
-		next: 'shift',
+		loopDirection: -1,
+		operation: 'contract',
 	});
 
 	/**
@@ -149,7 +183,8 @@ define(function (require, exports, module) {
 	exports.expandPanelsToLeft = generateController({
 		absorb: 'expandToLeft',
 		move: 'moveToLeft',
-		next: 'shift',
+		loopDirection: -1,
+		operation: 'expand',
 	});
 
 
@@ -165,6 +200,7 @@ define(function (require, exports, module) {
 	exports.expandPanelsToRight = generateController({
 		absorb: 'expandToRight',
 		move: 'moveToRight',
-		next: 'pop',
+		loopDirection: +1,
+		operation: 'expand'
 	});
 });

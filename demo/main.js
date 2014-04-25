@@ -38,6 +38,8 @@ define(['backbone-panels', 'lodash'], function (bbPanels, _) {
 
 				openWidth: '[data-attribute="openWidth"]',
 				closeWidth: '[data-attribute="closeWidth"]',
+
+				elasticity: '[data-attribute="elasticity"]'
 			},
 		})
 	})

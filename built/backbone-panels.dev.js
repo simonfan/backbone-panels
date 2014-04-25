@@ -62,6 +62,9 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 				delete this._real_min_width_before_close_;
 			}
 
+
+			this.panels.arrangePositions();
+
 		}, this);
 
 
@@ -87,6 +90,14 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 		var model = this.model;
 
+
+		// delta
+		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
+			currWidth = parseFloat(model.get('width')),
+			delta = Math.abs(closeWidth - currWidth);
+
+
+
 		var originalCompleteFunc = options.complete;
 
 		options.complete = _.bind(function() {
@@ -94,32 +105,17 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 				originalCompleteFunc.apply(this.$el, arguments);
 			}
 
+
+			// disable the panel after the animation is complete
 			this.disablePanel();
+
+
+			this.panels.arrangePositions();
 		}, this);
-
-		// delta
-		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
-			currWidth = parseFloat(model.get('width')),
-			delta = Math.abs(closeWidth - currWidth);
-
-		console.log('delta ' + delta);
-
-
-		console.log('attributes before setting temporary min width');
-
-		console.log(model.toJSON());
-
-		console.log(currWidth);
-		console.log(model.get('width'))
 
 		// set temporary min width
 		this._real_min_width_before_close_ = model.get('minWidth');
 		model.set('minWidth', closeWidth);
-
-
-		console.log('attributes before animation')
-		console.log(model.toJSON());
-		console.log('deltaE ' +  this.deltaE(delta));
 
 		return direction === 'w' ?
 			this.aContractToW(delta, options) :
@@ -144,7 +140,6 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 
 			if (this.panelEnabled()) {
 				// enabled
-			//	this.unfreeze();
 				this.enableResizable();
 
 				// [3] set classes
@@ -154,8 +149,6 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 
 			} else {
 				// disabled
-
-			//	this.freeze();
 				this.disableResizable();
 
 
@@ -165,7 +158,7 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 					.removeClass(this.panelClass + '-enabled');
 			}
 
-			this.panels.arrange();
+			this.panels.arrangeBoundaries();
 
 		});
 
@@ -211,11 +204,12 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 			this.initializeUIDraggable(options);
 
 
-			// initialize panel before initialize resizable.
+			this.initializeUIResizable(options);
+
+
+
 			this.initializePanel(options);
 
-
-			this.initializeUIResizable(options);
 
 		},
 
@@ -258,7 +252,6 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 	panel
 		.proto(require('./animations'))
 		.proto(require('./enable-disable'));
-	//	.proto(require('./freeze-unfreeze'));
 });
 
 /**
@@ -363,23 +356,10 @@ define('__backbone-panels/iterators',['require','exports','module','lodash'],fun
  * @module backbone-panels
  * @submodule positioners
  */
-define('__backbone-panels/panel-config',['require','exports','module'],function (require, exports, module) {
+define('__backbone-panels/arrange/position',['require','exports','module','lodash'],function (require, exports, module) {
 	
 
-
-
-	exports.sumBefore = function sumBefore(attr, index) {
-		return this.reduceBefore(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
-		}, 0);
-	};
-
-	exports.sumAfter = function sumAfter(attr, index) {
-		return this.reduceAfter(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
-		}, 0);
-	};
-
+	var _ = require('lodash');
 
 	/**
 	 * Returns the left position at which a given
@@ -388,9 +368,15 @@ define('__backbone-panels/panel-config',['require','exports','module'],function 
 	 * @method calculateLeftPos
 	 * @param panel {Bakcbone Model}
 	 */
-	exports.calculateLeftPos = function calculateLeftPos(index) {
-		return this.sumBefore('width', index);
-	};
+	function calculateLeftPos(index) {
+		return this.reduceBefore(index, function (value, panel) {
+			return value + panel.get('width');
+		}, 0);
+	}
+
+
+
+
 
 	/**
 	 * Set the place for the panel.
@@ -398,39 +384,129 @@ define('__backbone-panels/panel-config',['require','exports','module'],function 
 	 * @method postitionPanel
 	 * @param panel {Backbone Model}
 	 */
-	exports.postitionPanel = function postitionPanel(panel) {
-		var index = this.panelIndex(panel),
-			left = this.calculateLeftPos(index);
+	module.exports = _.throttle(function arrangePositions() {
 
-		panel.model.set({
-			left: left,
-			top: 0
-		});
-	};
+		console.log('arrange positions')
+
+		this.each(function (panel, index) {
 
 
-	exports.setPanelRightBoundaries = function setPanelRightBoundaries(panel) {
-		var index = this.panelIndex(panel),
-			minWidthAfter = this.sumAfter('minWidth', index),
-			maxWidthAfter = this.sumAfter('maxWidth', index);
+			var left = calculateLeftPos.call(this, index);
 
-		var totalWidth = this.sumAfter('width', -1);
+			panel.model.set({
+				left: left,
+				top: 0
+			});
 
-		panel.model.set('maxRight', totalWidth - minWidthAfter);
+		}, this);
+	}, 50);
+});
 
-		panel.model.set('minRight', totalWidth - maxWidthAfter);
-	};
+/**
+ * Logic for positioning the panels at the right starting place.
+ *
+ * @module backbone-panels
+ * @submodule positioners
+ */
+define('__backbone-panels/arrange/boundaries',['require','exports','module'],function (require, exports, module) {
+	
 
-	exports.setPanelLeftBoundaries = function setPanelLeftBoundaries(panel) {
-		var index = this.panelIndex(panel),
-			maxWidthBefore = this.sumBefore('maxWidth', index),
-			minWidthBefore = this.sumBefore('minWidth', index);
+
+	// private
+	function sumBefore(attr, index) {
+		return this.reduceBefore(index, function (value, panel) {
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+		}, 0);
+	}
+
+
+
+
+	function setPanelLeftBoundaries(panel, index) {
+		var maxWidthBefore = sumBefore.call(this, 'maxWidth', index),
+			minWidthBefore = sumBefore.call(this, 'minWidth', index);
 
 		panel.model.set('maxLeft', maxWidthBefore);
 
 		panel.model.set('minLeft', minWidthBefore);
-	};
+	}
 
+	// after
+	function sumAfter(attr, index) {
+		return this.reduceAfter(index, function (value, panel) {
+			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+		}, 0);
+	}
+
+	function setPanelRightBoundaries(panel, index) {
+
+		var minWidthAfter = sumAfter.call(this, 'minWidth', index),
+			maxWidthAfter = sumAfter.call(this, 'maxWidth', index);
+
+		var totalWidth = sumAfter.call(this, 'width', -1);
+
+		panel.model.set('maxRight', totalWidth - minWidthAfter);
+
+		panel.model.set('minRight', totalWidth - maxWidthAfter);
+	}
+
+
+
+
+
+
+
+
+	module.exports = function arrangeBoundaries() {
+
+		console.log('arrange boundaries');
+
+		this.each(function (panel, index) {
+
+			setPanelLeftBoundaries.call(this, panel, index);
+
+			setPanelRightBoundaries.call(this, panel, index);
+
+		}, this);
+	};
+});
+
+/**
+ * Logic for positioning the panels at the right starting place.
+ *
+ * @module backbone-panels
+ * @submodule positioners
+ */
+define('__backbone-panels/arrange/index',['require','exports','module','./position','./boundaries'],function (require, exports, module) {
+	
+
+	exports.arrangePositions = require('./position');
+
+
+	exports.arrangeBoundaries = require('./boundaries');
+
+	exports.arrangeHandles = function arrangeHandles() {
+
+		var enabledPanels = this.filter(function (p) {
+			return p.panelEnabled();
+		});
+
+		_.each(enabledPanels, function (panel, index) {
+
+			// disable limit handles
+			if (index === 0) {
+				panel.disableHandle('w');
+			} else if (index === this.panels.length - 1) {
+				panel.disableHandle('e');
+			} else {
+				panel
+					.enableHandle('w')
+					.enableHandle('e');
+			}
+
+		}, this);
+
+	}
 
 	/**
 	 * Puts all panels in their places
@@ -440,23 +516,12 @@ define('__backbone-panels/panel-config',['require','exports','module'],function 
 	 */
 	exports.arrange = function arrange() {
 
-		this.each(function (panel, index) {
 
-			// disable limit handles
-			if (index === 0) {
-				panel.disableHandle('w');
-			} else if (index === this.panels.length - 1) {
-				panel.disableHandle('e');
-			}
+		console.log('arrange')
 
-
-			this.postitionPanel(panel);
-
-			this.setPanelRightBoundaries(panel);
-
-			this.setPanelLeftBoundaries(panel);
-
-		}, this);
+		this.arrangePositions();
+		this.arrangeBoundaries();
+		this.arrangeHandles();
 	};
 });
 
@@ -485,6 +550,9 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
 				delta = Math.abs(edata.delta),
 				before, after;
 
+			// add panel to edata
+			edata.panel = panel;
+
 			if (edata.action === 'expand') {
 				// contract other guys
 
@@ -493,13 +561,13 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
 
 					before = this.before(index);
 
-					this.contractPanelsToLeft(before, delta);
+					this.contractPanelsToLeft(before, delta, edata);
 
 				} else if (edata.handle === 'e') {
 					// contract after
 					after = this.after(index);
 
-					this.contractPanelsToRight(after, delta);
+					this.contractPanelsToRight(after, delta, edata);
 
 				}
 
@@ -511,13 +579,13 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
 
 					before = this.before(index);
 
-					this.expandPanelsToRight(before, delta);
+					this.expandPanelsToRight(before, delta, edata);
 
 				} else if (edata.handle === 'e') {
 					// expand after
 					after = this.after(index);
 
-					this.expandPanelsToLeft(after, delta);
+					this.expandPanelsToLeft(after, delta, edata);
 				}
 			}
 
@@ -530,7 +598,7 @@ define('__backbone-panels/event-handlers',['require','exports','module','lodash'
 	};
 
 	exports.handlePanelResizeStop = function handlePanelResizeStop(panel, edata) {
-		this.arrange();
+	//	this.arrange();
 	};
 });
 
@@ -546,37 +614,57 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	var _ = require('lodash');
 
 
+	/**
+	 *
+	 *
+	 * @param data {Object}
+	 *     @param index
+	 *     @param panel
+	 *     @param panels
+	 *     @param operation
+	 *     @param eventData
+	 */
+	exports.calcPanelElasticity = function calcPanelElasticity(d) {
+		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
+
+		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
+	},
 
 	exports.controlOptions = {
 		agent: 'panels-control',
-		elasticity: 1.5,
+		elasticity: 0.3,
 	};
 
 	function generateController(_o) {
 
 		/**
 		 * _o:
-		 *     next: 'shift' | 'pop'
+		 *     loopDirection: 'shift' | 'pop'
 		 *     move:
 		 *     absorb:
 		 *
 		 */
 
-		return function controller(panels, delta) {
+		return function controller(panels, delta, edata) {
 
 			var coptions = this.controlOptions;
+
+			// [0] variable to hold panels to be looped through
+			//     array direction is controlled by loopDirection option
+			var loop = _.clone(panels);
+			if (_o.loopDirection === -1) {
+				loop.reverse();
+			}
 
 			// [1] variable to hold panels that were
 			//     sized once.
 			var _panels = [];
 
 			// [2] loop through panels
-			while (panels.length && delta !== 0) {
+			while (loop.length && delta !== 0) {
 
-				// [2.1] get the next panel to be sized
-				//     this method should reduce the panels array length
-				//     (either pop or shift)
-				var panel = panels[_o.next]();
+				// [2.1] get the loop panel to be sized
+				var panel = loop.pop();
 
 				// [2.2] check panel status
 				if (panel.panelEnabled()) {
@@ -585,7 +673,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 					// Add the panel to the list of 'sized panels'
 					_panels.push(panel);
 
-					if (panels.length === 0) {
+					if (loop.length === 0) {
 						// [A-1] LAST PANEL
 
 						// this is the last panel, it should absorb the rest
@@ -594,11 +682,23 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 						delta = panel[_o.absorb](delta, coptions);
 
 					} else {
+
+
+
+
+						var elasticity = this.calcPanelElasticity({
+							index: panels.length - loop.length - 1,
+							panel: panel,
+							panels: panels,
+							operation: _o.operation,
+							eventData: edata,
+						});
+
 						// [A-2] NORMAL PANEL
 
 						// [A-2.1] Separate delta into movement and absorption
-						var dMove = delta / coptions.elasticity,
-							dAbsorb = delta - dMove;
+						var dAbsorb = delta * elasticity,
+							dMove = delta - dAbsorb;
 
 						// [A-2.2] Absorb
 						var absorbRemainder = panel[_o.absorb](dAbsorb, coptions);
@@ -631,6 +731,12 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 					delta = panel[_o.absorb](delta, coptions);
 				}
 			}
+
+/*
+			console.log('---remaining delta---')
+			console.log(delta);
+			console.log('---remaining delta---')
+*/
 		}
 
 	};
@@ -648,7 +754,8 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	exports.contractPanelsToLeft = generateController({
 		absorb: 'contractToLeft',
 		move: 'moveToLeft',
-		next: 'pop'
+		loopDirection: 1,
+		operation: 'contract',
 	});
 
 	/**
@@ -664,7 +771,8 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	exports.contractPanelsToRight = generateController({
 		absorb: 'contractToRight',
 		move: 'moveToRight',
-		next: 'shift',
+		loopDirection: -1,
+		operation: 'contract',
 	});
 
 	/**
@@ -679,7 +787,8 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	exports.expandPanelsToLeft = generateController({
 		absorb: 'expandToLeft',
 		move: 'moveToLeft',
-		next: 'shift',
+		loopDirection: -1,
+		operation: 'expand',
 	});
 
 
@@ -695,7 +804,8 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	exports.expandPanelsToRight = generateController({
 		absorb: 'expandToRight',
 		move: 'moveToRight',
-		next: 'pop',
+		loopDirection: +1,
+		operation: 'expand'
 	});
 });
 
@@ -779,7 +889,7 @@ define('__backbone-panels/enable-disable',['require','exports','module'],functio
  *
  * @module backbone-panels
  */
-define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/panel-config','./__backbone-panels/event-handlers','./__backbone-panels/controllers','./__backbone-panels/calculators','./__backbone-panels/enable-disable'],function (require, exports, module) {
+define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/arrange/index','./__backbone-panels/event-handlers','./__backbone-panels/controllers','./__backbone-panels/calculators','./__backbone-panels/enable-disable'],function (require, exports, module) {
 	
 
 	var $ = require('jquery'),
@@ -887,10 +997,10 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-	//		this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrange);
+			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
-		//	this.listenTo($(window), 'resize', this.arrange);
+			$(window).on('resize', _.bind(this.arrange, this));
 
 
 			// put the panl in the panels array
@@ -920,7 +1030,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 	});
 
 	panels.proto(require('./__backbone-panels/iterators'));
-	panels.proto(require('./__backbone-panels/panel-config'));
+	panels.proto(require('./__backbone-panels/arrange/index'));
 	panels.proto(require('./__backbone-panels/event-handlers'));
 	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));

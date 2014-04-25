@@ -23,6 +23,9 @@ define(function (require, exports, module) {
 				delta = Math.abs(edata.delta),
 				before, after;
 
+			// add panel to edata
+			edata.panel = panel;
+
 			if (edata.action === 'expand') {
 				// contract other guys
 
@@ -31,13 +34,13 @@ define(function (require, exports, module) {
 
 					before = this.before(index);
 
-					this.contractPanelsToLeft(before, delta);
+					this.contractPanelsToLeft(before, delta, edata);
 
 				} else if (edata.handle === 'e') {
 					// contract after
 					after = this.after(index);
 
-					this.contractPanelsToRight(after, delta);
+					this.contractPanelsToRight(after, delta, edata);
 
 				}
 
@@ -49,13 +52,13 @@ define(function (require, exports, module) {
 
 					before = this.before(index);
 
-					this.expandPanelsToRight(before, delta);
+					this.expandPanelsToRight(before, delta, edata);
 
 				} else if (edata.handle === 'e') {
 					// expand after
 					after = this.after(index);
 
-					this.expandPanelsToLeft(after, delta);
+					this.expandPanelsToLeft(after, delta, edata);
 				}
 			}
 
