@@ -120,7 +120,7 @@
     "classitems": [
         {
             "file": "src/__backbone-panels/arrange/index.js",
-            "line": 41,
+            "line": 43,
             "description": "Puts all panels in their places\nby calculating left positions on them all.",
             "itemtype": "method",
             "name": "arrange",

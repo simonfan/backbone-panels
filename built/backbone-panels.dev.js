@@ -158,7 +158,9 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 					.removeClass(this.panelClass + '-enabled');
 			}
 
-			this.panels.arrangeBoundaries();
+			this.panels
+				.arrangeBoundaries()
+				.arrangeHandles();
 
 		});
 
@@ -399,6 +401,9 @@ define('__backbone-panels/arrange/position',['require','exports','module','lodas
 			});
 
 		}, this);
+
+
+		return this;
 	}, 50);
 });
 
@@ -468,6 +473,8 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 			setPanelRightBoundaries.call(this, panel, index);
 
 		}, this);
+
+		return this;
 	};
 });
 
@@ -508,6 +515,8 @@ define('__backbone-panels/arrange/index',['require','exports','module','lodash',
 			}
 
 		}, this);
+
+		return this;
 
 	};
 

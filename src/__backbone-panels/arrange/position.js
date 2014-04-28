@@ -47,5 +47,8 @@ define(function (require, exports, module) {
 			});
 
 		}, this);
+
+
+		return this;
 	}, 50);
 });

@@ -25,7 +25,9 @@ define(function (require, exports, module) {
 					.removeClass(this.panelClass + '-enabled');
 			}
 
-			this.panels.arrangeBoundaries();
+			this.panels
+				.arrangeBoundaries()
+				.arrangeHandles();
 
 		});
 

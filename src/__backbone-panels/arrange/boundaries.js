@@ -64,5 +64,7 @@ define(function (require, exports, module) {
 			setPanelRightBoundaries.call(this, panel, index);
 
 		}, this);
+
+		return this;
 	};
 });
