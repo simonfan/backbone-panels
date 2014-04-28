@@ -117,9 +117,16 @@ define(function (require, exports, module) {
 
 			// disable limit handles
 			if (index === 0) {
-				panel.disableHandle(&#x27;w&#x27;);
-			} else if (index === this.panels.length - 1) {
-				panel.disableHandle(&#x27;e&#x27;);
+
+				panel
+					.disableHandle(&#x27;w&#x27;)
+					.enableHandle(&#x27;e&#x27;);
+
+			} else if (index === enabledPanels.length - 1) {
+
+				panel
+					.disableHandle(&#x27;e&#x27;)
+					.enableHandle(&#x27;w&#x27;);
 			} else {
 				panel
 					.enableHandle(&#x27;w&#x27;)
