@@ -913,6 +913,9 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 		backbone = require('lowercase-backbone'),
 		_ = require('lodash');
 
+	// internal
+	var panelBuilder = require('./__backbone-panels/panel-builder/index');
+
 	var panels = module.exports = backbone.view.extend({
 
 		initialize: function initialize(options) {
@@ -970,7 +973,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 		 * @property panelBuilder
 		 * @type Function
 		 */
-		panelBuilder: require('./__backbone-panels/panel-builder/index'),
+		panelBuilder: panelBuilder,
 		panelTemplate: '<div></div>',
 		panelClass: 'panel',
 
@@ -1052,5 +1055,15 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));
 	panels.proto(require('./__backbone-panels/enable-disable'));
+
+
+	// static properties
+	/**
+	 * Make the singlePanelBuilder available as a static prop
+	 * for easer extension.
+	 *
+	 * @property panelBuilder
+	 */
+	panels.panelBuilder = panelBuilder;
 });
 

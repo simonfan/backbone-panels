@@ -407,7 +407,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 26,
+            "line": 29,
             "description": "Initialization logic for panels view.",
             "itemtype": "method",
             "name": "initialPanels",
@@ -423,7 +423,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 45,
+            "line": 48,
             "description": "Array where the single panel views are stored\nin the order they appear (left->right) on the view.",
             "itemtype": "property",
             "name": "panels",
@@ -433,7 +433,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 68,
+            "line": 71,
             "description": "The constructor method for the single panel view.",
             "itemtype": "property",
             "name": "panelBuilder",
@@ -443,7 +443,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 78,
+            "line": 81,
             "description": "Adds a panel at a given index.",
             "itemtype": "method",
             "name": "addPanel",
@@ -464,11 +464,20 @@
         },
         {
             "file": "src/index.js",
-            "line": 139,
+            "line": 142,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",
             "type": "Object",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/index.js",
+            "line": 162,
+            "description": "Make the singlePanelBuilder available as a static prop\nfor easer extension.",
+            "itemtype": "property",
+            "name": "panelBuilder",
             "class": "",
             "module": "backbone-panels"
         }
