@@ -66,7 +66,7 @@ define(['backbone-panels', 'lodash'], function (bbPanels, _) {
 
 			var panel = panels.getPanelAt(index);
 
-			console.log('open remainder ' + panel.open(direction));
+			console.log('open remainder ' + panel.bbpOpen(direction));
 		})
 	});
 
@@ -78,7 +78,7 @@ define(['backbone-panels', 'lodash'], function (bbPanels, _) {
 
 			var panel = panels.getPanelAt(index);
 
-			console.log('close remainder ' + panel.close(direction));
+			console.log('close remainder ' + panel.bbpClose(direction));
 		})
 	})
 });

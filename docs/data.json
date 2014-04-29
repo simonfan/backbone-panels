@@ -27,6 +27,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/__backbone-panels/panel-builder/animations.js": {
+            "name": "src/__backbone-panels/panel-builder/animations.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/__backbone-panels/panel-builder/index.js": {
             "name": "src/__backbone-panels/panel-builder/index.js",
             "modules": {
@@ -70,6 +77,13 @@
         },
         "src/__backbone-panels/iterators.js": {
             "name": "src/__backbone-panels/iterators.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__backbone-panels/panel-meta-data.js": {
+            "name": "src/__backbone-panels/panel-meta-data.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -184,6 +198,147 @@
             "class": "",
             "module": "backbone-panels",
             "submodule": "positioners"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 6,
+            "itemtype": "method",
+            "name": "bbpOpen",
+            "params": [
+                {
+                    "name": "direction",
+                    "description": "Direction to which move",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "Animation options",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 48,
+            "description": "Partial to 'e'",
+            "itemtype": "method",
+            "name": "bbpOpenToE",
+            "params": [
+                {
+                    "name": "options",
+                    "description": ""
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 57,
+            "description": "Partial to 'w'",
+            "itemtype": "method",
+            "name": "bbpOpenToW",
+            "params": [
+                {
+                    "name": "options",
+                    "description": ""
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 70,
+            "itemtype": "method",
+            "name": "bbpClose",
+            "params": [
+                {
+                    "name": "direction",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 117,
+            "description": "Partial.",
+            "itemtype": "method",
+            "name": "bbpCloseToE",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 123,
+            "description": "Partial",
+            "itemtype": "method",
+            "name": "bbpCloseToW",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 137,
+            "description": "Calculates the opening direction based on the index of the panel",
+            "itemtype": "method",
+            "name": "calcOpenDirection",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 154,
+            "description": "Calculates the closing direction based on the index of the panel.",
+            "itemtype": "method",
+            "name": "calcCloseDirection",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 171,
+            "description": "Intelligent open\nReturns false if not able to open.",
+            "itemtype": "method",
+            "name": "open",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "line": 185,
+            "description": "Intelligent close.\n Returns false if not able to close",
+            "itemtype": "method",
+            "name": "close",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/index.js",
+            "line": 61,
+            "description": "The default values to be set to the panel model",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/parse-data.js",
+            "line": 37,
+            "description": "This method retrieves the configuration data for\n a single panel from the DOM element\n\n All data returned from this method will be directly set to\n the model.",
+            "itemtype": "method",
+            "name": "parseData",
+            "class": "",
+            "module": "backbone-panels",
+            "submodule": "parse-data"
         },
         {
             "file": "src/__backbone-panels/controllers.js",
@@ -321,22 +476,15 @@
         {
             "file": "src/__backbone-panels/iterators.js",
             "line": 35,
-            "description": "Retrieve the index of a given panel object.",
+            "description": "Returns an array with only the enabled panels.",
             "itemtype": "method",
-            "name": "panelIndex",
-            "params": [
-                {
-                    "name": "panel",
-                    "description": "",
-                    "type": "Object"
-                }
-            ],
+            "name": "enabledPanels",
             "class": "",
             "module": "backbone-panels"
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 50,
+            "line": 48,
             "description": "Retrieve all models before the given one.",
             "itemtype": "method",
             "name": "before",
@@ -352,7 +500,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 60,
+            "line": 58,
             "description": "Retrieve all models after the given one.",
             "itemtype": "method",
             "name": "after",
@@ -368,7 +516,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 70,
+            "line": 68,
             "itemtype": "method",
             "name": "reduceBefore",
             "params": [
@@ -399,7 +547,7 @@
         },
         {
             "file": "src/__backbone-panels/iterators.js",
-            "line": 83,
+            "line": 81,
             "itemtype": "method",
             "name": "reduceAfter",
             "params": [
@@ -423,6 +571,44 @@
                     "description": "",
                     "type": "Object",
                     "optional": true
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-meta-data.js",
+            "line": 1,
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-meta-data.js",
+            "line": 11,
+            "description": "Retrieve the index of a given panel object.",
+            "itemtype": "method",
+            "name": "panelIndex",
+            "params": [
+                {
+                    "name": "panel",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-meta-data.js",
+            "line": 26,
+            "description": "Returns the type of the panel.\nEither 'head', 'middle', 'tail'",
+            "itemtype": "method",
+            "name": "panelType",
+            "params": [
+                {
+                    "name": "panel",
+                    "description": "",
+                    "type": "Panel object"
                 }
             ],
             "class": "",
@@ -487,7 +673,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 142,
+            "line": 136,
             "description": "Css to be set on the main $el.",
             "itemtype": "property",
             "name": "css",
@@ -497,7 +683,7 @@
         },
         {
             "file": "src/index.js",
-            "line": 162,
+            "line": 157,
             "description": "Make the singlePanelBuilder available as a static prop\nfor easer extension.",
             "itemtype": "property",
             "name": "panelBuilder",
@@ -523,12 +709,20 @@
             "line": " src/__backbone-panels/iterators.js:1"
         },
         {
+            "message": "Missing item type\nThe default values to be set to the panel model",
+            "line": " src/__backbone-panels/panel-builder/index.js:61"
+        },
+        {
             "message": "Missing item type",
             "line": " src/__backbone-panels/controllers.js:13"
         },
         {
             "message": "Missing item type\n_o:\n    loopDirection: 'shift' | 'pop'\n    move:\n    absorb:",
             "line": " src/__backbone-panels/controllers.js:36"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/__backbone-panels/panel-meta-data.js:1"
         }
     ]
 }

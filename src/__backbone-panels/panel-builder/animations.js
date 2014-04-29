@@ -3,9 +3,16 @@ define(function (require, exports, module) {
 
 	var _ = require('lodash');
 
+	/**
+	 *
+	 *
+	 * @method bbpOpen
+	 * @param direction {String} Direction to which move
+	 * @param options {Object} Animation options
+	 */
 	exports.bbpOpen = function bbpOpen(direction, options) {
 
-		this.enablePanel();
+		this.bbpEnablePanel();
 
 		var openWidth = parseInt(this.panels.evalMeasureX(this.model.get('openWidth'))),
 			currWidth = parseInt(this.model.get('width')),
@@ -38,16 +45,35 @@ define(function (require, exports, module) {
 			this.aExpandToE(delta, options);
 	};
 
-	exports.bbpOpenToE = function bbpOpenToE(options) {
-		return this.open('e', options);
-	};
+	/**
+	 * Partial to 'e'
+	 *
+	 * @method bbpOpenToE
+	 * @param options
+	 */
+	exports.bbpOpenToE = _.partial(exports.bbpOpen, 'e');
 
-	exports.bbpOpenToW = function bbpOpenToW(options) {
-		return this.open('w', options);
-	};
+
+	/**
+	 * Partial to 'w'
+	 *
+	 * @method bbpOpenToW
+	 * @param options
+	 */
+	exports.bbpOpenToW = _.partial(exports.bbpOpen, 'w');
+
+	// ALIASES
+	exports.openToE = exports.bbpOpenToE;
+	exports.openToW = exports.bbpOpenToW;
 
 
-
+	/**
+	 *
+	 *
+	 * @method bbpClose
+	 * @param direction {String}
+	 * @param options {Object}
+	 */
 	exports.bbpClose = function bbpClose(direction, options) {
 
 				// options
@@ -72,7 +98,7 @@ define(function (require, exports, module) {
 
 
 			// disable the panel after the animation is complete
-			this.disablePanel();
+			this.bbpDisablePanel();
 
 
 			this.panels.arrangePositions();
@@ -87,21 +113,86 @@ define(function (require, exports, module) {
 			this.aContractToE(delta, options);
 
 	};
-	exports.bbpCloseToE = function bbpCloseToE(options) {
-		return this.close('e', options);
-	};
 
-	exports.bbpCloseToW = function bbpCloseToW(options) {
-		return this.close('w', options);
-	};
+	/**
+	 * Partial.
+	 * @method bbpCloseToE
+	 */
+	exports.bbpCloseToE = _.partial(exports.bbpClose, 'e');
 
+	/**
+	 * Partial
+	 * @method bbpCloseToW
+	 */
+	exports.bbpCloseToW = _.partial(exports.bbpClose, 'w');
 
 	// ALIASES
-	exports.open = exports.bbpOpen;
-	exports.openToE = exports.bbpOpenToE;
-	exports.openToW = exports.bbpOpenToW;
-
-	exports.close = exports.bbpClose;
 	exports.closeToE = exports.bbpCloseToE;
 	exports.closeToW = exports.bbpCloseToW;
+
+
+
+
+
+	/**
+	 * Calculates the opening direction based on the index of the panel
+	 *
+	 * @method calcOpenDirection
+	 *
+	 */
+	function calcOpenDirection() {
+
+		var type = this.panels.panelType(this);
+
+		if (type === 'only') {
+			return false;
+		} else {
+			return type === 'tail' ? 'w' : 'e';
+		}
+	}
+
+	/**
+	 * Calculates the closing direction based on the index of the panel.
+	 *
+	 * @method calcCloseDirection
+	 */
+	function calcCloseDirection() {
+
+		var type = this.panels.panelType(this);
+
+
+		if (type === 'only') {
+			return false;
+		} else {
+			return type === 'tail' ? 'e' : 'w';
+		}
+	}
+
+	/**
+	 * Intelligent open
+	 * Returns false if not able to open.
+	 *
+	 * @method open
+	 *
+	 */
+	exports.open = function open(options) {
+
+		var direction = this.model.get('openDirection') || calcOpenDirection.call(this);
+
+		return direction ? this.bbpOpen(direction, options) : direction;
+	};
+
+	/**
+	 *
+	 * Intelligent close.
+	 * Returns false if not able to close
+	 *
+	 * @method close
+	 */
+	exports.close = function close(options) {
+
+		var direction = this.model.get('closeDirection') || calcCloseDirection.call(this);
+
+		return direction ? this.bbpClose(direction, options) : direction;
+	};
 });

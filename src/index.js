@@ -92,17 +92,11 @@ define(function (require, exports, module) {
 			if (options.el) {
 				$el = options.el;
 			} else {
-
 				// build the $el.
 				var html = _.isFunction(this.panelTemplate) ? this.panelTemplate(options) : this.panelTemplate;
 
-				$el = $(html);
+				$el = $(html).appendTo(this.$el);
 			}
-
-			// add needed classes
-			// and append
-			$el.addClass(this.panelClass)
-				.appendTo(this.$el);
 
 			var panel = this.panelBuilder(_.extend({}, this.handleOptions, options, {
 				el: $el,
@@ -156,6 +150,7 @@ define(function (require, exports, module) {
 	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));
 	panels.proto(require('./__backbone-panels/enable-disable'));
+	panels.proto(require('./__backbone-panels/panel-meta-data'));
 
 
 	// static properties

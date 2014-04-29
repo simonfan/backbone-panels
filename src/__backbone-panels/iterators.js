@@ -33,19 +33,17 @@ define(function (require, exports, module) {
 	});
 
 	/**
-	 * Retrieve the index of a given panel object.
+	 * Returns an array with only the enabled panels.
 	 *
 	 *
-	 * @method panelIndex
-	 * @param panel {Object}
+	 * @method enabledPanels
+	 *
 	 */
-	exports.panelIndex = function panelIndex(panel) {
-		return this.findIndex(function (p) {
-			return p.cid === panel.cid;
+	exports.enabledPanels = function enabledPanels() {
+		return this.filter(function (panel) {
+			return panel.bbpPanelEnabled();
 		});
 	};
-
-
 
 	/**
 	 * Retrieve all models before the given one.

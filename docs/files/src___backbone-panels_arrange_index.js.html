@@ -112,7 +112,7 @@ define(function (require, exports, module) {
 	exports.arrangeHandles = function arrangeHandles() {
 
 		var enabledPanels = this.filter(function (p) {
-			return p.panelEnabled();
+			return p.bbpPanelEnabled();
 		});
 
 		_.each(enabledPanels, function (panel, index) {

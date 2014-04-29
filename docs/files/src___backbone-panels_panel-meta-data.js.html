@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/arrange/boundaries.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel-meta-data.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,78 +88,57 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/arrange/boundaries.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel-meta-data.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * Logic for positioning the panels at the right starting place.
- *
- * @module backbone-panels
- * @submodule positioners
+
  */
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-
-	// private
-	function sumBefore(attr, index) {
-		return this.reduceBefore(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
-		}, 0);
-	}
+	var _ = require(&#x27;lodash&#x27;);
 
 
 
-
-	function setPanelLeftBoundaries(panel, index) {
-		var maxWidthBefore = sumBefore.call(this, &#x27;maxWidth&#x27;, index),
-			minWidthBefore = sumBefore.call(this, &#x27;minWidth&#x27;, index);
-
-		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
-
-		panel.model.set(&#x27;minLeft&#x27;, minWidthBefore);
-	}
-
-	// after
-	function sumAfter(attr, index) {
-		return this.reduceAfter(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get(&#x27;width&#x27;);
-		}, 0);
-	}
-
-	function setPanelRightBoundaries(panel, index) {
-
-		var minWidthAfter = sumAfter.call(this, &#x27;minWidth&#x27;, index),
-			maxWidthAfter = sumAfter.call(this, &#x27;maxWidth&#x27;, index);
-
-		var totalWidth = sumAfter.call(this, &#x27;width&#x27;, -1);
-
-		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
-
-		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
-	}
+	/**
+	 * Retrieve the index of a given panel object.
+	 *
+	 *
+	 * @method panelIndex
+	 * @param panel {Object}
+	 */
+	exports.panelIndex = function panelIndex(panel) {
+		return this.findIndex(function (p) {
+			return p.cid === panel.cid;
+		});
+	};
 
 
 
+	/**
+	 * Returns the type of the panel.
+	 * Either &#x27;head&#x27;, &#x27;middle&#x27;, &#x27;tail&#x27;
+	 *
+	 * @method panelType
+	 * @param panel {Panel object}
+	 */
+	exports.panelType = function panelType(panel) {
+		var enabledPanels = this.enabledPanels();
 
+		if (enabledPanels.length === 1) {
+			return &#x27;only&#x27;;
+		} else {
 
-
-
-
-	module.exports = function arrangeBoundaries() {
-
-	//	console.log(&#x27;arrange boundaries&#x27;);
-
-		this.each(function (panel, index) {
-
-			setPanelLeftBoundaries.call(this, panel, index);
-
-			setPanelRightBoundaries.call(this, panel, index);
-
-		}, this);
-
-		return this;
+			if (panel.id === enabledPanels[0].id) {
+				return &#x27;head&#x27;;
+			} else if (panel.id === _.last(enabledPanels).id) {
+				return &#x27;tail&#x27;;
+			} else {
+				return &#x27;middle&#x27;;
+			}
+		}
 	};
 });
 

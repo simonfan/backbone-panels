@@ -11,7 +11,7 @@ define(function (require, exports, module) {
 	// private
 	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	}
 
@@ -30,7 +30,7 @@ define(function (require, exports, module) {
 	// after
 	function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	}
 

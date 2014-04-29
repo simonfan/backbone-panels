@@ -104,6 +104,9 @@ define(function (require, exports, module) {
 		resizable = require(&#x27;backbone-ui-resizable&#x27;),
 		backbone = require(&#x27;lowercase-backbone&#x27;);
 
+	// internal
+	var parseData = require(&#x27;./parse-data&#x27;);
+
 	var panel = module.exports = resizable.extend({
 
 		initialize: function initialize(options) {
@@ -134,10 +137,11 @@ define(function (require, exports, module) {
 			this.id = this.$el.prop(&#x27;id&#x27;);
 
 			// set initial data
-			var data = this.parseData(this.$el.data());
-			_.defaults(data, {
-				panelStatus: &#x27;enabled&#x27;
-			});
+			var data = parseData.call(this);
+
+			// set defaults
+			_.defaults(data, this.bbpDefaults);
+
 			this.model.set(data);
 
 
@@ -148,15 +152,19 @@ define(function (require, exports, module) {
 			this.$el.addClass(this.panelClass);
 		},
 
-		parseData: require(&#x27;./parse-data&#x27;),
+		/**
+		 *
+		 * The default values to be set to the panel model
+		 *
+		 */
+		bbpDefaults: {
+			panelStatus: &#x27;enabled&#x27;,
+			minWidth: &#x27;0&#x27;,
+			maxWidth: &#x27;100%&#x27;,
+			height: &#x27;100%&#x27;,
+		},
 
 		handles: &#x27;w,e&#x27;,
-
-		handleOptions: {
-			clss: &#x27;handle&#x27;,
-			ratio: 0,
-			thickness: 25,
-		},
 
 		panelClass: &#x27;panel&#x27;,
 	});

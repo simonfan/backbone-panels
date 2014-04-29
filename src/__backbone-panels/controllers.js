@@ -63,7 +63,7 @@ define(function (require, exports, module) {
 				var panel = loop.pop();
 
 				// [2.2] check panel status
-				if (panel.panelEnabled()) {
+				if (panel.bbpPanelEnabled()) {
 					// [2.2-A] panel ENABLED
 
 					// Add the panel to the list of 'sized panels'

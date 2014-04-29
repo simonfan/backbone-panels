@@ -5,7 +5,7 @@ define(function (require, exports, module) {
 
 		this.listenTo(this.model, 'change:panelStatus', function (model) {
 
-			if (this.panelEnabled()) {
+			if (this.bbpPanelEnabled()) {
 				// enabled
 				this.enableResizable();
 
@@ -33,16 +33,16 @@ define(function (require, exports, module) {
 
 	};
 
-	exports.panelEnabled = function panelEnabled() {
+	exports.bbpPanelEnabled = function bbpPanelEnabled() {
 		return this.model.get('panelStatus') === 'enabled';
 	};
 
-	exports.enablePanel = function enablePanel() {
+	exports.bbpEnablePanel = function bbpEnablePanel() {
 		this.model.set('panelStatus', 'enabled');
 		return this;
 	};
 
-	exports.disablePanel = function disablePanel() {
+	exports.bbpDisablePanel = function bbpDisablePanel() {
 		this.model.set('panelStatus', 'disabled');
 		return this;
 	};

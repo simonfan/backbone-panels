@@ -128,10 +128,21 @@ define(function (require, exports, module) {
 			},
 		};
 
-	module.exports = function parseData(data) {
+	/**
+	 *
+	 *
+	 * This method retrieves the configuration data for
+	 * a single panel from the DOM element
+	 *
+	 * All data returned from this method will be directly set to
+	 * the model.
+	 *
+	 * @method parseData
+	 */
+	module.exports = function parseData() {
 
-
-		var d = {};
+		var data = this.$el.data(),
+			d = {};
 
 		// parse x-axis percentual measures
 		_.each(measures.x, function (measure, dataKey) {
@@ -145,6 +156,9 @@ define(function (require, exports, module) {
 
 		// elasticity
 		d.elasticity = data.bbpElasticity;
+
+		// set defaults
+		d.panelStatus = data.bbpStatus;
 
 		return d;
 	};

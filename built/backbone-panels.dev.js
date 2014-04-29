@@ -34,10 +34,21 @@ define('__backbone-panels/panel-builder/parse-data',['require','exports','module
 			},
 		};
 
-	module.exports = function parseData(data) {
+	/**
+	 *
+	 *
+	 * This method retrieves the configuration data for
+	 * a single panel from the DOM element
+	 *
+	 * All data returned from this method will be directly set to
+	 * the model.
+	 *
+	 * @method parseData
+	 */
+	module.exports = function parseData() {
 
-
-		var d = {};
+		var data = this.$el.data(),
+			d = {};
 
 		// parse x-axis percentual measures
 		_.each(measures.x, function (measure, dataKey) {
@@ -52,6 +63,9 @@ define('__backbone-panels/panel-builder/parse-data',['require','exports','module
 		// elasticity
 		d.elasticity = data.bbpElasticity;
 
+		// set defaults
+		d.panelStatus = data.bbpStatus;
+
 		return d;
 	};
 
@@ -62,9 +76,16 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 	var _ = require('lodash');
 
+	/**
+	 *
+	 *
+	 * @method bbpOpen
+	 * @param direction {String} Direction to which move
+	 * @param options {Object} Animation options
+	 */
 	exports.bbpOpen = function bbpOpen(direction, options) {
 
-		this.enablePanel();
+		this.bbpEnablePanel();
 
 		var openWidth = parseInt(this.panels.evalMeasureX(this.model.get('openWidth'))),
 			currWidth = parseInt(this.model.get('width')),
@@ -97,16 +118,35 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			this.aExpandToE(delta, options);
 	};
 
-	exports.bbpOpenToE = function bbpOpenToE(options) {
-		return this.open('e', options);
-	};
+	/**
+	 * Partial to 'e'
+	 *
+	 * @method bbpOpenToE
+	 * @param options
+	 */
+	exports.bbpOpenToE = _.partial(exports.bbpOpen, 'e');
 
-	exports.bbpOpenToW = function bbpOpenToW(options) {
-		return this.open('w', options);
-	};
+
+	/**
+	 * Partial to 'w'
+	 *
+	 * @method bbpOpenToW
+	 * @param options
+	 */
+	exports.bbpOpenToW = _.partial(exports.bbpOpen, 'w');
+
+	// ALIASES
+	exports.openToE = exports.bbpOpenToE;
+	exports.openToW = exports.bbpOpenToW;
 
 
-
+	/**
+	 *
+	 *
+	 * @method bbpClose
+	 * @param direction {String}
+	 * @param options {Object}
+	 */
 	exports.bbpClose = function bbpClose(direction, options) {
 
 				// options
@@ -131,7 +171,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 
 			// disable the panel after the animation is complete
-			this.disablePanel();
+			this.bbpDisablePanel();
 
 
 			this.panels.arrangePositions();
@@ -146,23 +186,88 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			this.aContractToE(delta, options);
 
 	};
-	exports.bbpCloseToE = function bbpCloseToE(options) {
-		return this.close('e', options);
-	};
 
-	exports.bbpCloseToW = function bbpCloseToW(options) {
-		return this.close('w', options);
-	};
+	/**
+	 * Partial.
+	 * @method bbpCloseToE
+	 */
+	exports.bbpCloseToE = _.partial(exports.bbpClose, 'e');
 
+	/**
+	 * Partial
+	 * @method bbpCloseToW
+	 */
+	exports.bbpCloseToW = _.partial(exports.bbpClose, 'w');
 
 	// ALIASES
-	exports.open = exports.bbpOpen;
-	exports.openToE = exports.bbpOpenToE;
-	exports.openToW = exports.bbpOpenToW;
-
-	exports.close = exports.bbpClose;
 	exports.closeToE = exports.bbpCloseToE;
 	exports.closeToW = exports.bbpCloseToW;
+
+
+
+
+
+	/**
+	 * Calculates the opening direction based on the index of the panel
+	 *
+	 * @method calcOpenDirection
+	 *
+	 */
+	function calcOpenDirection() {
+
+		var type = this.panels.panelType(this);
+
+		if (type === 'only') {
+			return false;
+		} else {
+			return type === 'tail' ? 'w' : 'e';
+		}
+	}
+
+	/**
+	 * Calculates the closing direction based on the index of the panel.
+	 *
+	 * @method calcCloseDirection
+	 */
+	function calcCloseDirection() {
+
+		var type = this.panels.panelType(this);
+
+
+		if (type === 'only') {
+			return false;
+		} else {
+			return type === 'tail' ? 'e' : 'w';
+		}
+	}
+
+	/**
+	 * Intelligent open
+	 * Returns false if not able to open.
+	 *
+	 * @method open
+	 *
+	 */
+	exports.open = function open(options) {
+
+		var direction = this.model.get('openDirection') || calcOpenDirection.call(this);
+
+		return direction ? this.bbpOpen(direction, options) : direction;
+	};
+
+	/**
+	 *
+	 * Intelligent close.
+	 * Returns false if not able to close
+	 *
+	 * @method close
+	 */
+	exports.close = function close(options) {
+
+		var direction = this.model.get('closeDirection') || calcCloseDirection.call(this);
+
+		return direction ? this.bbpClose(direction, options) : direction;
+	};
 });
 
 define('__backbone-panels/panel-builder/enable-disable',['require','exports','module'],function (require, exports, module) {
@@ -172,7 +277,7 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 
 		this.listenTo(this.model, 'change:panelStatus', function (model) {
 
-			if (this.panelEnabled()) {
+			if (this.bbpPanelEnabled()) {
 				// enabled
 				this.enableResizable();
 
@@ -200,16 +305,16 @@ define('__backbone-panels/panel-builder/enable-disable',['require','exports','mo
 
 	};
 
-	exports.panelEnabled = function panelEnabled() {
+	exports.bbpPanelEnabled = function bbpPanelEnabled() {
 		return this.model.get('panelStatus') === 'enabled';
 	};
 
-	exports.enablePanel = function enablePanel() {
+	exports.bbpEnablePanel = function bbpEnablePanel() {
 		this.model.set('panelStatus', 'enabled');
 		return this;
 	};
 
-	exports.disablePanel = function disablePanel() {
+	exports.bbpDisablePanel = function bbpDisablePanel() {
 		this.model.set('panelStatus', 'disabled');
 		return this;
 	};
@@ -227,6 +332,9 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 	var _ = require('lodash'),
 		resizable = require('backbone-ui-resizable'),
 		backbone = require('lowercase-backbone');
+
+	// internal
+	var parseData = require('./parse-data');
 
 	var panel = module.exports = resizable.extend({
 
@@ -258,10 +366,11 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 			this.id = this.$el.prop('id');
 
 			// set initial data
-			var data = this.parseData(this.$el.data());
-			_.defaults(data, {
-				panelStatus: 'enabled'
-			});
+			var data = parseData.call(this);
+
+			// set defaults
+			_.defaults(data, this.bbpDefaults);
+
 			this.model.set(data);
 
 
@@ -272,15 +381,19 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 			this.$el.addClass(this.panelClass);
 		},
 
-		parseData: require('./parse-data'),
+		/**
+		 *
+		 * The default values to be set to the panel model
+		 *
+		 */
+		bbpDefaults: {
+			panelStatus: 'enabled',
+			minWidth: '0',
+			maxWidth: '100%',
+			height: '100%',
+		},
 
 		handles: 'w,e',
-
-		handleOptions: {
-			clss: 'handle',
-			ratio: 0,
-			thickness: 25,
-		},
 
 		panelClass: 'panel',
 	});
@@ -325,19 +438,17 @@ define('__backbone-panels/iterators',['require','exports','module','lodash'],fun
 	});
 
 	/**
-	 * Retrieve the index of a given panel object.
+	 * Returns an array with only the enabled panels.
 	 *
 	 *
-	 * @method panelIndex
-	 * @param panel {Object}
+	 * @method enabledPanels
+	 *
 	 */
-	exports.panelIndex = function panelIndex(panel) {
-		return this.findIndex(function (p) {
-			return p.cid === panel.cid;
+	exports.enabledPanels = function enabledPanels() {
+		return this.filter(function (panel) {
+			return panel.bbpPanelEnabled();
 		});
 	};
-
-
 
 	/**
 	 * Retrieve all models before the given one.
@@ -454,7 +565,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 	// private
 	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	}
 
@@ -473,7 +584,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 	// after
 	function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.panelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
 		}, 0);
 	}
 
@@ -532,7 +643,7 @@ define('__backbone-panels/arrange/index',['require','exports','module','lodash',
 	exports.arrangeHandles = function arrangeHandles() {
 
 		var enabledPanels = this.filter(function (p) {
-			return p.panelEnabled();
+			return p.bbpPanelEnabled();
 		});
 
 		_.each(enabledPanels, function (panel, index) {
@@ -720,7 +831,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 				var panel = loop.pop();
 
 				// [2.2] check panel status
-				if (panel.panelEnabled()) {
+				if (panel.bbpPanelEnabled()) {
 					// [2.2-A] panel ENABLED
 
 					// Add the panel to the list of 'sized panels'
@@ -931,6 +1042,56 @@ define('__backbone-panels/enable-disable',['require','exports','module'],functio
 	};
 });
 
+/**
+
+ */
+define('__backbone-panels/panel-meta-data',['require','exports','module','lodash'],function (require, exports, module) {
+	
+
+	var _ = require('lodash');
+
+
+
+	/**
+	 * Retrieve the index of a given panel object.
+	 *
+	 *
+	 * @method panelIndex
+	 * @param panel {Object}
+	 */
+	exports.panelIndex = function panelIndex(panel) {
+		return this.findIndex(function (p) {
+			return p.cid === panel.cid;
+		});
+	};
+
+
+
+	/**
+	 * Returns the type of the panel.
+	 * Either 'head', 'middle', 'tail'
+	 *
+	 * @method panelType
+	 * @param panel {Panel object}
+	 */
+	exports.panelType = function panelType(panel) {
+		var enabledPanels = this.enabledPanels();
+
+		if (enabledPanels.length === 1) {
+			return 'only';
+		} else {
+
+			if (panel.id === enabledPanels[0].id) {
+				return 'head';
+			} else if (panel.id === _.last(enabledPanels).id) {
+				return 'tail';
+			} else {
+				return 'middle';
+			}
+		}
+	};
+});
+
 //     backbone-panels
 //     (c) simonfan
 //     backbone-panels is licensed under the MIT terms.
@@ -940,7 +1101,7 @@ define('__backbone-panels/enable-disable',['require','exports','module'],functio
  *
  * @module backbone-panels
  */
-define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/arrange/index','./__backbone-panels/event-handlers','./__backbone-panels/controllers','./__backbone-panels/calculators','./__backbone-panels/enable-disable'],function (require, exports, module) {
+define('backbone-panels',['require','exports','module','jquery','lowercase-backbone','lodash','./__backbone-panels/panel-builder/index','./__backbone-panels/iterators','./__backbone-panels/arrange/index','./__backbone-panels/event-handlers','./__backbone-panels/controllers','./__backbone-panels/calculators','./__backbone-panels/enable-disable','./__backbone-panels/panel-meta-data'],function (require, exports, module) {
 	
 
 	var $ = require('jquery'),
@@ -1025,17 +1186,11 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 			if (options.el) {
 				$el = options.el;
 			} else {
-
 				// build the $el.
 				var html = _.isFunction(this.panelTemplate) ? this.panelTemplate(options) : this.panelTemplate;
 
-				$el = $(html);
+				$el = $(html).appendTo(this.$el);
 			}
-
-			// add needed classes
-			// and append
-			$el.addClass(this.panelClass)
-				.appendTo(this.$el);
 
 			var panel = this.panelBuilder(_.extend({}, this.handleOptions, options, {
 				el: $el,
@@ -1089,6 +1244,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 	panels.proto(require('./__backbone-panels/controllers'));
 	panels.proto(require('./__backbone-panels/calculators'));
 	panels.proto(require('./__backbone-panels/enable-disable'));
+	panels.proto(require('./__backbone-panels/panel-meta-data'));
 
 
 	// static properties
