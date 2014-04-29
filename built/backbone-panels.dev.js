@@ -122,11 +122,11 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			this.aContractToE(delta, options);
 
 	};
-	exports.closeToRight = function closeToRight(options) {
+	exports.closeToE = function closeToE(options) {
 		return this.close('e', options);
 	};
 
-	exports.closeToLeft = function closeToLeft(options) {
+	exports.closeToW = function closeToW(options) {
 		return this.close('w', options);
 	};
 });
