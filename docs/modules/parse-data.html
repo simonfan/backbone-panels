@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-builder/index.js - backbone-panels</title>
+    <title>parse-data - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,85 +88,38 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-builder/index.js</h1>
+                        <h1>parse-data Module</h1>
+<div class="box clearfix meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-/**
- *
- * @module backbone-panels
- * @submolude panel-builder
- */
-define(function (require, exports, module) {
-	&#x27;use strict&#x27;;
+    
 
-	var _ = require(&#x27;lodash&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;);
+    
+        <div class="foundat">
+            Defined in: <a href="../files/src___backbone-panels_panel-builder_parse-data.js.html#l1"><code>src&#x2F;__backbone-panels&#x2F;panel-builder&#x2F;parse-data.js:1</code></a>
+        </div>
+    
 
-	var panel = module.exports = resizable.extend({
-
-		initialize: function initialize(options) {
-
-
-			backbone.view.prototype.initialize.call(this, options);
-
-			this.initializeModelDock(options);
-
-			this.initializeUIDraggable(options);
-
-
-			this.initializeUIResizable(options);
+    
+</div>
 
 
 
-			this.initializePanel(options);
+<div class="box intro">
+    <p>This module controls how data is processed from DOM to the model.</p>
+
+</div>
 
 
-		},
 
-		initializePanel: function initializePanel(options) {
+<div class="yui3-g">
+    <div class="yui3-u-1-2">
+        
+    </div>
 
-			// reference to the panels object
-			this.panels = options.panels;
-
-			// set an id for the panel.
-			this.id = this.$el.prop(&#x27;id&#x27;);
-
-			// set initial data
-			var data = this.parseData(this.$el.data());
-			_.defaults(data, {
-				panelStatus: &#x27;enabled&#x27;
-			});
-			this.model.set(data);
-
-
-			// initialize enable-disable system
-			this._initializePanelEnableDisable();
-
-
-			this.$el.addClass(this.panelClass);
-		},
-
-		parseData: require(&#x27;./parse-data&#x27;),
-
-		handles: &#x27;w,e&#x27;,
-
-		handleOptions: {
-			clss: &#x27;handle&#x27;,
-			ratio: 0,
-			thickness: 25,
-		},
-
-		panelClass: &#x27;panel&#x27;,
-	});
-
-	panel
-		.proto(require(&#x27;./animations&#x27;))
-		.proto(require(&#x27;./enable-disable&#x27;));
-});
-
-    </pre>
+    <div class="yui3-u-1-2">
+        
+    </div>
 </div>
 
                     </div>

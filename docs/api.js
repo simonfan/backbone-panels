@@ -4,6 +4,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "modules": [
         "backbone-panels",
         "enable-disable",
+        "parse-data",
         "positioners"
     ],
     "allModules": [
@@ -15,6 +16,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "enable-disable",
             "name": "enable-disable",
             "description": "Logic for enabling and disabling panels"
+        },
+        {
+            "displayName": "parse-data",
+            "name": "parse-data",
+            "description": "This module controls how data is processed from DOM to the model."
         },
         {
             "displayName": "positioners",

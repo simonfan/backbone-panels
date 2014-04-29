@@ -1,3 +1,10 @@
+/**
+ * This module controls how data is processed from DOM to the model.
+ *
+ * @submodule parse-data
+ *
+ */
+
 define('__backbone-panels/panel-builder/parse-data',['require','exports','module','lodash'],function (require, exports, module) {
 	
 
@@ -6,29 +13,46 @@ define('__backbone-panels/panel-builder/parse-data',['require','exports','module
 
 	// private
 	var measures = {
-			x: [
-				'minLeft', 'left', 'maxLeft',
-				'minWidth', 'width', 'maxWidth', 'defaultWidth'
-			],
-			y: [
-				'minTop', 'top', 'maxTop',
-				'minHeight', 'height', 'maxHeight',
-			],
+			x: {
+				bbpMinLeft:      'minLeft',
+				bbpLeft:         'left',
+				bbpMaxLeft:      'maxLeft',
+				bbpMinWidth:     'minWidth',
+				bbpWidth:        'width',
+				bbpMaxWidth:     'maxWidth',
+				bbpDefaultWidth: 'defaultWidth',
+
+				bbpOpenWidth:    'openWidth',
+			},
+			y: {
+				bbpMinTop:       'minTop',
+				bbpTop:          'top',
+				bbpMaxTop:       'maxTop',
+				bbpMinHeight:    'minHeight',
+				bbpHeight:       'height',
+				bbpMaxHeight:    'maxHeight',
+			},
 		};
 
 	module.exports = function parseData(data) {
 
+
+		var d = {};
+
 		// parse x-axis percentual measures
-		_.each(measures.x, function (measure) {
-			data[measure] = this.panels.evalMeasureX(data[measure]);
+		_.each(measures.x, function (measure, dataKey) {
+			d[measure] = this.panels.evalMeasureX(data[dataKey]);
 		}, this);
 
 		// parse y-axis percentual measure
-		_.each(measures.y, function (measure) {
-			data[measure] = this.panels.evalMeasureY(data[measure]);
+		_.each(measures.y, function (measure, dataKey) {
+			d[measure] = this.panels.evalMeasureY(data[dataKey]);
 		}, this);
 
-		return data;
+		// elasticity
+		d.elasticity = data.bbpElasticity;
+
+		return d;
 	};
 
 });
@@ -38,7 +62,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 	var _ = require('lodash');
 
-	exports.open = function open(direction, options) {
+	exports.bbpOpen = function bbpOpen(direction, options) {
 
 		this.enablePanel();
 
@@ -73,17 +97,17 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			this.aExpandToE(delta, options);
 	};
 
-	exports.openToE = function openToE(options) {
+	exports.bbpOpenToE = function bbpOpenToE(options) {
 		return this.open('e', options);
 	};
 
-	exports.openToW = function openToW(options) {
+	exports.bbpOpenToW = function bbpOpenToW(options) {
 		return this.open('w', options);
 	};
 
 
 
-	exports.close = function close(direction, options) {
+	exports.bbpClose = function bbpClose(direction, options) {
 
 				// options
 		options = options || {};
@@ -122,13 +146,23 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 			this.aContractToE(delta, options);
 
 	};
-	exports.closeToE = function closeToE(options) {
+	exports.bbpCloseToE = function bbpCloseToE(options) {
 		return this.close('e', options);
 	};
 
-	exports.closeToW = function closeToW(options) {
+	exports.bbpCloseToW = function bbpCloseToW(options) {
 		return this.close('w', options);
 	};
+
+
+	// ALIASES
+	exports.open = exports.bbpOpen;
+	exports.openToE = exports.bbpOpenToE;
+	exports.openToW = exports.bbpOpenToW;
+
+	exports.close = exports.bbpClose;
+	exports.closeToE = exports.bbpCloseToE;
+	exports.closeToW = exports.bbpCloseToW;
 });
 
 define('__backbone-panels/panel-builder/enable-disable',['require','exports','module'],function (require, exports, module) {

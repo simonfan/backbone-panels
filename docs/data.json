@@ -36,6 +36,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/__backbone-panels/panel-builder/parse-data.js": {
+            "name": "src/__backbone-panels/panel-builder/parse-data.js",
+            "modules": {
+                "parse-data": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/__backbone-panels/controllers.js": {
             "name": "src/__backbone-panels/controllers.js",
             "modules": {},
@@ -79,6 +88,7 @@
             "name": "backbone-panels",
             "submodules": {
                 "positioners": 1,
+                "parse-data": 1,
                 "enable-disable": 1
             },
             "classes": {},
@@ -101,6 +111,19 @@
             "file": "src/__backbone-panels/arrange/boundaries.js",
             "line": 1,
             "description": "Logic for positioning the panels at the right starting place."
+        },
+        "parse-data": {
+            "name": "parse-data",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "backbone-panels",
+            "namespace": "",
+            "file": "src/__backbone-panels/panel-builder/parse-data.js",
+            "line": 1,
+            "description": "This module controls how data is processed from DOM to the model."
         },
         "enable-disable": {
             "name": "enable-disable",

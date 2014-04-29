@@ -3,7 +3,7 @@ define(function (require, exports, module) {
 
 	var _ = require('lodash');
 
-	exports.open = function open(direction, options) {
+	exports.bbpOpen = function bbpOpen(direction, options) {
 
 		this.enablePanel();
 
@@ -38,17 +38,17 @@ define(function (require, exports, module) {
 			this.aExpandToE(delta, options);
 	};
 
-	exports.openToE = function openToE(options) {
+	exports.bbpOpenToE = function bbpOpenToE(options) {
 		return this.open('e', options);
 	};
 
-	exports.openToW = function openToW(options) {
+	exports.bbpOpenToW = function bbpOpenToW(options) {
 		return this.open('w', options);
 	};
 
 
 
-	exports.close = function close(direction, options) {
+	exports.bbpClose = function bbpClose(direction, options) {
 
 				// options
 		options = options || {};
@@ -87,11 +87,21 @@ define(function (require, exports, module) {
 			this.aContractToE(delta, options);
 
 	};
-	exports.closeToE = function closeToE(options) {
+	exports.bbpCloseToE = function bbpCloseToE(options) {
 		return this.close('e', options);
 	};
 
-	exports.closeToW = function closeToW(options) {
+	exports.bbpCloseToW = function bbpCloseToW(options) {
 		return this.close('w', options);
 	};
+
+
+	// ALIASES
+	exports.open = exports.bbpOpen;
+	exports.openToE = exports.bbpOpenToE;
+	exports.openToW = exports.bbpOpenToW;
+
+	exports.close = exports.bbpClose;
+	exports.closeToE = exports.bbpCloseToE;
+	exports.closeToW = exports.bbpCloseToW;
 });
