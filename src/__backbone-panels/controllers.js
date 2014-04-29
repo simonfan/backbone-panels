@@ -63,8 +63,8 @@ define(function (require, exports, module) {
 				var panel = loop.pop();
 
 				// [2.2] check panel status
-				if (panel.bbpPanelEnabled()) {
-					// [2.2-A] panel ENABLED
+				if (panel.bbpPanelEnabled() && !panel.bbpPanelResizing()) {
+					// [2.2-A] panel ENABLED AND NOT RESIZING
 
 					// Add the panel to the list of 'sized panels'
 					_panels.push(panel);
@@ -109,7 +109,7 @@ define(function (require, exports, module) {
 
 
 				} else {
-					// [2.2-B] panel DISABLED
+					// [2.2-B] panel DISABLED OR RESIZING
 					//     Just move it.
 					//     Do not alter the delta at all.
 					panel[_o.move](delta, coptions);

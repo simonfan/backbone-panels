@@ -325,7 +325,14 @@
         },
         {
             "file": "src/__backbone-panels/panel-builder/index.js",
-            "line": 61,
+            "line": 71,
+            "description": "Returns whether the panel is currently resizing.",
+            "class": "",
+            "module": "backbone-panels"
+        },
+        {
+            "file": "src/__backbone-panels/panel-builder/index.js",
+            "line": 80,
             "description": "The default values to be set to the panel model",
             "class": "",
             "module": "backbone-panels"
@@ -709,8 +716,12 @@
             "line": " src/__backbone-panels/iterators.js:1"
         },
         {
+            "message": "Missing item type\nReturns whether the panel is currently resizing.",
+            "line": " src/__backbone-panels/panel-builder/index.js:71"
+        },
+        {
             "message": "Missing item type\nThe default values to be set to the panel model",
-            "line": " src/__backbone-panels/panel-builder/index.js:61"
+            "line": " src/__backbone-panels/panel-builder/index.js:80"
         },
         {
             "message": "Missing item type",

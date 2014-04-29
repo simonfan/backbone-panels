@@ -56,6 +56,25 @@ define(function (require, exports, module) {
 
 
 			this.$el.addClass(this.panelClass);
+
+
+			// listen to resizestart and resizestop
+			this.on('resizestart', function () {
+				this.model.set('bbpPanelResizing', true);
+			}, this);
+
+			this.on('resizestop', function () {
+				this.model.set('bbpPanelResizing', false);
+			}, this);
+		},
+
+		/**
+		 *
+		 * Returns whether the panel is currently resizing.
+		 *
+		 */
+		bbpPanelResizing: function bbpPanelResizing() {
+			return this.model.get('bbpPanelResizing');
 		},
 
 		/**

@@ -171,7 +171,7 @@ define('__backbone-panels/panel-builder/animations',['require','exports','module
 
 
 			// disable the panel after the animation is complete
-			this.bbpDisablePanel();
+	//		this.bbpDisablePanel();
 
 
 			this.panels.arrangePositions();
@@ -379,6 +379,25 @@ define('__backbone-panels/panel-builder/index',['require','exports','module','lo
 
 
 			this.$el.addClass(this.panelClass);
+
+
+			// listen to resizestart and resizestop
+			this.on('resizestart', function () {
+				this.model.set('bbpPanelResizing', true);
+			}, this);
+
+			this.on('resizestop', function () {
+				this.model.set('bbpPanelResizing', false);
+			}, this);
+		},
+
+		/**
+		 *
+		 * Returns whether the panel is currently resizing.
+		 *
+		 */
+		bbpPanelResizing: function bbpPanelResizing() {
+			return this.model.get('bbpPanelResizing');
 		},
 
 		/**
@@ -831,8 +850,8 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 				var panel = loop.pop();
 
 				// [2.2] check panel status
-				if (panel.bbpPanelEnabled()) {
-					// [2.2-A] panel ENABLED
+				if (panel.bbpPanelEnabled() && !panel.bbpPanelResizing()) {
+					// [2.2-A] panel ENABLED AND NOT RESIZING
 
 					// Add the panel to the list of 'sized panels'
 					_panels.push(panel);
@@ -877,7 +896,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 
 
 				} else {
-					// [2.2-B] panel DISABLED
+					// [2.2-B] panel DISABLED OR RESIZING
 					//     Just move it.
 					//     Do not alter the delta at all.
 					panel[_o.move](delta, coptions);
