@@ -112,7 +112,7 @@ define(function (require, exports, module) {
 	 */
 	function calculateLeftPos(index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.get(&#x27;width&#x27;);
+			return value + panel.model.get(&#x27;width&#x27;);
 		}, 0);
 	}
 

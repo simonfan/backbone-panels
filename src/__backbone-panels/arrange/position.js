@@ -18,7 +18,7 @@ define(function (require, exports, module) {
 	 */
 	function calculateLeftPos(index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.get('width');
+			return value + panel.model.get('width');
 		}, 0);
 	}
 

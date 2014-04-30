@@ -536,7 +536,7 @@ define('__backbone-panels/arrange/position',['require','exports','module','lodas
 	 */
 	function calculateLeftPos(index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.get('width');
+			return value + panel.model.get('width');
 		}, 0);
 	}
 
@@ -584,7 +584,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 	// private
 	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get('width');
 		}, 0);
 	}
 
@@ -603,7 +603,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 	// after
 	function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.get(attr) : value + panel.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get('width');
 		}, 0);
 	}
 
