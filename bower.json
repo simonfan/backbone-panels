@@ -1,6 +1,6 @@
 {
   "name": "backbone-panels",
-  "version": "0.5.13",
+  "version": "0.6.13",
   "homepage": "https://github.com/simonfan/backbone-panels",
   "authors": [
     "simonfan <simonxd@gmail.com>"
@@ -24,12 +24,13 @@
   "resolutions": {
     "subject": "~0.4.1",
     "jquery": "~2.1.0",
-    "model-dock": "0.4.6"
+    "backbone-ui-resizable": "0.8.19",
+    "backbone-ui-draggable": "0.7.13"
   },
   "dependencies": {
-    "backbone-ui-resizable": "0.8.17",
+    "backbone-ui-resizable": "0.8.19",
     "jquery": "~2.1.0",
     "requirejs": "~2.1.11",
-    "model-dock": "0.4.6"
+    "lowercase-backbone": "~0.2.5"
   }
 }

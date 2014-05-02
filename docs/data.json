@@ -27,15 +27,15 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/__backbone-panels/panel-builder/animations.js": {
-            "name": "src/__backbone-panels/panel-builder/animations.js",
+        "src/__backbone-panels/panel/animations.js": {
+            "name": "src/__backbone-panels/panel/animations.js",
             "modules": {},
             "classes": {},
             "fors": {},
             "namespaces": {}
         },
-        "src/__backbone-panels/panel-builder/index.js": {
-            "name": "src/__backbone-panels/panel-builder/index.js",
+        "src/__backbone-panels/panel/index.js": {
+            "name": "src/__backbone-panels/panel/index.js",
             "modules": {
                 "backbone-panels": 1
             },
@@ -43,8 +43,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/__backbone-panels/panel-builder/parse-data.js": {
-            "name": "src/__backbone-panels/panel-builder/parse-data.js",
+        "src/__backbone-panels/panel/parse-data.js": {
+            "name": "src/__backbone-panels/panel/parse-data.js",
             "modules": {
                 "parse-data": 1
             },
@@ -109,7 +109,7 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/__backbone-panels/panel-builder/index.js",
+            "file": "src/__backbone-panels/panel/index.js",
             "line": 1,
             "submolude": "panel-builder"
         },
@@ -135,7 +135,7 @@
             "namespaces": {},
             "module": "backbone-panels",
             "namespace": "",
-            "file": "src/__backbone-panels/panel-builder/parse-data.js",
+            "file": "src/__backbone-panels/panel/parse-data.js",
             "line": 1,
             "description": "This module controls how data is processed from DOM to the model."
         },
@@ -200,7 +200,7 @@
             "submodule": "positioners"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 6,
             "itemtype": "method",
             "name": "bbpOpen",
@@ -220,7 +220,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 48,
             "description": "Partial to 'e'",
             "itemtype": "method",
@@ -235,7 +235,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 57,
             "description": "Partial to 'w'",
             "itemtype": "method",
@@ -250,7 +250,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 70,
             "itemtype": "method",
             "name": "bbpClose",
@@ -270,7 +270,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 117,
             "description": "Partial.",
             "itemtype": "method",
@@ -279,7 +279,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 123,
             "description": "Partial",
             "itemtype": "method",
@@ -288,7 +288,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 137,
             "description": "Calculates the opening direction based on the index of the panel",
             "itemtype": "method",
@@ -297,7 +297,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 154,
             "description": "Calculates the closing direction based on the index of the panel.",
             "itemtype": "method",
@@ -306,7 +306,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 171,
             "description": "Intelligent open\nReturns false if not able to open.",
             "itemtype": "method",
@@ -315,7 +315,7 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/animations.js",
+            "file": "src/__backbone-panels/panel/animations.js",
             "line": 185,
             "description": "Intelligent close.\n Returns false if not able to close",
             "itemtype": "method",
@@ -324,21 +324,21 @@
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/index.js",
+            "file": "src/__backbone-panels/panel/index.js",
             "line": 71,
             "description": "Returns whether the panel is currently resizing.",
             "class": "",
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/index.js",
+            "file": "src/__backbone-panels/panel/index.js",
             "line": 80,
-            "description": "The default values to be set to the panel model",
+            "description": "The default values to be set to the panel modeld",
             "class": "",
             "module": "backbone-panels"
         },
         {
-            "file": "src/__backbone-panels/panel-builder/parse-data.js",
+            "file": "src/__backbone-panels/panel/parse-data.js",
             "line": 37,
             "description": "This method retrieves the configuration data for\n a single panel from the DOM element\n\n All data returned from this method will be directly set to\n the model.",
             "itemtype": "method",
@@ -701,7 +701,7 @@
     "warnings": [
         {
             "message": "unknown tag: submolude",
-            "line": " src/__backbone-panels/panel-builder/index.js:1"
+            "line": " src/__backbone-panels/panel/index.js:1"
         },
         {
             "message": "unknown tag: submolude",
@@ -717,11 +717,11 @@
         },
         {
             "message": "Missing item type\nReturns whether the panel is currently resizing.",
-            "line": " src/__backbone-panels/panel-builder/index.js:71"
+            "line": " src/__backbone-panels/panel/index.js:71"
         },
         {
-            "message": "Missing item type\nThe default values to be set to the panel model",
-            "line": " src/__backbone-panels/panel-builder/index.js:80"
+            "message": "Missing item type\nThe default values to be set to the panel modeld",
+            "line": " src/__backbone-panels/panel/index.js:80"
         },
         {
             "message": "Missing item type",

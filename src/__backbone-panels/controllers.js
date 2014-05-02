@@ -21,7 +21,7 @@ define(function (require, exports, module) {
 	 *     @param eventData
 	 */
 	exports.calcPanelElasticity = function calcPanelElasticity(d) {
-		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
+		var panelElasticity = parseFloat(d.panel.modeld.get('elasticity'));
 
 		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
 	};

@@ -3,7 +3,7 @@ define(function (require, exports, module) {
 
 	exports._initializePanelEnableDisable = function _initializePanelEnableDisable() {
 
-		this.listenTo(this.model, 'change:panelStatus', function (model) {
+		this.listenTo(this.modeld, 'change:panelStatus', function (model) {
 
 			if (this.bbpPanelEnabled()) {
 				// enabled
@@ -34,16 +34,16 @@ define(function (require, exports, module) {
 	};
 
 	exports.bbpPanelEnabled = function bbpPanelEnabled() {
-		return this.model.get('panelStatus') === 'enabled';
+		return this.modeld.get('panelStatus') === 'enabled';
 	};
 
 	exports.bbpEnablePanel = function bbpEnablePanel() {
-		this.model.set('panelStatus', 'enabled');
+		this.modeld.set('panelStatus', 'enabled');
 		return this;
 	};
 
 	exports.bbpDisablePanel = function bbpDisablePanel() {
-		this.model.set('panelStatus', 'disabled');
+		this.modeld.set('panelStatus', 'disabled');
 		return this;
 	};
 

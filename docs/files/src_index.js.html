@@ -109,15 +109,15 @@ define(function (require, exports, module) {
 		_ = require(&#x27;lodash&#x27;);
 
 	// internal
-	var panelBuilder = require(&#x27;./__backbone-panels/panel-builder/index&#x27;);
+	var panelBuilder = require(&#x27;./__backbone-panels/panel/index&#x27;);
 
 	var panels = module.exports = backbone.view.extend({
 
 		initialize: function initialize(options) {
-			backbone.view.prototype.initialize.apply(this, arguments);
+			backbone.view.prototype.initialize.call(this, options);
 
 			// this
-			this.initializePanels.apply(this, arguments);
+			this.initializePanels.call(this, options);
 		},
 
 		/**
@@ -206,7 +206,7 @@ define(function (require, exports, module) {
 				.listenTo(panel, &#x27;resizestop&#x27;, this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-			this.listenTo(panel.model, &#x27;change:minWidth change:maxWidth&#x27;, this.arrangeBoundaries);
+			this.listenTo(panel.modeld, &#x27;change:minWidth change:maxWidth&#x27;, this.arrangeBoundaries);
 
 			// listen to resize events on window
 		//	$(window).on(&#x27;resize&#x27;, _.bind(this.arrange, this));

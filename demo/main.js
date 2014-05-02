@@ -9,7 +9,7 @@ define(['backbone-panels', 'lodash'], function (bbPanels, _) {
 
 				this.on('resize', function () {
 
-					this.model.set('right', this.model.get('left') + this.model.get('width'))
+					this.modeld.set('right', this.modeld.get('left') + this.modeld.get('width'))
 
 				}, this);
 

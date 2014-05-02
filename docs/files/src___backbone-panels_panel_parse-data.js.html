@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/__backbone-panels/panel-builder/index.js - backbone-panels</title>
+    <title>src/__backbone-panels/panel/parse-data.js - backbone-panels</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,109 +88,81 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/__backbone-panels/panel-builder/index.js</h1>
+                        <h1 class="file-heading">File: src/__backbone-panels/panel/parse-data.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
+ * This module controls how data is processed from DOM to the model.
  *
- * @module backbone-panels
- * @submolude panel-builder
+ * @submodule parse-data
+ *
  */
+
 define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	var _ = require(&#x27;lodash&#x27;),
-		resizable = require(&#x27;backbone-ui-resizable&#x27;),
-		backbone = require(&#x27;lowercase-backbone&#x27;);
-
-	// internal
-	var parseData = require(&#x27;./parse-data&#x27;);
-
-	var panel = module.exports = resizable.extend({
-
-		initialize: function initialize(options) {
+	var _ = require(&#x27;lodash&#x27;);
 
 
-			backbone.view.prototype.initialize.call(this, options);
+	// private
+	var measures = {
+			x: {
+				bbpMinLeft:      &#x27;minLeft&#x27;,
+				bbpLeft:         &#x27;left&#x27;,
+				bbpMaxLeft:      &#x27;maxLeft&#x27;,
+				bbpMinWidth:     &#x27;minWidth&#x27;,
+				bbpWidth:        &#x27;width&#x27;,
+				bbpMaxWidth:     &#x27;maxWidth&#x27;,
+				bbpDefaultWidth: &#x27;defaultWidth&#x27;,
 
-			this.initializeModelDock(options);
+				bbpOpenWidth:    &#x27;openWidth&#x27;,
+			},
+			y: {
+				bbpMinTop:       &#x27;minTop&#x27;,
+				bbpTop:          &#x27;top&#x27;,
+				bbpMaxTop:       &#x27;maxTop&#x27;,
+				bbpMinHeight:    &#x27;minHeight&#x27;,
+				bbpHeight:       &#x27;height&#x27;,
+				bbpMaxHeight:    &#x27;maxHeight&#x27;,
+			},
+		};
 
-			this.initializeUIDraggable(options);
+	/**
+	 *
+	 *
+	 * This method retrieves the configuration data for
+	 * a single panel from the DOM element
+	 *
+	 * All data returned from this method will be directly set to
+	 * the model.
+	 *
+	 * @method parseData
+	 */
+	module.exports = function parseData() {
 
+		var data = this.$el.data(),
+			d = {};
 
-			this.initializeUIResizable(options);
+		// parse x-axis percentual measures
+		_.each(measures.x, function (measure, dataKey) {
+			d[measure] = this.panels.evalMeasureX(data[dataKey]);
+		}, this);
 
+		// parse y-axis percentual measure
+		_.each(measures.y, function (measure, dataKey) {
+			d[measure] = this.panels.evalMeasureY(data[dataKey]);
+		}, this);
 
+		// elasticity
+		d.elasticity = data.bbpElasticity;
 
-			this.initializePanel(options);
+		// set defaults
+		d.panelStatus = data.bbpStatus;
 
+		return d;
+	};
 
-		},
-
-		initializePanel: function initializePanel(options) {
-
-			// reference to the panels object
-			this.panels = options.panels;
-
-			// set an id for the panel.
-			this.id = this.$el.prop(&#x27;id&#x27;);
-
-			// set initial data
-			var data = parseData.call(this);
-
-			// set defaults
-			_.defaults(data, this.bbpDefaults);
-
-			this.model.set(data);
-
-
-			// initialize enable-disable system
-			this._initializePanelEnableDisable();
-
-
-			this.$el.addClass(this.panelClass);
-
-
-			// listen to resizestart and resizestop
-			this.on(&#x27;resizestart&#x27;, function () {
-				this.model.set(&#x27;bbpPanelResizing&#x27;, true);
-			}, this);
-
-			this.on(&#x27;resizestop&#x27;, function () {
-				this.model.set(&#x27;bbpPanelResizing&#x27;, false);
-			}, this);
-		},
-
-		/**
-		 *
-		 * Returns whether the panel is currently resizing.
-		 *
-		 */
-		bbpPanelResizing: function bbpPanelResizing() {
-			return this.model.get(&#x27;bbpPanelResizing&#x27;);
-		},
-
-		/**
-		 *
-		 * The default values to be set to the panel model
-		 *
-		 */
-		bbpDefaults: {
-			panelStatus: &#x27;enabled&#x27;,
-			minWidth: &#x27;0&#x27;,
-			maxWidth: &#x27;100%&#x27;,
-			height: &#x27;100%&#x27;,
-		},
-
-		handles: &#x27;w,e&#x27;,
-
-		panelClass: &#x27;panel&#x27;,
-	});
-
-	panel
-		.proto(require(&#x27;./animations&#x27;))
-		.proto(require(&#x27;./enable-disable&#x27;));
 });
 
     </pre>

@@ -105,7 +105,7 @@ define(function (require, exports, module) {
 	// private
 	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get(&#x27;width&#x27;);
+			return panel.bbpPanelEnabled() ? value + panel.modeld.get(attr) : value + panel.modeld.get(&#x27;width&#x27;);
 		}, 0);
 	}
 
@@ -116,15 +116,15 @@ define(function (require, exports, module) {
 		var maxWidthBefore = sumBefore.call(this, &#x27;maxWidth&#x27;, index),
 			minWidthBefore = sumBefore.call(this, &#x27;minWidth&#x27;, index);
 
-		panel.model.set(&#x27;maxLeft&#x27;, maxWidthBefore);
+		panel.modeld.set(&#x27;maxLeft&#x27;, maxWidthBefore);
 
-		panel.model.set(&#x27;minLeft&#x27;, minWidthBefore);
+		panel.modeld.set(&#x27;minLeft&#x27;, minWidthBefore);
 	}
 
 	// after
 	function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get(&#x27;width&#x27;);
+			return panel.bbpPanelEnabled() ? value + panel.modeld.get(attr) : value + panel.modeld.get(&#x27;width&#x27;);
 		}, 0);
 	}
 
@@ -135,9 +135,9 @@ define(function (require, exports, module) {
 
 		var totalWidth = sumAfter.call(this, &#x27;width&#x27;, -1);
 
-		panel.model.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
+		panel.modeld.set(&#x27;maxRight&#x27;, totalWidth - minWidthAfter);
 
-		panel.model.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
+		panel.modeld.set(&#x27;minRight&#x27;, totalWidth - maxWidthAfter);
 	}
 
 

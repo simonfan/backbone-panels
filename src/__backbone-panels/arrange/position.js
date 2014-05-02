@@ -18,7 +18,7 @@ define(function (require, exports, module) {
 	 */
 	function calculateLeftPos(index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.model.get('width');
+			return value + panel.modeld.get('width');
 		}, 0);
 	}
 
@@ -41,7 +41,7 @@ define(function (require, exports, module) {
 
 			var left = calculateLeftPos.call(this, index);
 
-			panel.model.set({
+			panel.modeld.set({
 				left: left,
 				top: 0
 			});

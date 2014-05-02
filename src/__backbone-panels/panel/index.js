@@ -20,7 +20,7 @@ define(function (require, exports, module) {
 
 			backbone.view.prototype.initialize.call(this, options);
 
-			this.initializeModelDock(options);
+			this.initializeModelView(options);
 
 			this.initializeUIDraggable(options);
 
@@ -48,7 +48,7 @@ define(function (require, exports, module) {
 			// set defaults
 			_.defaults(data, this.bbpDefaults);
 
-			this.model.set(data);
+			this.modeld.set(data);
 
 
 			// initialize enable-disable system
@@ -60,11 +60,11 @@ define(function (require, exports, module) {
 
 			// listen to resizestart and resizestop
 			this.on('resizestart', function () {
-				this.model.set('bbpPanelResizing', true);
+				this.modeld.set('bbpPanelResizing', true);
 			}, this);
 
 			this.on('resizestop', function () {
-				this.model.set('bbpPanelResizing', false);
+				this.modeld.set('bbpPanelResizing', false);
 			}, this);
 		},
 
@@ -74,12 +74,12 @@ define(function (require, exports, module) {
 		 *
 		 */
 		bbpPanelResizing: function bbpPanelResizing() {
-			return this.model.get('bbpPanelResizing');
+			return this.modeld.get('bbpPanelResizing');
 		},
 
 		/**
 		 *
-		 * The default values to be set to the panel model
+		 * The default values to be set to the panel modeld
 		 *
 		 */
 		bbpDefaults: {
