@@ -48,7 +48,7 @@ define(function (require, exports, module) {
 			// set defaults
 			_.defaults(data, this.bbpDefaults);
 
-			this.modeld.set(data);
+			this.model.set(data);
 
 
 			// initialize enable-disable system
@@ -60,11 +60,11 @@ define(function (require, exports, module) {
 
 			// listen to resizestart and resizestop
 			this.on('resizestart', function () {
-				this.modeld.set('bbpPanelResizing', true);
+				this.model.set('bbpPanelResizing', true);
 			}, this);
 
 			this.on('resizestop', function () {
-				this.modeld.set('bbpPanelResizing', false);
+				this.model.set('bbpPanelResizing', false);
 			}, this);
 		},
 
@@ -74,12 +74,12 @@ define(function (require, exports, module) {
 		 *
 		 */
 		bbpPanelResizing: function bbpPanelResizing() {
-			return this.modeld.get('bbpPanelResizing');
+			return this.model.get('bbpPanelResizing');
 		},
 
 		/**
 		 *
-		 * The default values to be set to the panel modeld
+		 * The default values to be set to the panel model
 		 *
 		 */
 		bbpDefaults: {

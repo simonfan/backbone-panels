@@ -87,8 +87,8 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 
 		this.bbpEnablePanel();
 
-		var openWidth = parseInt(this.panels.evalMeasureX(this.modeld.get('openWidth'))),
-			currWidth = parseInt(this.modeld.get('width')),
+		var openWidth = parseInt(this.panels.evalMeasureX(this.model.get('openWidth'))),
+			currWidth = parseInt(this.model.get('width')),
 			delta = openWidth - currWidth;
 
 
@@ -102,7 +102,7 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 			}
 			// restore min width
 			if (_.isNumber(this._real_min_width_before_close_)) {
-				this.modeld.set('minWidth', this._real_min_width_before_close_);
+				this.model.set('minWidth', this._real_min_width_before_close_);
 
 				delete this._real_min_width_before_close_;
 			}
@@ -152,12 +152,12 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 				// options
 		options = options || {};
 
-		var modeld = this.modeld;
+		var model = this.model;
 
 
 		// delta
-		var closeWidth = parseFloat(this.panels.evalMeasureX(modeld.get('closeWidth'))) || 0,
-			currWidth = parseFloat(modeld.get('width')),
+		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
+			currWidth = parseFloat(model.get('width')),
 			delta = Math.abs(closeWidth - currWidth);
 
 
@@ -178,8 +178,8 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 		}, this);
 
 		// set temporary min width
-		this._real_min_width_before_close_ = modeld.get('minWidth');
-		modeld.set('minWidth', closeWidth);
+		this._real_min_width_before_close_ = model.get('minWidth');
+		model.set('minWidth', closeWidth);
 
 		return direction === 'w' ?
 			this.aContractToW(delta, options) :
@@ -250,7 +250,7 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 	 */
 	exports.open = function open(options) {
 
-		var direction = this.modeld.get('openDirection') || calcOpenDirection.call(this);
+		var direction = this.model.get('openDirection') || calcOpenDirection.call(this);
 
 		return direction ? this.bbpOpen(direction, options) : direction;
 	};
@@ -264,7 +264,7 @@ define('__backbone-panels/panel/animations',['require','exports','module','lodas
 	 */
 	exports.close = function close(options) {
 
-		var direction = this.modeld.get('closeDirection') || calcCloseDirection.call(this);
+		var direction = this.model.get('closeDirection') || calcCloseDirection.call(this);
 
 		return direction ? this.bbpClose(direction, options) : direction;
 	};
@@ -275,7 +275,7 @@ define('__backbone-panels/panel/enable-disable',['require','exports','module'],f
 
 	exports._initializePanelEnableDisable = function _initializePanelEnableDisable() {
 
-		this.listenTo(this.modeld, 'change:panelStatus', function (model) {
+		this.listenTo(this.model, 'change:panelStatus', function (model) {
 
 			if (this.bbpPanelEnabled()) {
 				// enabled
@@ -306,16 +306,16 @@ define('__backbone-panels/panel/enable-disable',['require','exports','module'],f
 	};
 
 	exports.bbpPanelEnabled = function bbpPanelEnabled() {
-		return this.modeld.get('panelStatus') === 'enabled';
+		return this.model.get('panelStatus') === 'enabled';
 	};
 
 	exports.bbpEnablePanel = function bbpEnablePanel() {
-		this.modeld.set('panelStatus', 'enabled');
+		this.model.set('panelStatus', 'enabled');
 		return this;
 	};
 
 	exports.bbpDisablePanel = function bbpDisablePanel() {
-		this.modeld.set('panelStatus', 'disabled');
+		this.model.set('panelStatus', 'disabled');
 		return this;
 	};
 
@@ -371,7 +371,7 @@ define('__backbone-panels/panel/index',['require','exports','module','lodash','b
 			// set defaults
 			_.defaults(data, this.bbpDefaults);
 
-			this.modeld.set(data);
+			this.model.set(data);
 
 
 			// initialize enable-disable system
@@ -383,11 +383,11 @@ define('__backbone-panels/panel/index',['require','exports','module','lodash','b
 
 			// listen to resizestart and resizestop
 			this.on('resizestart', function () {
-				this.modeld.set('bbpPanelResizing', true);
+				this.model.set('bbpPanelResizing', true);
 			}, this);
 
 			this.on('resizestop', function () {
-				this.modeld.set('bbpPanelResizing', false);
+				this.model.set('bbpPanelResizing', false);
 			}, this);
 		},
 
@@ -397,12 +397,12 @@ define('__backbone-panels/panel/index',['require','exports','module','lodash','b
 		 *
 		 */
 		bbpPanelResizing: function bbpPanelResizing() {
-			return this.modeld.get('bbpPanelResizing');
+			return this.model.get('bbpPanelResizing');
 		},
 
 		/**
 		 *
-		 * The default values to be set to the panel modeld
+		 * The default values to be set to the panel model
 		 *
 		 */
 		bbpDefaults: {
@@ -536,7 +536,7 @@ define('__backbone-panels/arrange/position',['require','exports','module','lodas
 	 */
 	function calculateLeftPos(index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return value + panel.modeld.get('width');
+			return value + panel.model.get('width');
 		}, 0);
 	}
 
@@ -559,7 +559,7 @@ define('__backbone-panels/arrange/position',['require','exports','module','lodas
 
 			var left = calculateLeftPos.call(this, index);
 
-			panel.modeld.set({
+			panel.model.set({
 				left: left,
 				top: 0
 			});
@@ -584,7 +584,7 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 	// private
 	function sumBefore(attr, index) {
 		return this.reduceBefore(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.modeld.get(attr) : value + panel.modeld.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get('width');
 		}, 0);
 	}
 
@@ -595,15 +595,15 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 		var maxWidthBefore = sumBefore.call(this, 'maxWidth', index),
 			minWidthBefore = sumBefore.call(this, 'minWidth', index);
 
-		panel.modeld.set('maxLeft', maxWidthBefore);
+		panel.model.set('maxLeft', maxWidthBefore);
 
-		panel.modeld.set('minLeft', minWidthBefore);
+		panel.model.set('minLeft', minWidthBefore);
 	}
 
 	// after
 	function sumAfter(attr, index) {
 		return this.reduceAfter(index, function (value, panel) {
-			return panel.bbpPanelEnabled() ? value + panel.modeld.get(attr) : value + panel.modeld.get('width');
+			return panel.bbpPanelEnabled() ? value + panel.model.get(attr) : value + panel.model.get('width');
 		}, 0);
 	}
 
@@ -614,9 +614,9 @@ define('__backbone-panels/arrange/boundaries',['require','exports','module'],fun
 
 		var totalWidth = sumAfter.call(this, 'width', -1);
 
-		panel.modeld.set('maxRight', totalWidth - minWidthAfter);
+		panel.model.set('maxRight', totalWidth - minWidthAfter);
 
-		panel.modeld.set('minRight', totalWidth - maxWidthAfter);
+		panel.model.set('minRight', totalWidth - maxWidthAfter);
 	}
 
 
@@ -808,7 +808,7 @@ define('__backbone-panels/controllers',['require','exports','module','lodash'],f
 	 *     @param eventData
 	 */
 	exports.calcPanelElasticity = function calcPanelElasticity(d) {
-		var panelElasticity = parseFloat(d.panel.modeld.get('elasticity'));
+		var panelElasticity = parseFloat(d.panel.model.get('elasticity'));
 
 		return !isNaN(panelElasticity) ? panelElasticity : this.controlOptions.elasticity;
 	};
@@ -1225,7 +1225,7 @@ define('backbone-panels',['require','exports','module','jquery','lowercase-backb
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-			this.listenTo(panel.modeld, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
+			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
 		//	$(window).on('resize', _.bind(this.arrange, this));

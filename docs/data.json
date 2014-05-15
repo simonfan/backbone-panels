@@ -333,7 +333,7 @@
         {
             "file": "src/__backbone-panels/panel/index.js",
             "line": 80,
-            "description": "The default values to be set to the panel modeld",
+            "description": "The default values to be set to the panel model",
             "class": "",
             "module": "backbone-panels"
         },
@@ -720,7 +720,7 @@
             "line": " src/__backbone-panels/panel/index.js:71"
         },
         {
-            "message": "Missing item type\nThe default values to be set to the panel modeld",
+            "message": "Missing item type\nThe default values to be set to the panel model",
             "line": " src/__backbone-panels/panel/index.js:80"
         },
         {

@@ -112,7 +112,7 @@ define(function (require, exports, module) {
 				.listenTo(panel, 'resizestop', this.handlePanelResizeStop);
 
 			// listen to changes on minWidth and maxWidth
-			this.listenTo(panel.modeld, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
+			this.listenTo(panel.model, 'change:minWidth change:maxWidth', this.arrangeBoundaries);
 
 			// listen to resize events on window
 		//	$(window).on('resize', _.bind(this.arrange, this));

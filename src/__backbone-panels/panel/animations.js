@@ -14,8 +14,8 @@ define(function (require, exports, module) {
 
 		this.bbpEnablePanel();
 
-		var openWidth = parseInt(this.panels.evalMeasureX(this.modeld.get('openWidth'))),
-			currWidth = parseInt(this.modeld.get('width')),
+		var openWidth = parseInt(this.panels.evalMeasureX(this.model.get('openWidth'))),
+			currWidth = parseInt(this.model.get('width')),
 			delta = openWidth - currWidth;
 
 
@@ -29,7 +29,7 @@ define(function (require, exports, module) {
 			}
 			// restore min width
 			if (_.isNumber(this._real_min_width_before_close_)) {
-				this.modeld.set('minWidth', this._real_min_width_before_close_);
+				this.model.set('minWidth', this._real_min_width_before_close_);
 
 				delete this._real_min_width_before_close_;
 			}
@@ -79,12 +79,12 @@ define(function (require, exports, module) {
 				// options
 		options = options || {};
 
-		var modeld = this.modeld;
+		var model = this.model;
 
 
 		// delta
-		var closeWidth = parseFloat(this.panels.evalMeasureX(modeld.get('closeWidth'))) || 0,
-			currWidth = parseFloat(modeld.get('width')),
+		var closeWidth = parseFloat(this.panels.evalMeasureX(model.get('closeWidth'))) || 0,
+			currWidth = parseFloat(model.get('width')),
 			delta = Math.abs(closeWidth - currWidth);
 
 
@@ -105,8 +105,8 @@ define(function (require, exports, module) {
 		}, this);
 
 		// set temporary min width
-		this._real_min_width_before_close_ = modeld.get('minWidth');
-		modeld.set('minWidth', closeWidth);
+		this._real_min_width_before_close_ = model.get('minWidth');
+		model.set('minWidth', closeWidth);
 
 		return direction === 'w' ?
 			this.aContractToW(delta, options) :
@@ -177,7 +177,7 @@ define(function (require, exports, module) {
 	 */
 	exports.open = function open(options) {
 
-		var direction = this.modeld.get('openDirection') || calcOpenDirection.call(this);
+		var direction = this.model.get('openDirection') || calcOpenDirection.call(this);
 
 		return direction ? this.bbpOpen(direction, options) : direction;
 	};
@@ -191,7 +191,7 @@ define(function (require, exports, module) {
 	 */
 	exports.close = function close(options) {
 
-		var direction = this.modeld.get('closeDirection') || calcCloseDirection.call(this);
+		var direction = this.model.get('closeDirection') || calcCloseDirection.call(this);
 
 		return direction ? this.bbpClose(direction, options) : direction;
 	};
